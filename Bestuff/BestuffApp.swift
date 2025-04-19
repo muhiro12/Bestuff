@@ -8,6 +8,8 @@
 import SwiftUI
 import SwiftData
 
+// MARK: - BestuffApp
+
 @main
 struct BestuffApp: App {
     var sharedModelContainer: ModelContainer = {
@@ -31,8 +33,7 @@ struct BestuffApp: App {
     }
 }
 
-import SwiftUI
-import SwiftData
+// MARK: - ContentView
 
 struct ContentView: View {
     var body: some View {
@@ -68,8 +69,7 @@ struct ContentView: View {
         .modelContainer(container)
 }
 
-import Foundation
-import SwiftData
+// MARK: - BestItem Model
 
 @Model
 final class BestItem {
@@ -90,6 +90,8 @@ final class BestItem {
     }
 }
 
+// MARK: - BestItem Gradient Extension
+
 extension BestItem {
     var gradient: LinearGradient {
         let base = Double(score) / 5.0
@@ -103,6 +105,8 @@ extension BestItem {
         )
     }
 }
+
+// MARK: - BestItemListView
 
 struct BestItemListView: View {
     @Environment(\.modelContext) private var modelContext
@@ -233,6 +237,8 @@ struct BestItemListView: View {
     }
 }
 
+// MARK: - AddItemView
+
 struct AddItemView: View {
     @Environment(\.modelContext) private var modelContext
     @Binding var isPresented: Bool
@@ -279,6 +285,8 @@ struct AddItemView: View {
     }
 }
 
+// MARK: - SettingsView
+
 struct SettingsView: View {
     var body: some View {
         NavigationStack {
@@ -290,6 +298,8 @@ struct SettingsView: View {
         }
     }
 }
+
+// MARK: - EditItemView
 
 struct EditItemView: View {
     @Environment(\.modelContext) private var modelContext
@@ -329,6 +339,8 @@ struct EditItemView: View {
         }
     }
 }
+
+// MARK: - RecapView
 
 struct RecapView: View {
     @Query private var bestItems: [BestItem]
@@ -436,8 +448,7 @@ struct RecapView: View {
     }
 }
 
-import UIKit
-import SwiftUI
+// MARK: - ShareSheet
 
 struct ShareSheet: UIViewControllerRepresentable {
     var activityItems: [Any]
@@ -449,6 +460,8 @@ struct ShareSheet: UIViewControllerRepresentable {
 
     func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
 }
+
+// MARK: - CardViewModifier
 
 struct CardViewModifier: ViewModifier {
     var background: LinearGradient
@@ -468,7 +481,7 @@ extension View {
     }
 }
 
-import SwiftUI
+// MARK: - Style Definitions
 
 enum AppFont {
     static let title = Font.title3.weight(.semibold)
