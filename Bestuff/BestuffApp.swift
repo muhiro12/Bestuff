@@ -117,8 +117,8 @@ struct InsightsView: View {
                         let topItemsThisYear = allItems.filter {
                             calendar.component(.year, from: $0.timestamp) == year
                         }
-                        .sorted { $0.score > $1.score }
-                        .prefix(5)
+                            .sorted { $0.score > $1.score }
+                            .prefix(5)
 
                         Chart {
                             ForEach(Array(topItemsThisYear.enumerated()), id: \.1.timestamp) { index, item in
@@ -358,13 +358,11 @@ struct ContentView: View {
     let container = try! ModelContainer(for: BestItem.self, configurations: config)
     let context = container.mainContext
 
-    [
-        BestItem(timestamp: .now, title: "AirPods Pro", score: 5, category: "Tech", note: "Great for daily use", tags: ["audio", "Apple"]),
-        BestItem(timestamp: .now, title: "The Alchemist", score: 4, category: "Books", note: "Inspiring story", tags: ["novel", "life"]),
-        BestItem(timestamp: .now, title: "Uniqlo Jacket", score: 3, category: "Fashion", note: "Affordable and warm", tags: ["winter", "clothing"]),
-        BestItem(timestamp: .now, title: "Sushi Lunch", score: 5, category: "Food", note: "Fresh and delicious", tags: ["restaurant", "lunch"]),
-        BestItem(timestamp: .now, title: "Spotify Premium", score: 4, category: "Music", note: "Good variety of playlists", tags: ["subscription", "music"])
-    ].forEach { context.insert($0) }
+    BestItem.create(context: context, title: "AirPods Pro", score: 5, category: "Tech", note: "Great for daily use", tags: ["audio", "Apple"])
+    BestItem.create(context: context, title: "The Alchemist", score: 4, category: "Books", note: "Inspiring story", tags: ["novel", "life"])
+    BestItem.create(context: context, title: "Uniqlo Jacket", score: 3, category: "Fashion", note: "Affordable and warm", tags: ["winter", "clothing"])
+    BestItem.create(context: context, title: "Sushi Lunch", score: 5, category: "Food", note: "Fresh and delicious", tags: ["restaurant", "lunch"])
+    BestItem.create(context: context, title: "Spotify Premium", score: 4, category: "Music", note: "Good variety of playlists", tags: ["subscription", "music"])
 
     return ContentView()
         .modelContainer(container)
@@ -374,19 +372,22 @@ struct ContentView: View {
 
 @Model
 final class BestItem {
-    var timestamp: Date
-    var title: String
-    var score: Int
-    var category: String
-    var note: String
-    var tags: [String]
-    var imageData: Data?
-    var purchaseDate: Date?
-    var price: Double?
-    var recommendLevel: Int
+    var timestamp: Date = Date.now
+    var title: String = ""
+    var score: Int = 0
+    var category: String = "General"
+    var note: String = ""
+    var tags: [String] = []
+    var imageData: Data? = nil
+    var purchaseDate: Date? = nil
+    var price: Double? = nil
+    var recommendLevel: Int = 3
 
-    init(
-        timestamp: Date,
+    private init() {}
+
+    @discardableResult
+    static func create(
+        context: ModelContext,
         title: String,
         score: Int,
         category: String = "General",
@@ -395,17 +396,19 @@ final class BestItem {
         purchaseDate: Date? = nil,
         price: Double? = nil,
         recommendLevel: Int = 3
-    ) {
-        self.timestamp = timestamp
-        self.title = title
-        self.score = score
-        self.category = category
-        self.note = note
-        self.tags = tags
-        self.imageData = nil
-        self.purchaseDate = purchaseDate
-        self.price = price
-        self.recommendLevel = recommendLevel
+    ) -> BestItem {
+        let item = BestItem()
+        item.timestamp = .now
+        item.title = title
+        item.score = score
+        item.category = category
+        item.note = note
+        item.tags = tags
+        item.purchaseDate = purchaseDate
+        item.price = price
+        item.recommendLevel = recommendLevel
+        context.insert(item)
+        return item
     }
 }
 
@@ -653,8 +656,8 @@ struct AddItemView: View {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Add") {
                         withAnimation(.spring()) {
-                            let newItem = BestItem(
-                                timestamp: .now,
+                            _ = BestItem.create(
+                                context: modelContext,
                                 title: title,
                                 score: score,
                                 category: category.isEmpty ? "General" : category,
@@ -664,7 +667,6 @@ struct AddItemView: View {
                                 price: Double(price),
                                 recommendLevel: recommendLevel
                             )
-                            modelContext.insert(newItem)
                         }
                         isPresented = false
                     }
