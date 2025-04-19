@@ -86,6 +86,20 @@ final class BestItem {
     }
 }
 
+extension BestItem {
+    var gradient: LinearGradient {
+        let base = Double(score) / 5.0
+        return LinearGradient(
+            colors: [
+                Color.cyan.opacity(0.3 + base * 0.2),
+                Color.accentColor.opacity(0.4 + base * 0.4)
+            ],
+            startPoint: .topLeading,
+            endPoint: .bottomTrailing
+        )
+    }
+}
+
 struct BestItemListView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var bestItems: [BestItem]
@@ -115,25 +129,37 @@ struct BestItemListView: View {
                 } else {
                     let flatItems = filteredBestItems
                     ForEach(Dictionary(grouping: flatItems, by: { $0.category }).sorted(by: { $0.key < $1.key }), id: \.key) { category, items in
-                        Section(header: Text(category)) {
+                        Section(header: Text(category).foregroundColor(.accentColor)) {
                             ForEach(items) { item in
-                                VStack(alignment: .leading) {
+                                VStack(alignment: .leading, spacing: 6) {
+                                    Text(item.category.uppercased())
+                                        .font(.caption2)
+                                        .padding(.horizontal, 6)
+                                        .padding(.vertical, 2)
+                                        .background(Color.accentColor.opacity(0.15))
+                                        .clipShape(Capsule())
                                     Text(item.title)
-                                        .font(.headline)
+                                        .font(AppFont.title)
                                     Text("Score: \(item.score)")
-                                        .font(.subheadline)
-                                    Text(item.timestamp.formatted())
-                                        .font(.caption)
-                                        .foregroundColor(.gray)
+                                        .font(AppFont.body)
+                                        .foregroundStyle(.secondary)
+                                    Text(item.timestamp.formatted(date: .abbreviated, time: .omitted))
+                                        .font(AppFont.caption)
+                                        .foregroundStyle(.gray)
                                 }
+                                .bestCardStyle(using: item.gradient)
                                 .onTapGesture {
-                                    editingItem = item
+                                    withAnimation(.spring()) {
+                                        editingItem = item
+                                    }
                                 }
                             }
                             .onDelete { indexSet in
-                                for index in indexSet {
-                                    let item = items[index]
-                                    modelContext.delete(item)
+                                withAnimation(.spring()) {
+                                    for index in indexSet {
+                                        let item = items[index]
+                                        modelContext.delete(item)
+                                    }
                                 }
                             }
                         }
@@ -141,6 +167,9 @@ struct BestItemListView: View {
                 }
             }
             .navigationTitle("Items")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbarBackground(Color.accentColor, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
@@ -211,11 +240,14 @@ struct AddItemView: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Add") {
-                        let newItem = BestItem(timestamp: .now, title: title, score: score, category: category.isEmpty ? "General" : category)
-                        modelContext.insert(newItem)
+                        withAnimation(.spring()) {
+                            let newItem = BestItem(timestamp: .now, title: title, score: score, category: category.isEmpty ? "General" : category)
+                            modelContext.insert(newItem)
+                        }
                         isPresented = false
                     }
                     .disabled(title.isEmpty)
+                    .tint(.accentColor)
                 }
             }
         }
@@ -227,6 +259,9 @@ struct SettingsView: View {
         NavigationStack {
             Text("Settings View (Placeholder)")
                 .navigationTitle("Settings")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbarBackground(Color.accentColor, for: .navigationBar)
+                .toolbarBackground(.visible, for: .navigationBar)
         }
     }
 }
@@ -261,6 +296,7 @@ struct EditItemView: View {
                         try? modelContext.save()
                         isPresented = nil
                     }
+                    .tint(.accentColor)
                 }
             }
         }
@@ -287,10 +323,22 @@ struct RecapView: View {
 
         NavigationStack {
             ScrollView {
-                recapContentView(for: thisMonthBestItems)
-                    .padding()
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("This Month's Best")
+                        .font(.largeTitle.bold())
+                        .padding(.bottom, 4)
+                    Text("Your top-rated picks this month")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                    
+                    recapContentView(for: thisMonthBestItems)
+                        .padding()
+                }
             }
             .navigationTitle("This Month's Recap")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbarBackground(Color.accentColor, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Share") {
@@ -316,18 +364,26 @@ struct RecapView: View {
         VStack(alignment: .leading, spacing: 12) {
             if items.isEmpty {
                 Text("No items added this month.")
-                    .foregroundColor(.gray)
             } else {
                 ForEach(items) { item in
-                    VStack(alignment: .leading, spacing: 4) {
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text(item.category.uppercased())
+                            .font(.caption2)
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 2)
+                            .background(Color.accentColor.opacity(0.15))
+                            .clipShape(Capsule())
                         Text(item.title)
-                            .font(.headline)
+                            .font(AppFont.title)
+                            .fontWeight(.semibold)
                         Text("Score: \(item.score)")
-                            .font(.subheadline)
-                        Text(item.timestamp.formatted())
-                            .font(.caption)
-                            .foregroundColor(.gray)
+                            .font(AppFont.body)
+                            .foregroundStyle(.secondary)
+                        Text(item.timestamp.formatted(date: .abbreviated, time: .omitted))
+                            .font(AppFont.caption)
+                            .foregroundStyle(.gray)
                     }
+                    .bestCardStyle(using: item.gradient)
                     Divider()
                 }
             }
@@ -347,4 +403,42 @@ struct ShareSheet: UIViewControllerRepresentable {
     }
 
     func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
+}
+
+struct CardViewModifier: ViewModifier {
+    var background: LinearGradient
+
+    func body(content: Content) -> some View {
+        content
+            .padding()
+            .background(background)
+            .clipShape(RoundedRectangle(cornerRadius: DesignMetrics.cornerRadius, style: .continuous))
+            .shadow(color: .black.opacity(DesignMetrics.shadowOpacity), radius: DesignMetrics.shadowRadius, x: 0, y: 2)
+    }
+}
+
+extension View {
+    func bestCardStyle(using gradient: LinearGradient) -> some View {
+        self.modifier(CardViewModifier(background: gradient))
+    }
+}
+
+import SwiftUI
+
+enum AppFont {
+    static let title = Font.title3.weight(.semibold)
+    static let body = Font.subheadline
+    static let caption = Font.caption2
+}
+
+enum AppColor {
+    static let background = Color(.systemBackground)
+    static let surface = Color(.secondarySystemBackground)
+    static let accent = Color.accentColor
+}
+
+enum DesignMetrics {
+    static let cornerRadius: CGFloat = 12
+    static let shadowRadius: CGFloat = 4
+    static let shadowOpacity: Double = 0.05
 }
