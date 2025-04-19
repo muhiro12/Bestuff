@@ -795,25 +795,51 @@ struct RecapView: View {
     @State private var isPresentingShareSheet = false
     @State private var sharedImage: UIImage?
     @State private var editingItem: BestItem? = nil
+    @State private var selectedDate: Date = Date()
+    
+    private var filteredItems: [BestItem] {
+        let components = Calendar.current.dateComponents([.year, .month], from: selectedDate)
+        return bestItems.filter {
+            let itemComponents = Calendar.current.dateComponents([.year, .month], from: $0.timestamp)
+            return itemComponents.year == components.year && itemComponents.month == components.month
+        }
+        .sorted { $0.score > $1.score }
+    }
+    
+    private var totalCount: Int {
+        filteredItems.count
+    }
+    
+    private var totalScore: Int {
+        filteredItems.map(\.score).reduce(0, +)
+    }
+    
+    private var averageScore: Double {
+        totalCount > 0 ? Double(totalScore) / Double(totalCount) : 0
+    }
 
     var body: some View {
-        let calendar = Calendar.current
-        let now = Date()
-        let currentMonth = calendar.component(.month, from: now)
-        let currentYear = calendar.component(.year, from: now)
-
-        let thisMonthBestItems = bestItems.filter {
-            let itemMonth = calendar.component(.month, from: $0.timestamp)
-            let itemYear = calendar.component(.year, from: $0.timestamp)
-            return itemMonth == currentMonth && itemYear == currentYear
-        }
-            .sorted { $0.score > $1.score }
-
-        NavigationStack {
+        return NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 12) {
-
-                    recapContentView(for: thisMonthBestItems)
+                    VStack(alignment: .leading, spacing: 12) {
+                        DatePicker("Select Month", selection: $selectedDate, displayedComponents: [.date])
+                            .datePickerStyle(.compact)
+                            .labelsHidden()
+                            .padding(.horizontal)
+                        
+                        if totalCount > 0 {
+                            HStack(spacing: 16) {
+                                Label("\(totalCount) items", systemImage: "square.stack.3d.up")
+                                Label("Avg. \(String(format: "%.1f", averageScore))", systemImage: "chart.bar.xaxis")
+                                Label("Total \(totalScore)", systemImage: "sum")
+                            }
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                            .padding(.horizontal)
+                        }
+                    }
+                    recapContentView(for: filteredItems)
                         .padding()
                 }
             }
@@ -821,7 +847,7 @@ struct RecapView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Share") {
-                        let renderer = ImageRenderer(content: recapContentView(for: thisMonthBestItems).padding())
+                        let renderer = ImageRenderer(content: recapContentView(for: filteredItems).padding())
                         renderer.scale = UIScreen.main.scale
                         if let uiImage = renderer.uiImage {
                             sharedImage = uiImage
@@ -841,9 +867,8 @@ struct RecapView: View {
         }
     }
 
-    @ViewBuilder
     private func recapContentView(for items: [BestItem]) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
+        return VStack(alignment: .leading, spacing: 12) {
             if items.isEmpty {
                 Text("No items added this month.")
             } else {
@@ -927,6 +952,23 @@ struct RecapView: View {
                     }
                     Divider()
                 }
+                VStack(alignment: .leading, spacing: 8) {
+                    Divider()
+                        .padding(.vertical, 4)
+                    Text("Summary")
+                        .font(.headline)
+                        .padding(.bottom, 4)
+
+                    Label("Total Score: \(totalScore)", systemImage: "sum")
+                    Label("Average Score: \(String(format: "%.1f", averageScore))", systemImage: "chart.bar.xaxis")
+                    Label("Total Items: \(totalCount)", systemImage: "square.stack.3d.up")
+                }
+                .padding()
+                .background(Color(.secondarySystemBackground))
+                .clipShape(RoundedRectangle(cornerRadius: DesignMetrics.cornerRadius, style: .continuous))
+                .padding(.top)
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
             }
         }
     }
