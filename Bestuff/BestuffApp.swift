@@ -12,7 +12,7 @@ import SwiftData
 struct BestuffApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Item.self,
+            BestItem.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
@@ -41,7 +41,7 @@ struct ContentView: View {
                 .tabItem {
                     Label("Recap", systemImage: "star.circle")
                 }
-            ItemListView()
+            BestItemListView()
                 .tabItem {
                     Label("Items", systemImage: "list.bullet")
                 }
@@ -55,13 +55,13 @@ struct ContentView: View {
 
 #Preview {
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
-    let container = try! ModelContainer(for: Item.self, configurations: config)
+    let container = try! ModelContainer(for: BestItem.self, configurations: config)
     let context = container.mainContext
 
     [
-        Item(timestamp: .now, title: "Sample 1", score: 5, category: "Books"),
-        Item(timestamp: .now, title: "Sample 2", score: 3, category: "Music"),
-        Item(timestamp: .now, title: "Sample 3", score: 4, category: "Tech")
+        BestItem(timestamp: .now, title: "Sample 1", score: 5, category: "Books"),
+        BestItem(timestamp: .now, title: "Sample 2", score: 3, category: "Music"),
+        BestItem(timestamp: .now, title: "Sample 3", score: 4, category: "Tech")
     ].forEach { context.insert($0) }
 
     return ContentView()
@@ -72,7 +72,7 @@ import Foundation
 import SwiftData
 
 @Model
-final class Item {
+final class BestItem {
     var timestamp: Date
     var title: String
     var score: Int
@@ -86,11 +86,11 @@ final class Item {
     }
 }
 
-struct ItemListView: View {
+struct BestItemListView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query private var items: [Item]
+    @Query private var bestItems: [BestItem]
     @State private var isPresentingAddSheet = false
-    @State private var editingItem: Item? = nil
+    @State private var editingItem: BestItem? = nil
     @State private var searchText: String = ""
     @State private var sortOption: SortOption = .byDate
     @State private var minimumScore: Int = 1
@@ -99,8 +99,8 @@ struct ItemListView: View {
         case byDate, byScore
     }
 
-    var filteredItems: [Item] {
-        items.filter { item in
+    var filteredBestItems: [BestItem] {
+        bestItems.filter { item in
             (item.title.localizedCaseInsensitiveContains(searchText) || item.category.localizedCaseInsensitiveContains(searchText)) && item.score >= minimumScore
         }
         .sorted(by: { (sortOption == .byDate) ? $0.timestamp < $1.timestamp : $0.score > $1.score })
@@ -109,11 +109,12 @@ struct ItemListView: View {
     var body: some View {
         NavigationStack {
             List {
-                if filteredItems.isEmpty {
+                if filteredBestItems.isEmpty {
                     Text("No items found.")
                         .foregroundColor(.gray)
                 } else {
-                    ForEach(Dictionary(grouping: filteredItems, by: { $0.category }).sorted(by: { $0.key < $1.key }), id: \.key) { category, items in
+                    let flatItems = filteredBestItems
+                    ForEach(Dictionary(grouping: flatItems, by: { $0.category }).sorted(by: { $0.key < $1.key }), id: \.key) { category, items in
                         Section(header: Text(category)) {
                             ForEach(items) { item in
                                 VStack(alignment: .leading) {
@@ -129,7 +130,12 @@ struct ItemListView: View {
                                     editingItem = item
                                 }
                             }
-                            .onDelete(perform: deleteItems)
+                            .onDelete { indexSet in
+                                for index in indexSet {
+                                    let item = items[index]
+                                    modelContext.delete(item)
+                                }
+                            }
                         }
                     }
                 }
@@ -171,7 +177,7 @@ struct ItemListView: View {
 
     private func deleteItems(offsets: IndexSet) {
         for index in offsets {
-            modelContext.delete(items[index])
+            modelContext.delete(bestItems[index])
         }
     }
 }
@@ -205,11 +211,10 @@ struct AddItemView: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Add") {
-                        let newItem = Item(timestamp: .now, title: title, score: score, category: category)
+                        let newItem = BestItem(timestamp: .now, title: title, score: score, category: category.isEmpty ? "General" : category)
                         modelContext.insert(newItem)
                         isPresented = false
                     }
-                    // TODO: Consider validating category input or using a picker to standardize categories.
                     .disabled(title.isEmpty)
                 }
             }
@@ -220,7 +225,6 @@ struct AddItemView: View {
 struct SettingsView: View {
     var body: some View {
         NavigationStack {
-            // TODO: Implement meaningful settings options before release (e.g., version info, feedback, etc.)
             Text("Settings View (Placeholder)")
                 .navigationTitle("Settings")
         }
@@ -229,8 +233,8 @@ struct SettingsView: View {
 
 struct EditItemView: View {
     @Environment(\.modelContext) private var modelContext
-    @Bindable var item: Item
-    @Binding var isPresented: Item?
+    @Bindable var item: BestItem
+    @Binding var isPresented: BestItem?
 
     var body: some View {
         NavigationStack {
@@ -254,6 +258,7 @@ struct EditItemView: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
+                        try? modelContext.save()
                         isPresented = nil
                     }
                 }
@@ -263,7 +268,7 @@ struct EditItemView: View {
 }
 
 struct RecapView: View {
-    @Query private var items: [Item]
+    @Query private var bestItems: [BestItem]
     @State private var isPresentingShareSheet = false
     @State private var sharedImage: UIImage?
 
@@ -273,7 +278,7 @@ struct RecapView: View {
         let currentMonth = calendar.component(.month, from: now)
         let currentYear = calendar.component(.year, from: now)
 
-        let thisMonthItems = items.filter {
+        let thisMonthBestItems = bestItems.filter {
             let itemMonth = calendar.component(.month, from: $0.timestamp)
             let itemYear = calendar.component(.year, from: $0.timestamp)
             return itemMonth == currentMonth && itemYear == currentYear
@@ -282,14 +287,15 @@ struct RecapView: View {
 
         NavigationStack {
             ScrollView {
-                recapContent(thisMonthItems)
+                recapContentView(for: thisMonthBestItems)
                     .padding()
             }
             .navigationTitle("This Month's Recap")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Share") {
-                        let renderer = ImageRenderer(content: recapContent(thisMonthItems).padding())
+                        let renderer = ImageRenderer(content: recapContentView(for: thisMonthBestItems).padding())
+                        renderer.scale = UIScreen.main.scale
                         if let uiImage = renderer.uiImage {
                             sharedImage = uiImage
                             isPresentingShareSheet = true
@@ -306,7 +312,7 @@ struct RecapView: View {
     }
 
     @ViewBuilder
-    private func recapContent(_ items: [Item]) -> some View {
+    private func recapContentView(for items: [BestItem]) -> some View {
         VStack(alignment: .leading, spacing: 12) {
             if items.isEmpty {
                 Text("No items added this month.")
