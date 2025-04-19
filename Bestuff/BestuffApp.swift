@@ -38,13 +38,17 @@ struct BestuffApp: App {
 struct ContentView: View {
     var body: some View {
         TabView {
+            BestItemListView()
+                .tabItem {
+                    Label("Items", systemImage: "list.bullet")
+                }
             RecapView()
                 .tabItem {
                     Label("Recap", systemImage: "star.circle")
                 }
-            BestItemListView()
+            Text("Coming Soon")
                 .tabItem {
-                    Label("Items", systemImage: "list.bullet")
+                    Label("Discover", systemImage: "sparkles")
                 }
             SettingsView()
                 .tabItem {
@@ -79,6 +83,7 @@ final class BestItem {
     var category: String
     var note: String
     var tags: [String]
+    var imageData: Data?
 
     init(timestamp: Date, title: String, score: Int, category: String = "General", note: String = "", tags: [String] = []) {
         self.timestamp = timestamp
@@ -87,6 +92,7 @@ final class BestItem {
         self.category = category
         self.note = note
         self.tags = tags
+        self.imageData = nil
     }
 }
 
@@ -140,6 +146,15 @@ struct BestItemListView: View {
                         Section(header: Text(category).foregroundColor(.accentColor)) {
                             ForEach(items) { item in
                                 VStack(alignment: .leading, spacing: 6) {
+                                    if let data = item.imageData,
+                                       let uiImage = UIImage(data: data) {
+                                        Image(uiImage: uiImage)
+                                            .resizable()
+                                            .scaledToFill()
+                                            .frame(height: 140)
+                                            .clipped()
+                                            .cornerRadius(8)
+                                    }
                                     Text(item.category.uppercased())
                                         .font(.caption2)
                                         .padding(.horizontal, 6)
@@ -252,12 +267,9 @@ struct AddItemView: View {
             TextField("Note", text: $note, axis: .vertical)
                 .lineLimit(3...5)
 
-                Picker("Score", selection: $score) {
-                    ForEach(1..<6) { value in
-                        Text("\(value)").tag(value)
-                    }
+                Section(header: Text("Rating")) {
+                    RatingView(rating: $score)
                 }
-                .pickerStyle(.segmented)
             }
             .navigationTitle("Add Item")
             .toolbar {
@@ -299,21 +311,34 @@ struct EditItemView: View {
     @Environment(\.modelContext) private var modelContext
     @Bindable var item: BestItem
     @Binding var isPresented: BestItem?
+    let categoryOptions = ["Books", "Music", "Tech", "Fashion", "Food", "Other"]
 
     var body: some View {
         NavigationStack {
             Form {
                 TextField("Title", text: $item.title)
-                TextField("Category", text: $item.category)
+                Menu {
+                    ForEach(categoryOptions, id: \.self) { option in
+                        Button(option) {
+                            item.category = option
+                        }
+                    }
+                } label: {
+                    HStack {
+                        Text(item.category.isEmpty ? "Select Category" : item.category)
+                            .foregroundColor(item.category.isEmpty ? .gray : .primary)
+                        Spacer()
+                        Image(systemName: "chevron.down")
+                            .foregroundColor(.gray)
+                    }
+                }
+                .padding(.vertical, 4)
             TextField("Note", text: $item.note, axis: .vertical)
                 .lineLimit(3...5)
 
-                Picker("Score", selection: $item.score) {
-                    ForEach(1..<6) { value in
-                        Text("\(value)").tag(value)
-                    }
+                Section(header: Text("Rating")) {
+                    RatingView(rating: $item.score)
                 }
-                .pickerStyle(.segmented)
             }
             .navigationTitle("Edit Item")
             .toolbar {
@@ -397,6 +422,14 @@ struct RecapView: View {
             } else {
                 ForEach(items) { item in
                     VStack(alignment: .leading, spacing: 6) {
+                        if let data = item.imageData,
+                           let uiImage = UIImage(data: data) {
+                            Image(uiImage: uiImage)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(height: 200)
+                                .cornerRadius(8)
+                        }
                         Text(item.category.uppercased())
                             .font(.caption2)
                             .padding(.horizontal, 6)
@@ -412,24 +445,24 @@ struct RecapView: View {
                         Text(item.timestamp.formatted(date: .abbreviated, time: .omitted))
                             .font(AppFont.caption)
                             .foregroundStyle(.gray)
-                    if !item.note.isEmpty {
-                        Text(item.note)
-                            .font(AppFont.body)
-                            .foregroundStyle(.primary)
-                            .padding(.top, 4)
-                    }
-                    if !item.tags.isEmpty {
-                        HStack {
-                            ForEach(item.tags, id: \.self) { tag in
-                                Text("#\(tag)")
-                                    .font(.caption2)
-                                    .padding(.horizontal, 4)
-                                    .padding(.vertical, 2)
-                                    .background(Color.accentColor.opacity(0.1))
-                                    .clipShape(Capsule())
+                        if !item.note.isEmpty {
+                            Text(item.note)
+                                .font(AppFont.body)
+                                .foregroundStyle(.primary)
+                                .padding(.top, 4)
+                        }
+                        if !item.tags.isEmpty {
+                            HStack {
+                                ForEach(item.tags, id: \.self) { tag in
+                                    Text("#\(tag)")
+                                        .font(.caption2)
+                                        .padding(.horizontal, 4)
+                                        .padding(.vertical, 2)
+                                        .background(Color.accentColor.opacity(0.1))
+                                        .clipShape(Capsule())
+                                }
                             }
                         }
-                    }
                     }
                     .bestCardStyle(using: item.gradient)
                     Divider()
@@ -456,19 +489,22 @@ struct ShareSheet: UIViewControllerRepresentable {
 
 struct CardViewModifier: ViewModifier {
     var background: LinearGradient
+    var isTopItem: Bool = false
 
     func body(content: Content) -> some View {
         content
             .padding()
             .background(background)
             .clipShape(RoundedRectangle(cornerRadius: DesignMetrics.cornerRadius, style: .continuous))
-            .shadow(color: .black.opacity(DesignMetrics.shadowOpacity), radius: DesignMetrics.shadowRadius, x: 0, y: 2)
+            .shadow(color: .black.opacity(isTopItem ? 0.1 : DesignMetrics.shadowOpacity),
+                    radius: isTopItem ? 10 : DesignMetrics.shadowRadius,
+                    x: 0, y: isTopItem ? 4 : 2)
     }
 }
 
 extension View {
-    func bestCardStyle(using gradient: LinearGradient) -> some View {
-        self.modifier(CardViewModifier(background: gradient))
+    func bestCardStyle(using gradient: LinearGradient, isTopItem: Bool = false) -> some View {
+        self.modifier(CardViewModifier(background: gradient, isTopItem: isTopItem))
     }
 }
 
@@ -490,4 +526,26 @@ enum DesignMetrics {
     static let cornerRadius: CGFloat = 12
     static let shadowRadius: CGFloat = 4
     static let shadowOpacity: Double = 0.05
+}
+
+// MARK: - RatingView
+
+struct RatingView: View {
+    @Binding var rating: Int
+    var maxRating: Int = 5
+
+    var body: some View {
+        HStack(spacing: 8) {
+            ForEach(1...maxRating, id: \.self) { index in
+                Image(systemName: index <= rating ? "star.fill" : "star")
+                    .resizable()
+                    .frame(width: 24, height: 24)
+                    .foregroundColor(.yellow)
+                    .onTapGesture {
+                        rating = index
+                    }
+            }
+        }
+        .padding(.vertical, 4)
+    }
 }
