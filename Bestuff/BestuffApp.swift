@@ -110,6 +110,35 @@ struct InsightsView: View {
                         }
                         .frame(height: CGFloat(categoryCounts.count * 40 + 40))
                     }
+                    insightsCard(title: "Top Items This Year") {
+                        let calendar = Calendar.current
+                        let year = calendar.component(.year, from: Date())
+
+                        let topItemsThisYear = allItems.filter {
+                            calendar.component(.year, from: $0.timestamp) == year
+                        }
+                        .sorted { $0.score > $1.score }
+                        .prefix(5)
+
+                        Chart {
+                            ForEach(Array(topItemsThisYear.enumerated()), id: \.1.timestamp) { index, item in
+                                BarMark(
+                                    x: .value("Score", item.score),
+                                    y: .value("Item", item.title)
+                                )
+                                .foregroundStyle(Gradient(colors: [Color.cyan.opacity(0.6), Color.accentColor]))
+                                .annotation(position: .trailing) {
+                                    Text("\(item.score)")
+                                        .font(.caption2)
+                                        .foregroundStyle(.secondary)
+                                }
+                            }
+                        }
+                        .chartYAxis {
+                            AxisMarks(position: .leading)
+                        }
+                        .frame(height: 260)
+                    }
 
                     insightsCard(title: "Top Categories by Average Score") {
                         let categoryAverages = Dictionary(grouping: allItems, by: \.category)
@@ -296,7 +325,7 @@ struct InsightsView: View {
 // MARK: - ContentView
 
 struct ContentView: View {
-    @State private var selectedTab = 1
+    @State private var selectedTab = 3
 
     var body: some View {
         TabView(selection: $selectedTab) {
@@ -796,7 +825,7 @@ struct RecapView: View {
     @State private var sharedImage: UIImage?
     @State private var editingItem: BestItem? = nil
     @State private var selectedDate: Date = Date()
-    
+
     private var filteredItems: [BestItem] {
         let components = Calendar.current.dateComponents([.year, .month], from: selectedDate)
         return bestItems.filter {
@@ -805,15 +834,15 @@ struct RecapView: View {
         }
         .sorted { $0.score > $1.score }
     }
-    
+
     private var totalCount: Int {
         filteredItems.count
     }
-    
+
     private var totalScore: Int {
         filteredItems.map(\.score).reduce(0, +)
     }
-    
+
     private var averageScore: Double {
         totalCount > 0 ? Double(totalScore) / Double(totalCount) : 0
     }
@@ -827,7 +856,7 @@ struct RecapView: View {
                             .datePickerStyle(.compact)
                             .labelsHidden()
                             .padding(.horizontal)
-                        
+
                         if totalCount > 0 {
                             HStack(spacing: 16) {
                                 Label("\(totalCount) items", systemImage: "square.stack.3d.up")
