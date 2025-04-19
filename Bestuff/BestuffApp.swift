@@ -676,13 +676,26 @@ struct AddItemView: View {
     }
 }
 
+
 // MARK: - SettingsView
 
 struct SettingsView: View {
     var body: some View {
         NavigationStack {
-            Text("Settings View (Placeholder)")
-                .navigationTitle("Settings")
+            Form {
+                Section {
+                    Label("Version \(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "Unknown")", systemImage: "number")
+                }
+                // TODO: Replace this placeholder with actual subscription functionality
+                Section(header: Text("Subscription")) {
+                    Label("Rate us on the App Store", systemImage: "star")
+                }
+                // TODO: Replace this placeholder with actual license list view
+                Section(header: Text("Licenses")) {
+                    Label("Open Source Licenses", systemImage: "doc.plaintext")
+                }
+            }
+            .navigationTitle("Settings")
         }
     }
 }
