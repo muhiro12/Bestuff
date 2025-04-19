@@ -64,9 +64,11 @@ struct ContentView: View {
     let context = container.mainContext
 
     [
-        BestItem(timestamp: .now, title: "Sample 1", score: 5, category: "Books"),
-        BestItem(timestamp: .now, title: "Sample 2", score: 3, category: "Music"),
-        BestItem(timestamp: .now, title: "Sample 3", score: 4, category: "Tech")
+        BestItem(timestamp: .now, title: "AirPods Pro", score: 5, category: "Tech", note: "Great for daily use", tags: ["audio", "Apple"]),
+        BestItem(timestamp: .now, title: "The Alchemist", score: 4, category: "Books", note: "Inspiring story", tags: ["novel", "life"]),
+        BestItem(timestamp: .now, title: "Uniqlo Jacket", score: 3, category: "Fashion", note: "Affordable and warm", tags: ["winter", "clothing"]),
+        BestItem(timestamp: .now, title: "Sushi Lunch", score: 5, category: "Food", note: "Fresh and delicious", tags: ["restaurant", "lunch"]),
+        BestItem(timestamp: .now, title: "Spotify Premium", score: 4, category: "Music", note: "Good variety of playlists", tags: ["subscription", "music"])
     ].forEach { context.insert($0) }
 
     return ContentView()
@@ -132,7 +134,14 @@ extension BestItem {
 
 struct BestItemListView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query private var bestItems: [BestItem]
+    @Query private var allItems: [BestItem]
+
+    var bestItems: [BestItem] {
+        allItems.filter {
+            ($0.title.localizedStandardContains(searchText) || $0.category.localizedStandardContains(searchText)) &&
+            $0.score >= minimumScore
+        }
+    }
     @State private var isPresentingAddSheet = false
     @State private var editingItem: BestItem? = nil
     @State private var searchText: String = ""
@@ -143,21 +152,64 @@ struct BestItemListView: View {
         case byDate, byScore
     }
 
-    var filteredBestItems: [BestItem] {
-        bestItems.filter { item in
-            (item.title.localizedCaseInsensitiveContains(searchText) || item.category.localizedCaseInsensitiveContains(searchText)) && item.score >= minimumScore
-        }
-        .sorted(by: { (sortOption == .byDate) ? $0.timestamp < $1.timestamp : $0.score > $1.score })
-    }
 
     var body: some View {
         NavigationStack {
             List {
-                if filteredBestItems.isEmpty {
-                    Text("No items found.")
-                        .foregroundColor(.gray)
+                let sortedItems = bestItems.sorted { (sortOption == .byDate) ? $0.timestamp < $1.timestamp : $0.score > $1.score }
+                if sortedItems.isEmpty {
+                    if allItems.isEmpty {
+                        Section {
+                            VStack(alignment: .center, spacing: 16) {
+                                Image(systemName: "sparkles")
+                                    .font(.system(size: 40))
+                                    .foregroundColor(.accentColor)
+                                Text("Start tracking your favorites!")
+                                    .font(.headline)
+                                Text("Tap the + button to add your first Best Item.")
+                                    .font(.subheadline)
+                                    .foregroundStyle(.secondary)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 40)
+                        }
+                    } else {
+                        Section {
+                            VStack(alignment: .center, spacing: 12) {
+                                Text("No matching items found.")
+                                    .font(.headline)
+                                if searchText.isEmpty {
+                                    Text("Here are some of your recent top-rated items:")
+                                        .font(.subheadline)
+                                        .foregroundStyle(.secondary)
+
+                                    let recentItems = allItems
+                                        .sorted(by: { $0.timestamp > $1.timestamp })
+                                        .prefix(3)
+
+                                    ForEach(recentItems) { item in
+                                        VStack(alignment: .leading, spacing: 4) {
+                                            Text(item.title)
+                                                .font(AppFont.title)
+                                            Text("Score: \(item.score)")
+                                                .font(AppFont.body)
+                                                .foregroundStyle(.secondary)
+                                        }
+                                        .bestCardStyle(using: item.gradient)
+                                        .onTapGesture {
+                                            withAnimation(.spring()) {
+                                                editingItem = item
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 40)
+                        }
+                    }
                 } else {
-                    let flatItems = filteredBestItems
+                    let flatItems = sortedItems
                     ForEach(Dictionary(grouping: flatItems, by: { $0.category }).sorted(by: { $0.key < $1.key }), id: \.key) { category, items in
                         Section(header: Text(category).foregroundColor(.accentColor)) {
                             ForEach(items) { item in
@@ -258,11 +310,6 @@ struct BestItemListView: View {
         }
     }
 
-    private func deleteItems(offsets: IndexSet) {
-        for index in offsets {
-            modelContext.delete(bestItems[index])
-        }
-    }
 }
 
 // MARK: - AddItemView
@@ -481,6 +528,7 @@ struct RecapView: View {
     @Query private var bestItems: [BestItem]
     @State private var isPresentingShareSheet = false
     @State private var sharedImage: UIImage?
+    @State private var editingItem: BestItem? = nil
 
     var body: some View {
         let calendar = Calendar.current
@@ -527,6 +575,9 @@ struct RecapView: View {
                     ShareSheet(activityItems: [image])
                 }
             }
+        }
+        .sheet(item: $editingItem) { item in
+            EditItemView(item: item, isPresented: $editingItem)
         }
     }
 
@@ -581,6 +632,9 @@ struct RecapView: View {
                         }
                     }
                     .bestCardStyle(using: item.gradient)
+                    .onTapGesture {
+                        self.editingItem = item
+                    }
                     Divider()
                 }
             }
