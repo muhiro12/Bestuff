@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import Charts
 
 // MARK: - BestuffApp
 
@@ -33,27 +34,290 @@ struct BestuffApp: App {
     }
 }
 
+@ViewBuilder
+private func insightsCard<T: View>(title: String, @ViewBuilder content: () -> T) -> some View {
+    VStack(alignment: .leading, spacing: 12) {
+        Text(title)
+            .font(.headline)
+        content()
+    }
+    .padding()
+    .background(.ultraThinMaterial)
+    .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+    .shadow(radius: 4)
+}
+
+// MARK: - InsightsView
+
+struct InsightsView: View {
+    @Query private var allItems: [BestItem]
+
+    var categoryCounts: [(category: String, count: Int)] {
+        Dictionary(grouping: allItems, by: \.category)
+            .map { ($0.key, $0.value.count) }
+            .sorted { $0.count > $1.count }
+    }
+
+    var scoreCounts: [(score: Int, count: Int)] {
+        Dictionary(grouping: allItems, by: \.score)
+            .map { ($0.key, $0.value.count) }
+            .sorted { $0.score < $1.score }
+    }
+
+    var monthlyCounts: [(month: String, count: Int)] {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM"
+        let grouped = Dictionary(grouping: allItems) { formatter.string(from: $0.timestamp) }
+        return grouped.map { ($0.key, $0.value.count) }
+            .sorted { $0.month < $1.month }
+    }
+
+    var tagCounts: [(tag: String, count: Int)] {
+        Dictionary(grouping: allItems.flatMap { $0.tags }, by: { $0 })
+            .map { ($0.key, $0.value.count) }
+            .sorted { $0.count > $1.count }
+    }
+
+    var body: some View {
+        NavigationStack {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 16) {
+                    Text("Insights")
+                        .font(.largeTitle.bold())
+                    Text("Visualize trends and analyze your best items by category, score, and more.")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+
+                    insightsCard(title: "Items per Category") {
+                        Chart {
+                            ForEach(categoryCounts, id: \.category) { entry in
+                                BarMark(
+                                    x: .value("Items", entry.count),
+                                    y: .value("Category", entry.category)
+                                )
+                                .foregroundStyle(Gradient(colors: [Color.cyan.opacity(0.6), Color.accentColor]))
+                                .cornerRadius(4)
+                                .annotation(position: .trailing) {
+                                    Text("\(entry.count)")
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                }
+                            }
+                        }
+                        .chartYAxis {
+                            AxisMarks(position: .leading)
+                        }
+                        .frame(height: CGFloat(categoryCounts.count * 40 + 40))
+                    }
+
+                    insightsCard(title: "Top Categories by Average Score") {
+                        let categoryAverages = Dictionary(grouping: allItems, by: \.category)
+                            .mapValues { items in
+                                Double(items.map(\.score).reduce(0, +)) / Double(items.count)
+                            }
+                            .sorted { $0.value > $1.value }
+
+                        Chart {
+                            ForEach(categoryAverages.prefix(5), id: \.key) { category, average in
+                                BarMark(
+                                    x: .value("Average", average),
+                                    y: .value("Category", category)
+                                )
+                                .foregroundStyle(Gradient(colors: [Color.mint.opacity(0.6), Color.accentColor]))
+                                .cornerRadius(4)
+                                .annotation(position: .trailing) {
+                                    Text(String(format: "%.1f", average))
+                                        .font(.caption2)
+                                        .foregroundStyle(.secondary)
+                                }
+                            }
+                        }
+                        .chartYAxis {
+                            AxisMarks(position: .leading)
+                        }
+                        .frame(height: CGFloat(min(categoryAverages.count, 5) * 30 + 40))
+                    }
+
+                    insightsCard(title: "Score Distribution") {
+                        Chart {
+                            ForEach(scoreCounts, id: \.score) { entry in
+                                BarMark(
+                                    x: .value("Score", entry.score),
+                                    y: .value("Count", entry.count)
+                                )
+                                .foregroundStyle(Gradient(colors: [Color.accentColor.opacity(0.6), Color.cyan]))
+                                .cornerRadius(4)
+                                .annotation(position: .top) {
+                                    Text("\(entry.count)")
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                }
+                            }
+                        }
+                        .chartXAxis {
+                            AxisMarks(values: .stride(by: 1))
+                        }
+                        .frame(height: 240)
+                    }
+
+                    insightsCard(title: "Monthly Activity") {
+                        Chart {
+                            ForEach(monthlyCounts, id: \.month) { entry in
+                                BarMark(
+                                    x: .value("Month", entry.month),
+                                    y: .value("Items", entry.count)
+                                )
+                                .foregroundStyle(Gradient(colors: [Color.indigo.opacity(0.6), Color.accentColor]))
+                                .cornerRadius(4)
+                                .annotation(position: .top) {
+                                    Text("\(entry.count)")
+                                        .font(.caption2)
+                                        .foregroundStyle(.secondary)
+                                }
+                            }
+                        }
+                        .chartXAxis {
+                            AxisMarks(values: .automatic(desiredCount: 6)) { _ in
+                                AxisGridLine(); AxisTick(); AxisValueLabel()
+                            }
+                        }
+                        .frame(height: 240)
+                    }
+
+                    insightsCard(title: "Top Tags") {
+                        Chart {
+                            ForEach(tagCounts.prefix(10), id: \.tag) { entry in
+                                BarMark(
+                                    x: .value("Count", entry.count),
+                                    y: .value("Tag", "#\(entry.tag)")
+                                )
+                                .foregroundStyle(Gradient(colors: [Color.teal.opacity(0.6), Color.accentColor]))
+                                .cornerRadius(4)
+                                .annotation(position: .trailing) {
+                                    Text("\(entry.count)")
+                                        .font(.caption2)
+                                        .foregroundStyle(.secondary)
+                                }
+                            }
+                        }
+                        .chartYAxis {
+                            AxisMarks(position: .leading)
+                        }
+                        .frame(height: CGFloat(min(tagCounts.count, 10) * 30 + 40))
+                    }
+                    
+                    insightsCard(title: "Average Price by Category") {
+                        let categoryAverages = Dictionary(grouping: allItems.filter { $0.price != nil }, by: \.category)
+                            .mapValues { items in
+                                items.compactMap(\.price).reduce(0, +) / Double(items.count)
+                            }
+                            .sorted { $0.value > $1.value }
+
+                        Chart {
+                            ForEach(categoryAverages.prefix(6), id: \.key) { category, avgPrice in
+                                BarMark(
+                                    x: .value("Average Price", avgPrice),
+                                    y: .value("Category", category)
+                                )
+                                .foregroundStyle(Gradient(colors: [Color.orange.opacity(0.6), Color.accentColor]))
+                                .cornerRadius(4)
+                                .annotation(position: .trailing) {
+                                    Text(String(format: "%.0f", avgPrice))
+                                        .font(.caption2)
+                                        .foregroundStyle(.secondary)
+                                }
+                            }
+                        }
+                        .chartYAxis {
+                            AxisMarks(position: .leading)
+                        }
+                        .frame(height: CGFloat(min(categoryAverages.count, 6) * 30 + 40))
+                    }
+                    
+                    insightsCard(title: "Most Expensive Items") {
+                        let expensiveItems = allItems.filter { $0.price != nil }
+                            .sorted { ($0.price ?? 0) > ($1.price ?? 0) }
+                            .prefix(5)
+                        Chart {
+                            ForEach(expensiveItems, id: \.timestamp) { item in
+                                BarMark(
+                                    x: .value("Price", item.price ?? 0),
+                                    y: .value("Item", item.title)
+                                )
+                                .foregroundStyle(Gradient(colors: [Color.pink, Color.accentColor]))
+                                .annotation(position: .trailing) {
+                                    Text(String(format: "%.0f", item.price ?? 0))
+                                        .font(.caption2)
+                                        .foregroundStyle(.secondary)
+                                }
+                            }
+                        }
+                        .chartXAxis {
+                            AxisMarks(position: .bottom)
+                        }
+                        .frame(height: 260)
+                    }
+                    
+                    insightsCard(title: "Items per Recommend Level") {
+                        let recommendLevelCounts = Dictionary(grouping: allItems, by: \.recommendLevel)
+                            .map { ($0.key, $0.value.count) }
+                            .sorted { $0.0 < $1.0 }
+                        
+                        Chart {
+                            ForEach(recommendLevelCounts, id: \.0) { level, count in
+                                BarMark(
+                                    x: .value("Recommend Level", level),
+                                    y: .value("Count", count)
+                                )
+                                .foregroundStyle(Gradient(colors: [Color.purple.opacity(0.6), Color.accentColor]))
+                                .cornerRadius(4)
+                                .annotation(position: .top) {
+                                    Text("\(count)")
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                }
+                            }
+                        }
+                        .chartXAxis {
+                            AxisMarks(values: .stride(by: 1))
+                        }
+                        .frame(height: 240)
+                    }
+                }
+                .padding()
+            }
+            
+        }
+    }
+}
+
 // MARK: - ContentView
 
 struct ContentView: View {
+    @State private var selectedTab = 2
+
     var body: some View {
-        TabView {
+        TabView(selection: $selectedTab) {
             BestItemListView()
                 .tabItem {
                     Label("Items", systemImage: "list.bullet")
                 }
+                .tag(0)
             RecapView()
                 .tabItem {
                     Label("Recap", systemImage: "star.circle")
                 }
-            Text("Coming Soon")
+                .tag(1)
+            InsightsView()
                 .tabItem {
-                    Label("Discover", systemImage: "sparkles")
+                    Label("Insights", systemImage: "chart.bar")
                 }
+                .tag(2)
             SettingsView()
                 .tabItem {
                     Label("Settings", systemImage: "gear")
                 }
+                .tag(3)
         }
     }
 }
