@@ -37,6 +37,10 @@ import SwiftData
 struct ContentView: View {
     var body: some View {
         TabView {
+            RecapView()
+                .tabItem {
+                    Label("Recap", systemImage: "star.circle")
+                }
             ItemListView()
                 .tabItem {
                     Label("Items", systemImage: "list.bullet")
@@ -54,7 +58,6 @@ struct ContentView: View {
     let container = try! ModelContainer(for: Item.self, configurations: config)
     let context = container.mainContext
 
-    // Insert mock data
     [
         Item(timestamp: .now, title: "Sample 1", score: 5, category: "Books"),
         Item(timestamp: .now, title: "Sample 2", score: 3, category: "Music"),
@@ -257,4 +260,85 @@ struct EditItemView: View {
             }
         }
     }
+}
+
+struct RecapView: View {
+    @Query private var items: [Item]
+    @State private var isPresentingShareSheet = false
+    @State private var sharedImage: UIImage?
+
+    var body: some View {
+        let calendar = Calendar.current
+        let now = Date()
+        let currentMonth = calendar.component(.month, from: now)
+        let currentYear = calendar.component(.year, from: now)
+
+        let thisMonthItems = items.filter {
+            let itemMonth = calendar.component(.month, from: $0.timestamp)
+            let itemYear = calendar.component(.year, from: $0.timestamp)
+            return itemMonth == currentMonth && itemYear == currentYear
+        }
+        .sorted { $0.score > $1.score }
+
+        NavigationStack {
+            ScrollView {
+                recapContent(thisMonthItems)
+                    .padding()
+            }
+            .navigationTitle("This Month's Recap")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Share") {
+                        let renderer = ImageRenderer(content: recapContent(thisMonthItems).padding())
+                        if let uiImage = renderer.uiImage {
+                            sharedImage = uiImage
+                            isPresentingShareSheet = true
+                        }
+                    }
+                }
+            }
+            .sheet(isPresented: $isPresentingShareSheet) {
+                if let image = sharedImage {
+                    ShareSheet(activityItems: [image])
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func recapContent(_ items: [Item]) -> some View {
+        VStack(alignment: .leading, spacing: 12) {
+            if items.isEmpty {
+                Text("No items added this month.")
+                    .foregroundColor(.gray)
+            } else {
+                ForEach(items) { item in
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(item.title)
+                            .font(.headline)
+                        Text("Score: \(item.score)")
+                            .font(.subheadline)
+                        Text(item.timestamp.formatted())
+                            .font(.caption)
+                            .foregroundColor(.gray)
+                    }
+                    Divider()
+                }
+            }
+        }
+    }
+}
+
+import UIKit
+import SwiftUI
+
+struct ShareSheet: UIViewControllerRepresentable {
+    var activityItems: [Any]
+    var applicationActivities: [UIActivity]? = nil
+
+    func makeUIViewController(context: Context) -> UIActivityViewController {
+        UIActivityViewController(activityItems: activityItems, applicationActivities: applicationActivities)
+    }
+
+    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
 }
