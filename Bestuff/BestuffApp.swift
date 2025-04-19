@@ -77,12 +77,16 @@ final class BestItem {
     var title: String
     var score: Int
     var category: String
+    var note: String
+    var tags: [String]
 
-    init(timestamp: Date, title: String, score: Int, category: String = "General") {
+    init(timestamp: Date, title: String, score: Int, category: String = "General", note: String = "", tags: [String] = []) {
         self.timestamp = timestamp
         self.title = title
         self.score = score
         self.category = category
+        self.note = note
+        self.tags = tags
     }
 }
 
@@ -146,6 +150,24 @@ struct BestItemListView: View {
                                     Text(item.timestamp.formatted(date: .abbreviated, time: .omitted))
                                         .font(AppFont.caption)
                                         .foregroundStyle(.gray)
+                                if !item.note.isEmpty {
+                                    Text(item.note)
+                                        .font(AppFont.body)
+                                        .foregroundStyle(.primary)
+                                        .padding(.top, 4)
+                                }
+                            if !item.tags.isEmpty {
+                                HStack {
+                                    ForEach(item.tags, id: \.self) { tag in
+                                        Text("#\(tag)")
+                                            .font(.caption2)
+                                            .padding(.horizontal, 4)
+                                            .padding(.vertical, 2)
+                                            .background(Color.accentColor.opacity(0.1))
+                                            .clipShape(Capsule())
+                                    }
+                                }
+                            }
                                 }
                                 .bestCardStyle(using: item.gradient)
                                 .onTapGesture {
@@ -217,12 +239,15 @@ struct AddItemView: View {
     @State private var title: String = ""
     @State private var score: Int = 3
     @State private var category: String = ""
+    @State private var note: String = ""
 
     var body: some View {
         NavigationStack {
             Form {
                 TextField("Title", text: $title)
                 TextField("Category", text: $category)
+            TextField("Note", text: $note, axis: .vertical)
+                .lineLimit(3...5)
 
                 Picker("Score", selection: $score) {
                     ForEach(1..<6) { value in
@@ -241,7 +266,7 @@ struct AddItemView: View {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Add") {
                         withAnimation(.spring()) {
-                            let newItem = BestItem(timestamp: .now, title: title, score: score, category: category.isEmpty ? "General" : category)
+                    let newItem = BestItem(timestamp: .now, title: title, score: score, category: category.isEmpty ? "General" : category, note: note)
                             modelContext.insert(newItem)
                         }
                         isPresented = false
@@ -276,6 +301,8 @@ struct EditItemView: View {
             Form {
                 TextField("Title", text: $item.title)
                 TextField("Category", text: $item.category)
+            TextField("Note", text: $item.note, axis: .vertical)
+                .lineLimit(3...5)
 
                 Picker("Score", selection: $item.score) {
                     ForEach(1..<6) { value in
@@ -330,7 +357,7 @@ struct RecapView: View {
                     Text("Your top-rated picks this month")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
-                    
+
                     recapContentView(for: thisMonthBestItems)
                         .padding()
                 }
@@ -382,6 +409,24 @@ struct RecapView: View {
                         Text(item.timestamp.formatted(date: .abbreviated, time: .omitted))
                             .font(AppFont.caption)
                             .foregroundStyle(.gray)
+                    if !item.note.isEmpty {
+                        Text(item.note)
+                            .font(AppFont.body)
+                            .foregroundStyle(.primary)
+                            .padding(.top, 4)
+                    }
+                    if !item.tags.isEmpty {
+                        HStack {
+                            ForEach(item.tags, id: \.self) { tag in
+                                Text("#\(tag)")
+                                    .font(.caption2)
+                                    .padding(.horizontal, 4)
+                                    .padding(.vertical, 2)
+                                    .background(Color.accentColor.opacity(0.1))
+                                    .clipShape(Capsule())
+                            }
+                        }
+                    }
                     }
                     .bestCardStyle(using: item.gradient)
                     Divider()
