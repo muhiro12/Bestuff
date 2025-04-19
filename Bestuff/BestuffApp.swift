@@ -84,8 +84,21 @@ final class BestItem {
     var note: String
     var tags: [String]
     var imageData: Data?
+    var purchaseDate: Date?
+    var price: Double?
+    var recommendLevel: Int
 
-    init(timestamp: Date, title: String, score: Int, category: String = "General", note: String = "", tags: [String] = []) {
+    init(
+        timestamp: Date,
+        title: String,
+        score: Int,
+        category: String = "General",
+        note: String = "",
+        tags: [String] = [],
+        purchaseDate: Date? = nil,
+        price: Double? = nil,
+        recommendLevel: Int = 3
+    ) {
         self.timestamp = timestamp
         self.title = title
         self.score = score
@@ -93,6 +106,9 @@ final class BestItem {
         self.note = note
         self.tags = tags
         self.imageData = nil
+        self.purchaseDate = purchaseDate
+        self.price = price
+        self.recommendLevel = recommendLevel
     }
 }
 
@@ -169,24 +185,24 @@ struct BestItemListView: View {
                                     Text(item.timestamp.formatted(date: .abbreviated, time: .omitted))
                                         .font(AppFont.caption)
                                         .foregroundStyle(.gray)
-                                if !item.note.isEmpty {
-                                    Text(item.note)
-                                        .font(AppFont.body)
-                                        .foregroundStyle(.primary)
-                                        .padding(.top, 4)
-                                }
-                            if !item.tags.isEmpty {
-                                HStack {
-                                    ForEach(item.tags, id: \.self) { tag in
-                                        Text("#\(tag)")
-                                            .font(.caption2)
-                                            .padding(.horizontal, 4)
-                                            .padding(.vertical, 2)
-                                            .background(Color.accentColor.opacity(0.1))
-                                            .clipShape(Capsule())
+                                    if !item.note.isEmpty {
+                                        Text(item.note)
+                                            .font(AppFont.body)
+                                            .foregroundStyle(.primary)
+                                            .padding(.top, 4)
                                     }
-                                }
-                            }
+                                    if !item.tags.isEmpty {
+                                        HStack {
+                                            ForEach(item.tags, id: \.self) { tag in
+                                                Text("#\(tag)")
+                                                    .font(.caption2)
+                                                    .padding(.horizontal, 4)
+                                                    .padding(.vertical, 2)
+                                                    .background(Color.accentColor.opacity(0.1))
+                                                    .clipShape(Capsule())
+                                            }
+                                        }
+                                    }
                                 }
                                 .bestCardStyle(using: item.gradient)
                                 .onTapGesture {
@@ -258,17 +274,31 @@ struct AddItemView: View {
     @State private var score: Int = 3
     @State private var category: String = ""
     @State private var note: String = ""
+    @State private var purchaseDate: Date = .now
+    @State private var price: String = ""
+    @State private var recommendLevel: Int = 3
 
     var body: some View {
         NavigationStack {
             Form {
                 TextField("Title", text: $title)
                 TextField("Category", text: $category)
-            TextField("Note", text: $note, axis: .vertical)
-                .lineLimit(3...5)
+                TextField("Note", text: $note, axis: .vertical)
+                    .lineLimit(3...5)
 
                 Section(header: Text("Rating")) {
                     RatingView(rating: $score)
+                }
+
+                Section(header: Text("Details")) {
+                    DatePicker("Purchase Date", selection: $purchaseDate, displayedComponents: .date)
+                    TextField("Price", text: $price)
+                        .keyboardType(.decimalPad)
+
+                    VStack(alignment: .leading) {
+                        Text("Recommend Level")
+                        RatingView(rating: $recommendLevel)
+                    }
                 }
             }
             .navigationTitle("Add Item")
@@ -281,7 +311,17 @@ struct AddItemView: View {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Add") {
                         withAnimation(.spring()) {
-                    let newItem = BestItem(timestamp: .now, title: title, score: score, category: category.isEmpty ? "General" : category, note: note)
+                            let newItem = BestItem(
+                                timestamp: .now,
+                                title: title,
+                                score: score,
+                                category: category.isEmpty ? "General" : category,
+                                note: note,
+                                tags: [],
+                                purchaseDate: purchaseDate,
+                                price: Double(price),
+                                recommendLevel: recommendLevel
+                            )
                             modelContext.insert(newItem)
                         }
                         isPresented = false
@@ -312,6 +352,8 @@ struct EditItemView: View {
     @Bindable var item: BestItem
     @Binding var isPresented: BestItem?
     let categoryOptions = ["Books", "Music", "Tech", "Fashion", "Food", "Other"]
+    @Query private var allItems: [BestItem]
+    @State private var currentTag: String = ""
 
     var body: some View {
         NavigationStack {
@@ -333,11 +375,74 @@ struct EditItemView: View {
                     }
                 }
                 .padding(.vertical, 4)
-            TextField("Note", text: $item.note, axis: .vertical)
-                .lineLimit(3...5)
+                TextField("Note", text: $item.note, axis: .vertical)
+                    .lineLimit(3...5)
+
+                Section(header: Text("Tags")) {
+                    TextField("Enter a tag", text: $currentTag)
+                        .onSubmit {
+                            addTag()
+                        }
+
+                    if !tagSuggestions.isEmpty {
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack {
+                                ForEach(tagSuggestions.filter {
+                                    $0.lowercased().hasPrefix(currentTag.lowercased()) && !item.tags.contains($0)
+                                }, id: \.self) { suggestion in
+                                    Button(action: {
+                                        currentTag = suggestion
+                                        addTag()
+                                    }) {
+                                        Text("#\(suggestion)")
+                                            .font(.caption)
+                                            .padding(6)
+                                            .background(Color.accentColor.opacity(0.15))
+                                            .clipShape(Capsule())
+                                    }
+                                }
+                            }
+                        }
+                        .padding(.top, 4)
+                    }
+
+                    if !item.tags.isEmpty {
+                        HStack {
+                            ForEach(item.tags, id: \.self) { tag in
+                                Text("#\(tag)")
+                                    .font(.caption2)
+                                    .padding(.horizontal, 6)
+                                    .padding(.vertical, 3)
+                                    .background(Color.accentColor.opacity(0.1))
+                                    .clipShape(Capsule())
+                            }
+                        }
+                        .padding(.top, 4)
+                    }
+                }
 
                 Section(header: Text("Rating")) {
                     RatingView(rating: $item.score)
+                }
+
+                Section(header: Text("Details")) {
+                    DatePicker("Purchase Date", selection:
+                                Binding(
+                                    get: { item.purchaseDate ?? .now },
+                                    set: { item.purchaseDate = $0 }
+                                ),
+                               displayedComponents: .date
+                    )
+                    TextField("Price", text: Binding(
+                        get: { item.price.map { String($0) } ?? "" },
+                        set: { item.price = Double($0) }
+                    ))
+                    .keyboardType(.decimalPad)
+
+                    VStack(alignment: .leading) {
+                        Text("Recommend Level")
+                        RatingView(rating: $item.recommendLevel)
+                    }
                 }
             }
             .navigationTitle("Edit Item")
@@ -356,6 +461,17 @@ struct EditItemView: View {
                 }
             }
         }
+    }
+
+    private var tagSuggestions: [String] {
+        Array(Set(allItems.flatMap { $0.tags })).sorted()
+    }
+
+    private func addTag() {
+        let trimmed = currentTag.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty && !item.tags.contains(trimmed) else { return }
+        item.tags.append(trimmed)
+        currentTag = ""
     }
 }
 
@@ -377,7 +493,7 @@ struct RecapView: View {
             let itemYear = calendar.component(.year, from: $0.timestamp)
             return itemMonth == currentMonth && itemYear == currentYear
         }
-        .sorted { $0.score > $1.score }
+            .sorted { $0.score > $1.score }
 
         NavigationStack {
             ScrollView {
