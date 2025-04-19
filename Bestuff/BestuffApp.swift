@@ -39,12 +39,13 @@ private func insightsCard<T: View>(title: String, @ViewBuilder content: () -> T)
     VStack(alignment: .leading, spacing: 12) {
         Text(title)
             .font(.headline)
+            .foregroundStyle(.primary)
         content()
     }
     .padding()
-    .background(.ultraThinMaterial)
+    .background(.thinMaterial)
     .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-    .shadow(radius: 4)
+    .shadow(color: .black.opacity(0.05), radius: 8, x: 0, y: 4)
 }
 
 // MARK: - InsightsView
@@ -205,7 +206,7 @@ struct InsightsView: View {
                         }
                         .frame(height: CGFloat(min(tagCounts.count, 10) * 30 + 40))
                     }
-                    
+
                     insightsCard(title: "Average Price by Category") {
                         let categoryAverages = Dictionary(grouping: allItems.filter { $0.price != nil }, by: \.category)
                             .mapValues { items in
@@ -233,7 +234,7 @@ struct InsightsView: View {
                         }
                         .frame(height: CGFloat(min(categoryAverages.count, 6) * 30 + 40))
                     }
-                    
+
                     insightsCard(title: "Most Expensive Items") {
                         let expensiveItems = allItems.filter { $0.price != nil }
                             .sorted { ($0.price ?? 0) > ($1.price ?? 0) }
@@ -257,12 +258,12 @@ struct InsightsView: View {
                         }
                         .frame(height: 260)
                     }
-                    
+
                     insightsCard(title: "Items per Recommend Level") {
                         let recommendLevelCounts = Dictionary(grouping: allItems, by: \.recommendLevel)
                             .map { ($0.key, $0.value.count) }
                             .sorted { $0.0 < $1.0 }
-                        
+
                         Chart {
                             ForEach(recommendLevelCounts, id: \.0) { level, count in
                                 BarMark(
@@ -284,9 +285,10 @@ struct InsightsView: View {
                         .frame(height: 240)
                     }
                 }
+                .padding(.horizontal)
                 .padding()
             }
-            
+
         }
     }
 }
@@ -294,7 +296,7 @@ struct InsightsView: View {
 // MARK: - ContentView
 
 struct ContentView: View {
-    @State private var selectedTab = 2
+    @State private var selectedTab = 1
 
     var body: some View {
         TabView(selection: $selectedTab) {
@@ -810,12 +812,6 @@ struct RecapView: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 12) {
-                    Text("This Month's Best")
-                        .font(.largeTitle.bold())
-                        .padding(.bottom, 4)
-                    Text("Your top-rated picks this month")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
 
                     recapContentView(for: thisMonthBestItems)
                         .padding()
@@ -851,49 +847,79 @@ struct RecapView: View {
             if items.isEmpty {
                 Text("No items added this month.")
             } else {
-                ForEach(items) { item in
-                    VStack(alignment: .leading, spacing: 6) {
-                        if let data = item.imageData,
-                           let uiImage = UIImage(data: data) {
-                            Image(uiImage: uiImage)
-                                .resizable()
-                                .scaledToFit()
+                ForEach(Array(items.enumerated()), id: \.offset) { index, item in
+                    ZStack(alignment: .topLeading) {
+                        VStack(alignment: .leading, spacing: 6) {
+                            if let data = item.imageData, let uiImage = UIImage(data: data) {
+                                Image(uiImage: uiImage)
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(height: 200)
+                                    .clipped()
+                                    .cornerRadius(8)
+                            } else {
+                                ZStack {
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .fill(Color.gray.opacity(0.3))
+                                    Text(item.category.prefix(1))
+                                        .font(.largeTitle.bold())
+                                        .foregroundColor(.white)
+                                }
                                 .frame(height: 200)
-                                .cornerRadius(8)
-                        }
-                        Text(item.category.uppercased())
-                            .font(.caption2)
-                            .padding(.horizontal, 6)
-                            .padding(.vertical, 2)
-                            .background(Color.accentColor.opacity(0.15))
-                            .clipShape(Capsule())
-                        Text(item.title)
-                            .font(AppFont.title)
-                            .fontWeight(.semibold)
-                        Text("Score: \(item.score)")
-                            .font(AppFont.body)
-                            .foregroundStyle(.secondary)
-                        Text(item.timestamp.formatted(date: .abbreviated, time: .omitted))
-                            .font(AppFont.caption)
-                            .foregroundStyle(.gray)
-                        if !item.note.isEmpty {
-                            Text(item.note)
+                            }
+                            Text(item.category.uppercased())
+                                .font(.caption2)
+                                .padding(.horizontal, 6)
+                                .padding(.vertical, 2)
+                                .background(Color.accentColor.opacity(0.15))
+                                .clipShape(Capsule())
+                            if index == 0 {
+                                Text(item.title)
+                                    .font(.largeTitle.bold())
+                                    .foregroundStyle(.primary)
+                            } else {
+                                Text(item.title)
+                                    .font(AppFont.title)
+                                    .fontWeight(.semibold)
+                            }
+                            Text("Score: \(item.score)")
                                 .font(AppFont.body)
-                                .foregroundStyle(.primary)
-                                .padding(.top, 4)
-                        }
-                        if !item.tags.isEmpty {
-                            HStack {
-                                ForEach(item.tags, id: \.self) { tag in
-                                    Text("#\(tag)")
-                                        .font(.caption2)
-                                        .padding(.horizontal, 4)
-                                        .padding(.vertical, 2)
-                                        .background(Color.accentColor.opacity(0.1))
-                                        .clipShape(Capsule())
+                                .foregroundStyle(.secondary)
+                            Text(item.timestamp.formatted(date: .abbreviated, time: .omitted))
+                                .font(AppFont.caption)
+                                .foregroundStyle(.gray)
+                            if !item.note.isEmpty {
+                                Text(item.note)
+                                    .font(AppFont.body)
+                                    .foregroundStyle(.primary)
+                                    .padding(.top, 4)
+                            }
+                            if !item.tags.isEmpty {
+                                HStack {
+                                    ForEach(item.tags, id: \.self) { tag in
+                                        Text("#\(tag)")
+                                            .font(.caption2)
+                                            .padding(.horizontal, 4)
+                                            .padding(.vertical, 2)
+                                            .background(Color.accentColor.opacity(0.1))
+                                            .clipShape(Capsule())
+                                    }
                                 }
                             }
                         }
+                        .padding()
+                        .background(
+                            RoundedRectangle(cornerRadius: DesignMetrics.cornerRadius, style: .continuous)
+                                .fill(Color.white.opacity(0.8))
+                                .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 4)
+                        )
+                        Text("#\(index + 1)")
+                            .font(.headline)
+                            .padding(6)
+                            .background(Color.black.opacity(0.7))
+                            .foregroundColor(.white)
+                            .clipShape(Capsule())
+                            .padding(8)
                     }
                     .bestCardStyle(using: item.gradient)
                     .onTapGesture {
