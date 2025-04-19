@@ -193,9 +193,6 @@ struct BestItemListView: View {
                 }
             }
             .navigationTitle("Items")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbarBackground(Color.accentColor, for: .navigationBar)
-            .toolbarBackground(.visible, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
@@ -292,9 +289,6 @@ struct SettingsView: View {
         NavigationStack {
             Text("Settings View (Placeholder)")
                 .navigationTitle("Settings")
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbarBackground(Color.accentColor, for: .navigationBar)
-                .toolbarBackground(.visible, for: .navigationBar)
         }
     }
 }
@@ -375,9 +369,6 @@ struct RecapView: View {
                 }
             }
             .navigationTitle("This Month's Recap")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbarBackground(Color.accentColor, for: .navigationBar)
-            .toolbarBackground(.visible, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Share") {
