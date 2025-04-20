@@ -869,8 +869,7 @@ struct EditItemView: View {
 
 struct RecapView: View {
     @Query private var bestItems: [BestItem]
-    @State private var isPresentingShareSheet = false
-    @State private var sharedImage: UIImage?
+    @State private var sharedImage: ShareImage?
     @State private var editingItem: BestItem? = nil
     @State private var selectedDate: Date = Date()
 
@@ -924,21 +923,16 @@ struct RecapView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Share") {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                            let renderer = ImageRenderer(content: recapContentView(for: filteredItems).padding())
-                            renderer.scale = UIScreen.main.scale
-                            if let uiImage = renderer.uiImage {
-                                sharedImage = uiImage
-                                isPresentingShareSheet = true
-                            }
+                        let renderer = ImageRenderer(content: recapContentView(for: filteredItems).padding())
+                        renderer.scale = UIScreen.main.scale
+                        if let uiImage = renderer.uiImage {
+                            sharedImage = ShareImage(image: uiImage)
                         }
                     }
                 }
             }
-            .sheet(isPresented: $isPresentingShareSheet) {
-                if let image = sharedImage {
-                    ShareSheet(activityItems: [image])
-                }
+            .sheet(item: $sharedImage) { item in
+                ShareSheet(activityItems: [item.image])
             }
         }
         .sheet(item: $editingItem) { item in
@@ -1050,6 +1044,16 @@ struct RecapView: View {
                 .foregroundStyle(.secondary)
             }
         }
+    }
+}
+
+// MARK: - ShareImage
+final class ShareImage: Identifiable {
+    let id = UUID()
+    let image: UIImage
+
+    init(image: UIImage) {
+        self.image = image
     }
 }
 
