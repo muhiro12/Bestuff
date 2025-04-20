@@ -29,6 +29,7 @@ struct BestuffApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .preferredColorScheme(UserDefaults.standard.bool(forKey: "isDarkMode") ? .dark : .light)
         }
         .modelContainer(sharedModelContainer)
     }
@@ -52,6 +53,8 @@ private func insightsCard<T: View>(title: String, @ViewBuilder content: () -> T)
 
 struct InsightsView: View {
     @Query private var allItems: [BestItem]
+    @State private var pendingDeletion: BestItem? = nil
+    @Environment(\.modelContext) private var modelContext
 
     var categoryCounts: [(category: String, count: Int)] {
         Dictionary(grouping: allItems, by: \.category)
@@ -319,6 +322,18 @@ struct InsightsView: View {
             }
 
         }
+        .alert(item: $pendingDeletion) { item in
+            Alert(
+                title: Text("Delete Item"),
+                message: Text("Are you sure you want to delete \"\(item.title)\"?"),
+                primaryButton: .destructive(Text("Delete")) {
+                    withAnimation(.spring()) {
+                        modelContext.delete(item)
+                    }
+                },
+                secondaryButton: .cancel()
+            )
+        }
     }
 }
 
@@ -445,6 +460,7 @@ struct BestItemListView: View {
     @State private var searchText: String = ""
     @State private var sortOption: SortOption = .byDate
     @State private var minimumScore: Int = 1
+    @State private var pendingDeletion: BestItem? = nil
 
     enum SortOption {
         case byDate, byScore
@@ -500,11 +516,12 @@ struct BestItemListView: View {
                                                 .foregroundStyle(.secondary)
                                         }
                                         .bestCardStyle(using: item.gradient)
-                                        .onTapGesture {
-                                            withAnimation(.spring()) {
-                                                editingItem = item
+                                            .onTapGesture {
+                                                Haptic.impact()
+                                                withAnimation(.spring()) {
+                                                    editingItem = item
+                                                }
                                             }
-                                        }
                                     }
                                 }
                             }
@@ -562,17 +579,15 @@ struct BestItemListView: View {
                                 }
                                 .bestCardStyle(using: item.gradient)
                                 .onTapGesture {
+                                    Haptic.impact()
                                     withAnimation(.spring()) {
                                         editingItem = item
                                     }
                                 }
                             }
                             .onDelete { indexSet in
-                                withAnimation(.spring()) {
-                                    for index in indexSet {
-                                        let item = items[index]
-                                        modelContext.delete(item)
-                                    }
+                                if let index = indexSet.first {
+                                    pendingDeletion = items[index]
                                 }
                             }
                         }
@@ -583,6 +598,7 @@ struct BestItemListView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
+                        Haptic.impact()
                         isPresentingAddSheet = true
                     } label: {
                         Label("Add Item", systemImage: "plus")
@@ -703,9 +719,26 @@ struct AddItemView: View {
 // MARK: - SettingsView
 
 struct SettingsView: View {
+    @AppStorage("isDarkMode") private var isDarkMode = false
+    @Environment(\.modelContext) private var modelContext
+    @Query private var allItems: [BestItem]
+    @AppStorage("hapticsEnabled") private var hapticsEnabled = true
+    @State private var showingResetAlert = false
+
     var body: some View {
         NavigationStack {
             Form {
+                Section(header: Text("Appearance")) {
+                    Toggle("Dark Mode", isOn: $isDarkMode)
+                    .onChange(of: isDarkMode) { _, _ in
+                            if let windowScene = UIApplication.shared.connectedScenes
+                                .compactMap({ $0 as? UIWindowScene }).first {
+                                for window in windowScene.windows {
+                                    window.overrideUserInterfaceStyle = isDarkMode ? .dark : .light
+                                }
+                            }
+                        }
+                }
                 Section {
                     Label("Version \(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "Unknown")", systemImage: "number")
                 }
@@ -716,6 +749,26 @@ struct SettingsView: View {
                 // TODO: Replace this placeholder with actual license list view
                 Section(header: Text("Licenses")) {
                     Label("Open Source Licenses", systemImage: "doc.plaintext")
+                }
+            Section {
+                Button(role: .destructive) {
+                    showingResetAlert = true
+                } label: {
+                    Label("Reset All Data", systemImage: "trash")
+                }
+            }
+            .alert("Reset All Data", isPresented: $showingResetAlert) {
+                Button("Delete All", role: .destructive) {
+                    for item in allItems {
+                        modelContext.delete(item)
+                    }
+                }
+                Button("Cancel", role: .cancel) { }
+            } message: {
+                Text("This will permanently delete all your items.")
+            }
+                Section(header: Text("Preferences")) {
+                    Toggle("Enable Haptics", isOn: $hapticsEnabled)
                 }
             }
             .navigationTitle("Settings")
@@ -1021,7 +1074,10 @@ struct RecapView: View {
                     }
                     .bestCardStyle(using: item.gradient)
                     .onTapGesture {
-                        self.editingItem = item
+                        Haptic.impact()
+                        withAnimation(.spring()) {
+                            editingItem = item
+                        }
                     }
                     Divider()
                 }
@@ -1121,5 +1177,16 @@ struct RatingView: View {
         }
         .pickerStyle(.wheel)
         .frame(height: 120)
+    }
+}
+
+// MARK: - Haptic Feedback Utility
+
+enum Haptic {
+    static func impact() {
+        if UserDefaults.standard.bool(forKey: "hapticsEnabled") {
+            let generator = UIImpactFeedbackGenerator(style: .medium)
+            generator.impactOccurred()
+        }
     }
 }
