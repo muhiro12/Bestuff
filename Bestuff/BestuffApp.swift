@@ -7,6 +7,7 @@
 import SwiftUI
 import SwiftData
 import Charts
+import PhotosUI
 
 // MARK: - BestuffApp
 
@@ -31,6 +32,41 @@ struct BestuffApp: App {
                 .preferredColorScheme(UserDefaults.standard.bool(forKey: "isDarkMode") ? .dark : .light)
         }
         .modelContainer(sharedModelContainer)
+    }
+}
+
+struct CategoryManagerView: View {
+    @Query private var allItems: [BestItem]
+    @Environment(\.modelContext) private var modelContext
+
+    var categoryCounts: [(category: String, count: Int)] {
+        Dictionary(grouping: allItems, by: { $0.category })
+            .map { ($0.key, $0.value.count) }
+            .sorted { $0.count > $1.count }
+    }
+
+    var body: some View {
+        List {
+            ForEach(categoryCounts, id: \.category) { entry in
+                HStack {
+                    Text(entry.category)
+                    Spacer()
+                    Text("\(entry.count)")
+                        .foregroundColor(.secondary)
+                }
+                .swipeActions {
+                    Button(role: .destructive) {
+                        for item in allItems where item.category == entry.category {
+                            item.category = "General"
+                        }
+                        try? modelContext.save()
+                    } label: {
+                        Label("Delete", systemImage: "trash")
+                    }
+                }
+            }
+        }
+        .navigationTitle("Manage Categories")
     }
 }
 
@@ -433,6 +469,7 @@ final class BestItem {
         category: String = "General",
         note: String = "",
         tags: [String] = [],
+        imageData: Data? = nil,
         purchaseDate: Date? = nil,
         price: Double? = nil,
         recommendLevel: Int = 3
@@ -444,6 +481,7 @@ final class BestItem {
         item.category = category
         item.note = note
         item.tags = tags
+        item.imageData = imageData
         item.purchaseDate = purchaseDate
         item.price = price
         item.recommendLevel = recommendLevel
@@ -456,15 +494,32 @@ final class BestItem {
 
 extension BestItem {
     var gradient: LinearGradient {
-        let base = Double(score) / 5.0
-        return LinearGradient(
-            colors: [
-                Color.cyan.opacity(0.3 + base * 0.2),
-                Color.accentColor.opacity(0.4 + base * 0.4)
-            ],
-            startPoint: .topLeading,
-            endPoint: .bottomTrailing
-        )
+        switch score {
+        case 1, 2:
+            return LinearGradient(
+                colors: [Color.gray, Color.blue],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+        case 3:
+            return LinearGradient(
+                colors: [Color.gray, Color.gray],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+        case 4, 5:
+            return LinearGradient(
+                colors: [Color.accentColor, Color.accentColor],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+        default:
+            return LinearGradient(
+                colors: [Color.gray, Color.blue],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+        }
     }
 }
 
@@ -669,11 +724,23 @@ struct AddItemView: View {
     @State private var purchaseDate: Date = .now
     @State private var price: String = ""
     @State private var recommendLevel: Int = 3
+    @State private var selectedImageItem: PhotosPickerItem? = nil
+    @State private var selectedImageData: Data? = nil
 
     var body: some View {
         NavigationStack {
             Form {
                 TextField("Title", text: $title)
+                PhotosPicker(selection: $selectedImageItem, matching: .images) {
+                    Label("Add Image", systemImage: "photo")
+                }
+                .onChange(of: selectedImageItem) {
+                    Task {
+                        if let data = try? await selectedImageItem?.loadTransferable(type: Data.self) {
+                            selectedImageData = data
+                        }
+                    }
+                }
                 Menu {
                     ForEach(["Books", "Music", "Tech", "Fashion", "Food", "Other"], id: \.self) { option in
                         Button(option) {
@@ -725,6 +792,7 @@ struct AddItemView: View {
                                 category: category.isEmpty ? "General" : category,
                                 note: note,
                                 tags: [],
+                                imageData: selectedImageData,
                                 purchaseDate: purchaseDate,
                                 price: Double(price),
                                 recommendLevel: recommendLevel
@@ -753,9 +821,9 @@ struct SettingsView: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section(header: Text("Appearance")) {
-                    Toggle("Dark Mode", isOn: $isDarkMode)
-                    .onChange(of: isDarkMode) { _, _ in
+                Section(header: Text("Theme")) {
+                    Toggle("Auto Dark Mode", isOn: $isDarkMode)
+                        .onChange(of: isDarkMode) { _, _ in
                             if let windowScene = UIApplication.shared.connectedScenes
                                 .compactMap({ $0 as? UIWindowScene }).first {
                                 for window in windowScene.windows {
@@ -763,6 +831,9 @@ struct SettingsView: View {
                                 }
                             }
                         }
+                    Text("Override system dark mode preference")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
                 }
                 Section {
                     Label("Version \(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "Unknown")", systemImage: "number")
@@ -774,6 +845,13 @@ struct SettingsView: View {
                 // TODO: Replace this placeholder with actual license list view
                 Section(header: Text("Licenses")) {
                     Label("Open Source Licenses", systemImage: "doc.plaintext")
+                }
+                // TODO: Replace this placeholder with actual notification settings
+                Section(header: Text("Notifications")) {
+                    Label("Manage Notifications", systemImage: "bell.badge")
+                        .foregroundColor(.gray)
+                        .opacity(0.5)
+                        .disabled(true)
                 }
             Section {
                 Button(role: .destructive) {
@@ -1041,7 +1119,23 @@ struct RecapView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Share") {
-                        let renderer = ImageRenderer(content: recapContentView(for: filteredItems).padding())
+                        let shareContent = VStack(spacing: 12) {
+                            HStack {
+                                Image("AppIcon")
+                                    .resizable()
+                                    .frame(width: 24, height: 24)
+                                Text(DateFormatter.localizedString(from: selectedDate, dateStyle: .long, timeStyle: .none))
+                                    .font(.headline)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(.ultraThinMaterial)
+                            .cornerRadius(12)
+
+                            recapContentView(for: filteredItems)
+                                .padding()
+                        }
+                        let renderer = ImageRenderer(content: shareContent.padding())
                         renderer.scale = UIScreen.main.scale
                         if let uiImage = renderer.uiImage {
                             sharedImage = ShareImage(image: uiImage)
@@ -1064,9 +1158,11 @@ struct RecapView: View {
                 Text("No items added this month.")
             } else {
                 VStack(spacing: 8) {
-                    HStack {
-                        Image(systemName: "crown.fill")
-                            .foregroundColor(.accentColor)
+                    HStack(spacing: 8) {
+                        Image("AppIcon") // Assuming "AppIcon" is in the asset catalog
+                            .resizable()
+                            .frame(width: 24, height: 24)
+                            .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
                         Text(DateFormatter.localizedString(from: selectedDate, dateStyle: .long, timeStyle: .none))
                             .font(.headline)
                     }
@@ -1160,25 +1256,55 @@ struct RecapView: View {
                     }
                     Divider()
                 }
-                VStack(alignment: .leading, spacing: 8) {
-                    Divider()
-                        .padding(.vertical, 4)
-                    Text("Summary")
-                        .font(.headline)
-                        .padding(.bottom, 4)
 
-                    Label("Total Score: \(totalScore)", systemImage: "sum")
-                    Label("Average Score: \(String(format: "%.1f", averageScore))", systemImage: "chart.bar.xaxis")
-                    Label("Total Items: \(totalCount)", systemImage: "square.stack.3d.up")
-                }
-                .padding()
-                .background(Color(.secondarySystemBackground))
-                .clipShape(RoundedRectangle(cornerRadius: DesignMetrics.cornerRadius, style: .continuous))
-                .padding(.top)
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
+                summarySection()
+
+                categoryAverageSection(for: items)
             }
         }
+    }
+
+    private func summarySection() -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Divider()
+                .padding(.vertical, 4)
+            Text("Summary")
+                .font(.headline)
+                .padding(.bottom, 4)
+
+            Label("Total Score: \(totalScore)", systemImage: "sum")
+            Label("Average Score: \(String(format: "%.1f", averageScore))", systemImage: "chart.bar.xaxis")
+            Label("Total Items: \(totalCount)", systemImage: "square.stack.3d.up")
+        }
+        .padding()
+        .background(Color(.secondarySystemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: DesignMetrics.cornerRadius, style: .continuous))
+        .padding(.top)
+        .font(.subheadline)
+        .foregroundStyle(.secondary)
+    }
+
+    private func categoryAverageSection(for items: [BestItem]) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Divider()
+                .padding(.vertical, 4)
+            Text("Average Score per Category")
+                .font(.headline)
+                .padding(.bottom, 4)
+            let grouped = Dictionary(grouping: items, by: { $0.category })
+            let mapped = grouped.map { (category: $0.key, average: Double($0.value.map { $0.score }.reduce(0, +)) / Double($0.value.count)) }
+            let averages = mapped.sorted(by: { $0.category < $1.category })
+
+            ForEach(averages, id: \.category) { entry in
+                Label("\(entry.category): \(String(format: "%.1f", entry.average))", systemImage: "chart.bar.xaxis")
+            }
+        }
+        .padding()
+        .background(Color(.secondarySystemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: DesignMetrics.cornerRadius, style: .continuous))
+        .padding(.top)
+        .font(.subheadline)
+        .foregroundStyle(.secondary)
     }
 }
 
@@ -1267,5 +1393,66 @@ enum Haptic {
             let generator = UIImpactFeedbackGenerator(style: .medium)
             generator.impactOccurred()
         }
+    }
+}
+
+struct ItemDetailView: View {
+    let item: BestItem
+
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 16) {
+                if let data = item.imageData, let uiImage = UIImage(data: data) {
+                    Image(uiImage: uiImage)
+                        .resizable()
+                        .scaledToFit()
+                        .cornerRadius(12)
+                }
+                Text(item.title)
+                    .font(.title)
+                    .fontWeight(.bold)
+                HStack {
+                    Text(item.category)
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                    Spacer()
+                    Text("Score: \(item.score)")
+                        .font(.subheadline)
+                }
+                if !item.note.isEmpty {
+                    Text(item.note)
+                        .font(.body)
+                }
+                if !item.tags.isEmpty {
+                    HStack {
+                        ForEach(item.tags, id: \.self) { tag in
+                            Text("#\(tag)")
+                                .font(.caption)
+                                .padding(4)
+                                .background(Color.accentColor.opacity(0.1))
+                                .clipShape(Capsule())
+                        }
+                    }
+                }
+                if let price = item.price {
+                    Text("Price: \(price, specifier: "%.2f")")
+                        .font(.body)
+                }
+                if let purchaseDate = item.purchaseDate {
+                    Text("Purchased on: \(purchaseDate, formatter: dateFormatter)")
+                        .font(.body)
+                }
+                Text("Recommend Level: \(item.recommendLevel)")
+                    .font(.body)
+            }
+            .padding()
+        }
+        .navigationTitle("Item Details")
+    }
+
+    private var dateFormatter: DateFormatter {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        return formatter
     }
 }
