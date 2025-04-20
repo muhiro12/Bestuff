@@ -175,7 +175,7 @@ struct InsightsView: View {
                                     x: .value("Score", entry.score),
                                     y: .value("Count", entry.count)
                                 )
-                                .foregroundStyle(Gradient(colors: [Color.accentColor.opacity(0.6), Color.cyan]))
+                                .foregroundStyle(Color.accentColor.opacity(0.8))
                                 .cornerRadius(4)
                                 .annotation(position: .top) {
                                     Text("\(entry.count)")
@@ -197,7 +197,7 @@ struct InsightsView: View {
                                     x: .value("Month", entry.month),
                                     y: .value("Items", entry.count)
                                 )
-                                .foregroundStyle(Gradient(colors: [Color.indigo.opacity(0.6), Color.accentColor]))
+                                .foregroundStyle(Color.accentColor.opacity(0.7))
                                 .cornerRadius(4)
                                 .annotation(position: .top) {
                                     Text("\(entry.count)")
@@ -221,7 +221,7 @@ struct InsightsView: View {
                                     x: .value("Count", entry.count),
                                     y: .value("Tag", "#\(entry.tag)")
                                 )
-                                .foregroundStyle(Gradient(colors: [Color.teal.opacity(0.6), Color.accentColor]))
+                                .foregroundStyle(Color.accentColor.opacity(0.8))
                                 .cornerRadius(4)
                                 .annotation(position: .trailing) {
                                     Text("\(entry.count)")
@@ -249,7 +249,7 @@ struct InsightsView: View {
                                     x: .value("Average Price", avgPrice),
                                     y: .value("Category", category)
                                 )
-                                .foregroundStyle(Gradient(colors: [Color.orange.opacity(0.6), Color.accentColor]))
+                                .foregroundStyle(Color.accentColor.opacity(0.8))
                                 .cornerRadius(4)
                                 .annotation(position: .trailing) {
                                     Text(String(format: "%.0f", avgPrice))
@@ -274,7 +274,7 @@ struct InsightsView: View {
                                     x: .value("Price", item.price ?? 0),
                                     y: .value("Item", item.title)
                                 )
-                                .foregroundStyle(Gradient(colors: [Color.pink, Color.accentColor]))
+                                .foregroundStyle(Color.accentColor.opacity(0.8))
                                 .annotation(position: .trailing) {
                                     Text(String(format: "%.0f", item.price ?? 0))
                                         .font(.caption2)
@@ -299,7 +299,7 @@ struct InsightsView: View {
                                     x: .value("Recommend Level", level),
                                     y: .value("Count", count)
                                 )
-                                .foregroundStyle(Gradient(colors: [Color.purple.opacity(0.6), Color.accentColor]))
+                                .foregroundStyle(Color.accentColor.opacity(0.8))
                                 .cornerRadius(4)
                                 .annotation(position: .top) {
                                     Text("\(count)")
@@ -453,8 +453,14 @@ struct BestItemListView: View {
 
     var body: some View {
         NavigationStack {
-            List {
-                let sortedItems = bestItems.sorted { (sortOption == .byDate) ? $0.timestamp < $1.timestamp : $0.score > $1.score }
+        List {
+            Section {
+                Text("Track and reflect on your favorite purchases. Use filters above to customize the view.")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .padding(.vertical, 4)
+            }
+            let sortedItems = bestItems.sorted { (sortOption == .byDate) ? $0.timestamp < $1.timestamp : $0.score > $1.score }
                 if sortedItems.isEmpty {
                     if allItems.isEmpty {
                         Section {
@@ -572,8 +578,8 @@ struct BestItemListView: View {
                         }
                     }
                 }
-            }
-            .navigationTitle("Items")
+        }
+        .navigationTitle("Your Best Picks")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
@@ -627,12 +633,27 @@ struct AddItemView: View {
         NavigationStack {
             Form {
                 TextField("Title", text: $title)
-                TextField("Category", text: $category)
+                Menu {
+                    ForEach(["Books", "Music", "Tech", "Fashion", "Food", "Other"], id: \.self) { option in
+                        Button(option) {
+                            category = option
+                        }
+                    }
+                } label: {
+                    HStack {
+                        Text(category.isEmpty ? "Select Category" : category)
+                            .foregroundColor(category.isEmpty ? .gray : .primary)
+                        Spacer()
+                        Image(systemName: "chevron.down")
+                            .foregroundColor(.gray)
+                    }
+                }
+                .padding(.vertical, 4)
                 TextField("Note", text: $note, axis: .vertical)
                     .lineLimit(3...5)
 
                 Section(header: Text("Rating")) {
-                    RatingView(rating: $score)
+                    RatingView(rating: $score, maxRating: 100, step: 20)
                 }
 
                 Section(header: Text("Details")) {
@@ -642,7 +663,7 @@ struct AddItemView: View {
 
                     VStack(alignment: .leading) {
                         Text("Recommend Level")
-                        RatingView(rating: $recommendLevel)
+                        RatingView(rating: $recommendLevel, maxRating: 100, step: 20)
                     }
                 }
             }
@@ -791,8 +812,20 @@ struct EditItemView: View {
                                displayedComponents: .date
                     )
                     TextField("Price", text: Binding(
-                        get: { item.price.map { String($0) } ?? "" },
-                        set: { item.price = Double($0) }
+                        get: {
+                            if let price = item.price {
+                                let formatter = NumberFormatter()
+                                formatter.numberStyle = .currency
+                                formatter.locale = Locale.current
+                                return formatter.string(from: NSNumber(value: price)) ?? ""
+                            } else {
+                                return ""
+                            }
+                        },
+                        set: {
+                            let sanitized = $0.replacingOccurrences(of: "[^0-9.]", with: "", options: .regularExpression)
+                            item.price = Double(sanitized)
+                        }
                     ))
                     .keyboardType(.decimalPad)
 
@@ -891,11 +924,13 @@ struct RecapView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Share") {
-                        let renderer = ImageRenderer(content: recapContentView(for: filteredItems).padding())
-                        renderer.scale = UIScreen.main.scale
-                        if let uiImage = renderer.uiImage {
-                            sharedImage = uiImage
-                            isPresentingShareSheet = true
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                            let renderer = ImageRenderer(content: recapContentView(for: filteredItems).padding())
+                            renderer.scale = UIScreen.main.scale
+                            if let uiImage = renderer.uiImage {
+                                sharedImage = uiImage
+                                isPresentingShareSheet = true
+                            }
                         }
                     }
                 }
@@ -1078,17 +1113,20 @@ enum DesignMetrics {
 
 struct RatingView: View {
     @Binding var rating: Int
-    var maxRating: Int = 5
+    var maxRating: Int = 100
+    var step: Int = 20
 
     var body: some View {
         HStack(spacing: 8) {
-            ForEach(1...maxRating, id: \.self) { index in
-                Image(systemName: index <= rating ? "star.fill" : "star")
+            let segments = maxRating / step
+            ForEach(0...segments, id: \.self) { i in
+                let level = i * step
+                Image(systemName: level <= rating ? "circle.fill" : "circle")
                     .resizable()
-                    .frame(width: 24, height: 24)
-                    .foregroundColor(.yellow)
+                    .frame(width: 18, height: 18)
+                    .foregroundColor(.accentColor)
                     .onTapGesture {
-                        rating = index
+                        rating = level
                     }
             }
         }
