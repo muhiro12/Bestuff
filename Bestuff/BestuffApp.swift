@@ -96,7 +96,7 @@ struct InsightsView: View {
                                     x: .value("Items", entry.count),
                                     y: .value("Category", entry.category)
                                 )
-                                .foregroundStyle(Gradient(colors: [Color.cyan.opacity(0.6), Color.accentColor]))
+                                .foregroundStyle(Color.accentColor.opacity(0.8))
                                 .cornerRadius(4)
                                 .annotation(position: .trailing) {
                                     Text("\(entry.count)")
@@ -126,7 +126,7 @@ struct InsightsView: View {
                                     x: .value("Score", item.score),
                                     y: .value("Item", item.title)
                                 )
-                                .foregroundStyle(Gradient(colors: [Color.cyan.opacity(0.6), Color.accentColor]))
+                                .foregroundStyle(Color.accentColor.opacity(0.8))
                                 .annotation(position: .trailing) {
                                     Text("\(item.score)")
                                         .font(.caption2)
@@ -153,7 +153,7 @@ struct InsightsView: View {
                                     x: .value("Average", average),
                                     y: .value("Category", category)
                                 )
-                                .foregroundStyle(Gradient(colors: [Color.mint.opacity(0.6), Color.accentColor]))
+                                .foregroundStyle(Color.accentColor.opacity(0.8))
                                 .cornerRadius(4)
                                 .annotation(position: .trailing) {
                                     Text(String(format: "%.1f", average))
@@ -197,7 +197,7 @@ struct InsightsView: View {
                                     x: .value("Month", entry.month),
                                     y: .value("Items", entry.count)
                                 )
-                                .foregroundStyle(Color.accentColor.opacity(0.7))
+                                .foregroundStyle(Color.accentColor.opacity(0.8))
                                 .cornerRadius(4)
                                 .annotation(position: .top) {
                                     Text("\(entry.count)")
@@ -653,7 +653,7 @@ struct AddItemView: View {
                     .lineLimit(3...5)
 
                 Section(header: Text("Rating")) {
-                    RatingView(rating: $score, maxRating: 100, step: 20)
+                    RatingView(rating: $score, maxRating: 100)
                 }
 
                 Section(header: Text("Details")) {
@@ -663,7 +663,7 @@ struct AddItemView: View {
 
                     VStack(alignment: .leading) {
                         Text("Recommend Level")
-                        RatingView(rating: $recommendLevel, maxRating: 100, step: 20)
+                        RatingView(rating: $recommendLevel, maxRating: 100)
                     }
                 }
             }
@@ -1111,22 +1111,15 @@ enum DesignMetrics {
 struct RatingView: View {
     @Binding var rating: Int
     var maxRating: Int = 100
-    var step: Int = 20
+    // Removed step parameter as it's no longer needed
 
     var body: some View {
-        HStack(spacing: 8) {
-            let segments = maxRating / step
-            ForEach(0...segments, id: \.self) { i in
-                let level = i * step
-                Image(systemName: level <= rating ? "circle.fill" : "circle")
-                    .resizable()
-                    .frame(width: 18, height: 18)
-                    .foregroundColor(.accentColor)
-                    .onTapGesture {
-                        rating = level
-                    }
+        Picker("Rating", selection: $rating) {
+            ForEach(0...maxRating, id: \.self) { value in
+                Text("\(value)")
             }
         }
-        .padding(.vertical, 4)
+        .pickerStyle(.wheel)
+        .frame(height: 120)
     }
 }
