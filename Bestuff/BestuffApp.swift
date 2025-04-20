@@ -1100,13 +1100,6 @@ enum AppFont {
     static let body = Font.subheadline
     static let caption = Font.caption2
 }
-
-enum AppColor {
-    static let background = Color(.systemBackground)
-    static let surface = Color(.secondarySystemBackground)
-    static let accent = Color.accentColor
-}
-
 enum DesignMetrics {
     static let cornerRadius: CGFloat = 12
     static let shadowRadius: CGFloat = 4
