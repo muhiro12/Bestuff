@@ -3,7 +3,6 @@
 //  Bestuff
 //
 //  Created by Hiromu Nakano on 2025/04/19.
-//
 
 import SwiftUI
 import SwiftData
@@ -53,17 +52,19 @@ private func insightsCard<T: View>(title: String, @ViewBuilder content: () -> T)
 
 struct InsightsView: View {
     @Query private var allItems: [BestItem]
+    @State private var selectedCategory: String = "All"
+    @State private var selectedYear: Int = Calendar.current.component(.year, from: Date())
     @State private var pendingDeletion: BestItem? = nil
     @Environment(\.modelContext) private var modelContext
 
     var categoryCounts: [(category: String, count: Int)] {
-        Dictionary(grouping: allItems, by: \.category)
+        Dictionary(grouping: filteredItems, by: \.category)
             .map { ($0.key, $0.value.count) }
             .sorted { $0.count > $1.count }
     }
 
     var scoreCounts: [(score: Int, count: Int)] {
-        Dictionary(grouping: allItems, by: \.score)
+        Dictionary(grouping: filteredItems, by: \.score)
             .map { ($0.key, $0.value.count) }
             .sorted { $0.score < $1.score }
     }
@@ -71,26 +72,50 @@ struct InsightsView: View {
     var monthlyCounts: [(month: String, count: Int)] {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM"
-        let grouped = Dictionary(grouping: allItems) { formatter.string(from: $0.timestamp) }
+        let grouped = Dictionary(grouping: filteredItems) { formatter.string(from: $0.timestamp) }
         return grouped.map { ($0.key, $0.value.count) }
             .sorted { $0.month < $1.month }
     }
 
     var tagCounts: [(tag: String, count: Int)] {
-        Dictionary(grouping: allItems.flatMap { $0.tags }, by: { $0 })
+        Dictionary(grouping: filteredItems.flatMap { $0.tags }, by: { $0 })
             .map { ($0.key, $0.value.count) }
             .sorted { $0.count > $1.count }
+    }
+    private var filteredItems: [BestItem] {
+        allItems.filter {
+            (selectedCategory == "All" || $0.category == selectedCategory) &&
+            Calendar.current.component(.year, from: $0.timestamp) == selectedYear
+        }
     }
 
     var body: some View {
         NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 16) {
-                    Text("Insights")
-                        .font(.largeTitle.bold())
-                    Text("Visualize trends and analyze your best items by category, score, and more.")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
+        ScrollView {
+            VStack(alignment: .leading, spacing: 16) {
+                VStack(alignment: .leading, spacing: 12) {
+                    HStack {
+                        Picker("Category", selection: $selectedCategory) {
+                            Text("All").tag("All")
+                            ForEach(Array(Set(allItems.map(\.category))), id: \.self) {
+                                Text($0).tag($0)
+                            }
+                        }
+                        .pickerStyle(.menu)
+
+                        Picker("Year", selection: $selectedYear) {
+                            ForEach((2020...Calendar.current.component(.year, from: Date())).reversed(), id: \.self) {
+                                Text("\($0)").tag($0)
+                            }
+                        }
+                        .pickerStyle(.menu)
+                    }
+                }
+                Text("Insights")
+                    .font(.largeTitle.bold())
+                Text("Visualize trends and analyze your best items by category, score, and more.")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
 
                     insightsCard(title: "Items per Category") {
                         Chart {
@@ -117,7 +142,7 @@ struct InsightsView: View {
                         let calendar = Calendar.current
                         let year = calendar.component(.year, from: Date())
 
-                        let topItemsThisYear = allItems.filter {
+                        let topItemsThisYear = filteredItems.filter {
                             calendar.component(.year, from: $0.timestamp) == year
                         }
                             .sorted { $0.score > $1.score }
@@ -767,12 +792,52 @@ struct SettingsView: View {
             } message: {
                 Text("This will permanently delete all your items.")
             }
+                Section(header: Text("Tags")) {
+                    NavigationLink(destination: TagManagerView()) {
+                        Label("Manage Tags", systemImage: "tag")
+                    }
+                }
                 Section(header: Text("Preferences")) {
                     Toggle("Enable Haptics", isOn: $hapticsEnabled)
                 }
             }
             .navigationTitle("Settings")
         }
+    }
+}
+
+struct TagManagerView: View {
+    @Query private var allItems: [BestItem]
+    @Environment(\.modelContext) private var modelContext
+
+    var tagCounts: [(tag: String, count: Int)] {
+        Dictionary(grouping: allItems.flatMap { $0.tags }, by: { $0 })
+            .map { ($0.key, $0.value.count) }
+            .sorted { $0.count > $1.count }
+    }
+
+    var body: some View {
+        List {
+            ForEach(tagCounts, id: \.tag) { entry in
+                HStack {
+                    Text("#\(entry.tag)")
+                    Spacer()
+                    Text("\(entry.count)")
+                        .foregroundColor(.secondary)
+                }
+                .swipeActions {
+                    Button(role: .destructive) {
+                        for item in allItems where item.tags.contains(entry.tag) {
+                            item.tags.removeAll { $0 == entry.tag }
+                        }
+                        try? modelContext.save()
+                    } label: {
+                        Label("Delete", systemImage: "trash")
+                    }
+                }
+            }
+        }
+        .navigationTitle("Manage Tags")
     }
 }
 
@@ -998,6 +1063,20 @@ struct RecapView: View {
             if items.isEmpty {
                 Text("No items added this month.")
             } else {
+                VStack(spacing: 8) {
+                    HStack {
+                        Image(systemName: "crown.fill")
+                            .foregroundColor(.accentColor)
+                        Text(DateFormatter.localizedString(from: selectedDate, dateStyle: .long, timeStyle: .none))
+                            .font(.headline)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(.ultraThinMaterial)
+                    .cornerRadius(12)
+                }
+                .padding(.bottom)
+
                 ForEach(Array(items.enumerated()), id: \.offset) { index, item in
                     ZStack(alignment: .topLeading) {
                         VStack(alignment: .leading, spacing: 6) {
