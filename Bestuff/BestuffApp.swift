@@ -35,28 +35,63 @@ struct BestuffApp: App {
     }
 }
 
-struct CategoryManagerView: View {
+struct TagManagerView: View {
     @Query private var allItems: [BestItem]
     @Environment(\.modelContext) private var modelContext
 
-    var categoryCounts: [(category: String, count: Int)] {
-        Dictionary(grouping: allItems, by: { $0.category })
+    var tagCounts: [(tag: String, count: Int)] {
+        Dictionary(grouping: allItems.flatMap { $0.tags }, by: { $0 })
             .map { ($0.key, $0.value.count) }
             .sorted { $0.count > $1.count }
     }
 
     var body: some View {
         List {
-            ForEach(categoryCounts, id: \.category) { entry in
+            ForEach(tagCounts, id: \.tag) { entry in
                 HStack {
-                    Text(entry.category)
+                    Text("#\(entry.tag)")
                     Spacer()
                     Text("\(entry.count)")
                         .foregroundColor(.secondary)
                 }
                 .swipeActions {
                     Button(role: .destructive) {
-                        for item in allItems where item.category == entry.category {
+                        for item in allItems where item.tags.contains(entry.tag) {
+                            item.tags.removeAll { $0 == entry.tag }
+                        }
+                        try? modelContext.save()
+                    } label: {
+                        Label("Delete", systemImage: "trash")
+                    }
+                }
+            }
+        }
+        .navigationTitle("Manage Tags")
+    }
+}
+
+struct CategoryManagerView: View {
+    @Query private var allItems: [BestItem]
+    @Environment(\.modelContext) private var modelContext
+
+    var categories: [(name: String, count: Int)] {
+        Dictionary(grouping: allItems.map { $0.category }, by: { $0 })
+            .map { ($0.key, $0.value.count) }
+            .sorted { $0.name < $1.name }
+    }
+
+    var body: some View {
+        List {
+            ForEach(categories, id: \.name) { entry in
+                HStack {
+                    Text(entry.name)
+                    Spacer()
+                    Text("\(entry.count)")
+                        .foregroundColor(.secondary)
+                }
+                .swipeActions {
+                    Button(role: .destructive) {
+                        for item in allItems where item.category == entry.name {
                             item.category = "General"
                         }
                         try? modelContext.save()
@@ -813,6 +848,7 @@ struct AddItemView: View {
 
 struct SettingsView: View {
     @AppStorage("isDarkMode") private var isDarkMode = false
+    @AppStorage("dynamicAppIcon") private var dynamicAppIcon = false
     @Environment(\.modelContext) private var modelContext
     @Query private var allItems: [BestItem]
     @AppStorage("hapticsEnabled") private var hapticsEnabled = true
@@ -830,6 +866,13 @@ struct SettingsView: View {
                                     window.overrideUserInterfaceStyle = isDarkMode ? .dark : .light
                                 }
                             }
+                        }
+                    Toggle("Auto Switch App Icon", isOn: $dynamicAppIcon)
+                        .onChange(of: dynamicAppIcon) { _, newValue in
+                            let iconName = newValue
+                                ? (UITraitCollection.current.userInterfaceStyle == .dark ? "AppIconDark" : "AppIconLight")
+                                : nil
+                            UIApplication.shared.setAlternateIconName(iconName)
                         }
                     Text("Override system dark mode preference")
                         .font(.caption)
@@ -870,6 +913,11 @@ struct SettingsView: View {
             } message: {
                 Text("This will permanently delete all your items.")
             }
+                Section(header: Text("Categories")) {
+                    NavigationLink(destination: CategoryManagerView()) {
+                        Label("Manage Categories", systemImage: "folder")
+                    }
+                }
                 Section(header: Text("Tags")) {
                     NavigationLink(destination: TagManagerView()) {
                         Label("Manage Tags", systemImage: "tag")
@@ -884,40 +932,6 @@ struct SettingsView: View {
     }
 }
 
-struct TagManagerView: View {
-    @Query private var allItems: [BestItem]
-    @Environment(\.modelContext) private var modelContext
-
-    var tagCounts: [(tag: String, count: Int)] {
-        Dictionary(grouping: allItems.flatMap { $0.tags }, by: { $0 })
-            .map { ($0.key, $0.value.count) }
-            .sorted { $0.count > $1.count }
-    }
-
-    var body: some View {
-        List {
-            ForEach(tagCounts, id: \.tag) { entry in
-                HStack {
-                    Text("#\(entry.tag)")
-                    Spacer()
-                    Text("\(entry.count)")
-                        .foregroundColor(.secondary)
-                }
-                .swipeActions {
-                    Button(role: .destructive) {
-                        for item in allItems where item.tags.contains(entry.tag) {
-                            item.tags.removeAll { $0 == entry.tag }
-                        }
-                        try? modelContext.save()
-                    } label: {
-                        Label("Delete", systemImage: "trash")
-                    }
-                }
-            }
-        }
-        .navigationTitle("Manage Tags")
-    }
-}
 
 // MARK: - EditItemView
 
@@ -1050,7 +1064,19 @@ struct EditItemView: View {
     }
 
     private var tagSuggestions: [String] {
-        Array(Set(allItems.flatMap { $0.tags })).sorted()
+        var tagUsage: [String: Date] = [:]
+        for item in allItems {
+            for tag in item.tags {
+                if let existing = tagUsage[tag] {
+                    if item.timestamp > existing {
+                        tagUsage[tag] = item.timestamp
+                    }
+                } else {
+                    tagUsage[tag] = item.timestamp
+                }
+            }
+        }
+        return tagUsage.sorted(by: { $0.value > $1.value }).map { $0.key }
     }
 
     private func addTag() {
@@ -1260,6 +1286,7 @@ struct RecapView: View {
                 summarySection()
 
                 categoryAverageSection(for: items)
+                top5ItemsSection(for: items)
             }
         }
     }
@@ -1305,6 +1332,39 @@ struct RecapView: View {
         .padding(.top)
         .font(.subheadline)
         .foregroundStyle(.secondary)
+    }
+
+    private func top5ItemsSection(for items: [BestItem]) -> some View {
+        let topItems = items.sorted(by: { $0.score > $1.score }).prefix(5)
+        return VStack(alignment: .leading, spacing: 8) {
+            Divider()
+                .padding(.vertical, 4)
+            Text("Top 5 Items")
+                .font(.headline)
+                .padding(.bottom, 4)
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 12) {
+                    ForEach(Array(topItems.enumerated()), id: \.offset) { index, item in
+                        VStack(alignment: .leading, spacing: 6) {
+                            Text("#\(index + 1)")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                            Text(item.title)
+                                .font(.subheadline)
+                                .fontWeight(.semibold)
+                            Text("Score: \(item.score)")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                        .padding()
+                        .background(Color(.secondarySystemBackground))
+                        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                    }
+                }
+                .padding(.horizontal)
+            }
+        }
+        .padding(.top)
     }
 }
 
