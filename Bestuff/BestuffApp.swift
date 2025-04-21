@@ -35,97 +35,620 @@ struct BestuffApp: App {
     }
 }
 
-struct TagManagerView: View {
-    @Query private var allItems: [BestItem]
-    @Environment(\.modelContext) private var modelContext
+// MARK: - ContentView
 
-    var tagCounts: [(tag: String, count: Int)] {
-        Dictionary(grouping: allItems.flatMap { $0.tags }, by: { $0 })
-            .map { ($0.key, $0.value.count) }
-            .sorted { $0.count > $1.count }
-    }
+struct ContentView: View {
+    @State private var selectedTab = 0
 
     var body: some View {
-        List {
-            ForEach(tagCounts, id: \.tag) { entry in
-                HStack {
-                    Text("#\(entry.tag)")
-                    Spacer()
-                    Text("\(entry.count)")
-                        .foregroundColor(.secondary)
+        TabView(selection: $selectedTab) {
+            BestItemListView()
+                .tabItem {
+                    Label("Items", systemImage: "list.bullet")
                 }
-                .swipeActions {
-                    Button(role: .destructive) {
-                        for item in allItems where item.tags.contains(entry.tag) {
-                            item.tags.removeAll { $0 == entry.tag }
-                        }
-                        try? modelContext.save()
-                    } label: {
-                        Label("Delete", systemImage: "trash")
-                    }
+                .tag(0)
+            RecapView()
+                .tabItem {
+                    Label("Recap", systemImage: "star.circle")
                 }
-            }
+                .tag(1)
+            InsightsView()
+                .tabItem {
+                    Label("Insights", systemImage: "chart.bar")
+                }
+                .tag(2)
+            SettingsView()
+                .tabItem {
+                    Label("Settings", systemImage: "gear")
+                }
+                .tag(3)
         }
-        .navigationTitle("Manage Tags")
     }
 }
 
-struct CategoryManagerView: View {
-    @Query private var allItems: [BestItem]
-    @Environment(\.modelContext) private var modelContext
+#Preview {
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: BestItem.self, configurations: config)
+    let context = container.mainContext
 
-    var categories: [(name: String, count: Int)] {
-        Dictionary(grouping: allItems.map { $0.category }, by: { $0 })
-            .map { ($0.key, $0.value.count) }
-            .sorted { $0.name < $1.name }
-    }
+    BestItem.create(context: context, title: "AirPods Pro", score: 5, category: "Tech", note: "Great for daily use", tags: ["audio", "Apple"])
+    BestItem.create(context: context, title: "The Alchemist", score: 4, category: "Books", note: "Inspiring story", tags: ["novel", "life"])
+    BestItem.create(context: context, title: "Uniqlo Jacket", score: 3, category: "Fashion", note: "Affordable and warm", tags: ["winter", "clothing"])
+    BestItem.create(context: context, title: "Sushi Lunch", score: 5, category: "Food", note: "Fresh and delicious", tags: ["restaurant", "lunch"])
+    BestItem.create(context: context, title: "Spotify Premium", score: 4, category: "Music", note: "Good variety of playlists", tags: ["subscription", "music"])
 
-    var body: some View {
-        List {
-            ForEach(categories, id: \.name) { entry in
-                HStack {
-                    Text(entry.name)
-                    Spacer()
-                    Text("\(entry.count)")
-                        .foregroundColor(.secondary)
-                }
-                .swipeActions {
-                    Button(role: .destructive) {
-                        for item in allItems where item.category == entry.name {
-                            item.category = "General"
-                        }
-                        try? modelContext.save()
-                    } label: {
-                        Label("Delete", systemImage: "trash")
-                    }
-                }
-            }
-        }
-        .navigationTitle("Manage Categories")
+    return ContentView()
+        .modelContainer(container)
+}
+
+// MARK: - BestItem Model
+
+@Model
+final class BestItem {
+    var timestamp: Date = Date.now
+    var title: String = ""
+    var score: Int = 0
+    var category: String = "General"
+    var note: String = ""
+    var tags: [String] = []
+    var imageData: Data? = nil
+    var purchaseDate: Date? = nil
+    var price: Double? = nil
+    var recommendLevel: Int = 3
+
+    private init() {}
+
+    @discardableResult
+    static func create(
+        context: ModelContext,
+        title: String,
+        score: Int,
+        category: String = "General",
+        note: String = "",
+        tags: [String] = [],
+        imageData: Data? = nil,
+        purchaseDate: Date? = nil,
+        price: Double? = nil,
+        recommendLevel: Int = 3
+    ) -> BestItem {
+        let item = BestItem()
+        item.timestamp = .now
+        item.title = title
+        item.score = score
+        item.category = category
+        item.note = note
+        item.tags = tags
+        item.imageData = imageData
+        item.purchaseDate = purchaseDate
+        item.price = price
+        item.recommendLevel = recommendLevel
+        context.insert(item)
+        return item
     }
 }
 
-struct InsightsCard<Content: View>: View {
-    let title: String
-    let content: Content
+extension BestItem {
+    var gradient: LinearGradient {
+        switch score {
+        case 1, 2:
+            return LinearGradient(
+                colors: [Color.gray, Color.blue],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+        case 3:
+            return LinearGradient(
+                colors: [Color.gray, Color.gray],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+        case 4, 5:
+            return LinearGradient(
+                colors: [Color.accentColor, Color.accentColor],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+        default:
+            return LinearGradient(
+                colors: [Color.gray, Color.blue],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+        }
+    }
+}
 
-    init(title: String, @ViewBuilder content: () -> Content) {
-        self.title = title
-        self.content = content()
+// MARK: - BestItemListView
+
+struct BestItemListView: View {
+    @Environment(\.modelContext) private var modelContext
+    @Query private var allItems: [BestItem]
+
+    var bestItems: [BestItem] {
+        allItems.filter {
+            ($0.title.localizedStandardContains(searchText) || $0.category.localizedStandardContains(searchText)) &&
+            $0.score >= minimumScore
+        }
+    }
+    @State private var isPresentingAddSheet = false
+    @State private var editingItem: BestItem? = nil
+    @State private var searchText: String = ""
+    @State private var sortOption: SortOption = .byDate
+    @State private var minimumScore: Int = 1
+    @State private var pendingDeletion: BestItem? = nil
+
+    enum SortOption {
+        case byDate, byScore
+    }
+
+
+    var body: some View {
+        NavigationStack {
+        List {
+            Section {
+                Text("Track and reflect on your favorite purchases. Use filters above to customize the view.")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .padding(.vertical, 4)
+            }
+            let sortedItems = bestItems.sorted { (sortOption == .byDate) ? $0.timestamp < $1.timestamp : $0.score > $1.score }
+                if sortedItems.isEmpty {
+                    if allItems.isEmpty {
+                        Section {
+                            VStack(alignment: .center, spacing: 16) {
+                                Image(systemName: "sparkles")
+                                    .font(.system(size: 40))
+                                    .foregroundColor(.accentColor)
+                                Text("Start tracking your favorites!")
+                                    .font(.headline)
+                                Text("Tap the + button to add your first Best Item.")
+                                    .font(.subheadline)
+                                    .foregroundStyle(.secondary)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 40)
+                        }
+                    } else {
+                        Section {
+                            VStack(alignment: .center, spacing: 12) {
+                                Text("No matching items found.")
+                                    .font(.headline)
+                                if searchText.isEmpty {
+                                    Text("Here are some of your recent top-rated items:")
+                                        .font(.subheadline)
+                                        .foregroundStyle(.secondary)
+
+                                    let recentItems = allItems
+                                        .sorted(by: { $0.timestamp > $1.timestamp })
+                                        .prefix(3)
+
+                                    ForEach(recentItems) { item in
+                                        VStack(alignment: .leading, spacing: 4) {
+                                            Text(item.title)
+                                                .font(AppFont.title)
+                                            Text("Score: \(item.score)")
+                                                .font(AppFont.body)
+                                                .foregroundStyle(.secondary)
+                                        }
+                                        .bestCardStyle(using: item.gradient)
+                                            .onTapGesture {
+                                                Haptic.impact()
+                                                withAnimation(.spring()) {
+                                                    editingItem = item
+                                                }
+                                            }
+                                    }
+                                }
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 40)
+                        }
+                    }
+                } else {
+                    let flatItems = sortedItems
+                    ForEach(Dictionary(grouping: flatItems, by: { $0.category }).sorted(by: { $0.key < $1.key }), id: \.key) { category, items in
+                        Section(header: Text(category).foregroundColor(.accentColor)) {
+                            ForEach(items) { item in
+                                VStack(alignment: .leading, spacing: 6) {
+                                    if let data = item.imageData,
+                                       let uiImage = UIImage(data: data) {
+                                        Image(uiImage: uiImage)
+                                            .resizable()
+                                            .scaledToFill()
+                                            .frame(height: 140)
+                                            .clipped()
+                                            .cornerRadius(8)
+                                    }
+                                    Text(item.category.uppercased())
+                                        .font(.caption2)
+                                        .padding(.horizontal, 6)
+                                        .padding(.vertical, 2)
+                                        .background(Color.accentColor.opacity(0.15))
+                                        .clipShape(Capsule())
+                                    Text(item.title)
+                                        .font(AppFont.title)
+                                    Text("Score: \(item.score)")
+                                        .font(AppFont.body)
+                                        .foregroundStyle(.secondary)
+                                    Text(item.timestamp.formatted(date: .abbreviated, time: .omitted))
+                                        .font(AppFont.caption)
+                                        .foregroundStyle(.gray)
+                                    if !item.note.isEmpty {
+                                        Text(item.note)
+                                            .font(AppFont.body)
+                                            .foregroundStyle(.primary)
+                                            .padding(.top, 4)
+                                    }
+                                    if !item.tags.isEmpty {
+                                        HStack {
+                                            ForEach(item.tags, id: \.self) { tag in
+                                                Text("#\(tag)")
+                                                    .font(.caption2)
+                                                    .padding(.horizontal, 4)
+                                                    .padding(.vertical, 2)
+                                                    .background(Color.accentColor.opacity(0.1))
+                                                    .clipShape(Capsule())
+                                            }
+                                        }
+                                    }
+                                }
+                                .bestCardStyle(using: item.gradient)
+                                .onTapGesture {
+                                    Haptic.impact()
+                                    withAnimation(.spring()) {
+                                        editingItem = item
+                                    }
+                                }
+                            }
+                            .onDelete { indexSet in
+                                if let index = indexSet.first {
+                                    pendingDeletion = items[index]
+                                }
+                            }
+                        }
+                    }
+                }
+        }
+        .navigationTitle("Your Best Picks")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        Haptic.impact()
+                        isPresentingAddSheet = true
+                    } label: {
+                        Label("Add Item", systemImage: "plus")
+                    }
+                }
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Picker("Min Score", selection: $minimumScore) {
+                        ForEach(1..<6) { value in
+                            Text("\(value)").tag(value)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                }
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Picker("Sort", selection: $sortOption) {
+                        Text("Date").tag(SortOption.byDate)
+                        Text("Score").tag(SortOption.byScore)
+                    }
+                    .pickerStyle(.segmented)
+                }
+            }
+            .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always))
+            .sheet(isPresented: $isPresentingAddSheet) {
+                AddItemView(isPresented: $isPresentingAddSheet)
+            }
+            .sheet(item: $editingItem) { item in
+                EditItemView(item: item, isPresented: $editingItem)
+            }
+        }
+    }
+}
+
+// MARK: - RecapView
+
+struct RecapView: View {
+    @Query private var bestItems: [BestItem]
+    @State private var sharedImage: ShareImage?
+    @State private var editingItem: BestItem? = nil
+    @State private var selectedDate: Date = Date()
+
+    private var filteredItems: [BestItem] {
+        let components = Calendar.current.dateComponents([.year, .month], from: selectedDate)
+        return bestItems.filter {
+            let itemComponents = Calendar.current.dateComponents([.year, .month], from: $0.timestamp)
+            return itemComponents.year == components.year && itemComponents.month == components.month
+        }
+        .sorted { $0.score > $1.score }
+    }
+
+    private var totalCount: Int {
+        filteredItems.count
+    }
+
+    private var totalScore: Int {
+        filteredItems.map(\.score).reduce(0, +)
+    }
+
+    private var averageScore: Double {
+        totalCount > 0 ? Double(totalScore) / Double(totalCount) : 0
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text(title)
+        return NavigationStack {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 12) {
+                    VStack(alignment: .leading, spacing: 12) {
+                        DatePicker("Select Month", selection: $selectedDate, displayedComponents: [.date])
+                            .datePickerStyle(.compact)
+                            .labelsHidden()
+                            .padding(.horizontal)
+
+                        if totalCount > 0 {
+                            HStack(spacing: 16) {
+                                Label("\(totalCount) items", systemImage: "square.stack.3d.up")
+                                Label("Avg. \(String(format: "%.1f", averageScore))", systemImage: "chart.bar.xaxis")
+                                Label("Total \(totalScore)", systemImage: "sum")
+                            }
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                            .padding(.horizontal)
+                        }
+                    }
+                    recapContentView(for: filteredItems)
+                        .padding()
+                }
+            }
+            .navigationTitle("This Month's Recap")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Share") {
+                        let shareContent = VStack(spacing: 12) {
+                            HStack {
+                                Image("AppIcon")
+                                    .resizable()
+                                    .frame(width: 24, height: 24)
+                                Text(DateFormatter.localizedString(from: selectedDate, dateStyle: .long, timeStyle: .none))
+                                    .font(.headline)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(.ultraThinMaterial)
+                            .cornerRadius(12)
+
+                            recapContentView(for: filteredItems)
+                                .padding()
+                        }
+                        let renderer = ImageRenderer(content: shareContent.padding())
+                        renderer.scale = UIScreen.main.scale
+                        if let uiImage = renderer.uiImage {
+                            sharedImage = ShareImage(image: uiImage)
+                        }
+                    }
+                }
+            }
+            .sheet(item: $sharedImage) { item in
+                ShareSheet(activityItems: [item.image])
+            }
+        }
+        .sheet(item: $editingItem) { item in
+            EditItemView(item: item, isPresented: $editingItem)
+        }
+    }
+
+    private func recapContentView(for items: [BestItem]) -> some View {
+        return VStack(alignment: .leading, spacing: 12) {
+            if items.isEmpty {
+                Text("No items added this month.")
+            } else {
+                VStack(spacing: 8) {
+                    HStack(spacing: 8) {
+                        Image("AppIcon") // Assuming "AppIcon" is in the asset catalog
+                            .resizable()
+                            .frame(width: 24, height: 24)
+                            .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
+                        Text(DateFormatter.localizedString(from: selectedDate, dateStyle: .long, timeStyle: .none))
+                            .font(.headline)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(.ultraThinMaterial)
+                    .cornerRadius(12)
+                }
+                .padding(.bottom)
+
+                ForEach(Array(items.enumerated()), id: \.offset) { index, item in
+                    ZStack(alignment: .topLeading) {
+                        VStack(alignment: .leading, spacing: 6) {
+                            if let data = item.imageData, let uiImage = UIImage(data: data) {
+                                Image(uiImage: uiImage)
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(height: 200)
+                                    .clipped()
+                                    .cornerRadius(8)
+                            } else {
+                                ZStack {
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .fill(Color.gray.opacity(0.3))
+                                    Text(item.category.prefix(1))
+                                        .font(.largeTitle.bold())
+                                        .foregroundColor(.white)
+                                }
+                                .frame(height: 200)
+                            }
+                            Text(item.category.uppercased())
+                                .font(.caption2)
+                                .padding(.horizontal, 6)
+                                .padding(.vertical, 2)
+                                .background(Color.accentColor.opacity(0.15))
+                                .clipShape(Capsule())
+                            if index == 0 {
+                                Text(item.title)
+                                    .font(.largeTitle.bold())
+                                    .foregroundStyle(.primary)
+                            } else {
+                                Text(item.title)
+                                    .font(AppFont.title)
+                                    .fontWeight(.semibold)
+                            }
+                            Text("Score: \(item.score)")
+                                .font(AppFont.body)
+                                .foregroundStyle(.secondary)
+                            Text(item.timestamp.formatted(date: .abbreviated, time: .omitted))
+                                .font(AppFont.caption)
+                                .foregroundStyle(.gray)
+                            if !item.note.isEmpty {
+                                Text(item.note)
+                                    .font(AppFont.body)
+                                    .foregroundStyle(.primary)
+                                    .padding(.top, 4)
+                            }
+                            if !item.tags.isEmpty {
+                                HStack {
+                                    ForEach(item.tags, id: \.self) { tag in
+                                        Text("#\(tag)")
+                                            .font(.caption2)
+                                            .padding(.horizontal, 4)
+                                            .padding(.vertical, 2)
+                                            .background(Color.accentColor.opacity(0.1))
+                                            .clipShape(Capsule())
+                                    }
+                                }
+                            }
+                        }
+                        .padding()
+                        .background(
+                            RoundedRectangle(cornerRadius: DesignMetrics.cornerRadius, style: .continuous)
+                                .fill(Color.white.opacity(0.8))
+                                .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 4)
+                        )
+                        Text("#\(index + 1)")
+                            .font(.headline)
+                            .padding(6)
+                            .background(Color.black.opacity(0.7))
+                            .foregroundColor(.white)
+                            .clipShape(Capsule())
+                            .padding(8)
+                    }
+                    .bestCardStyle(using: item.gradient)
+                    .onTapGesture {
+                        Haptic.impact()
+                        withAnimation(.spring()) {
+                            editingItem = item
+                        }
+                    }
+                    Divider()
+                }
+
+                summarySection()
+
+                categoryAverageSection(for: items)
+                top5ItemsSection(for: items)
+            }
+        }
+    }
+
+    private func summarySection() -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Divider()
+                .padding(.vertical, 4)
+            Text("Summary")
                 .font(.headline)
-                .foregroundStyle(.primary)
-            content
+                .padding(.bottom, 4)
+
+            Label("Total Score: \(totalScore)", systemImage: "sum")
+            Label("Average Score: \(String(format: "%.1f", averageScore))", systemImage: "chart.bar.xaxis")
+            Label("Total Items: \(totalCount)", systemImage: "square.stack.3d.up")
         }
         .padding()
-        .background(.thinMaterial)
-        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-        .shadow(color: .black.opacity(0.05), radius: 8, x: 0, y: 4)
+        .background(Color(.secondarySystemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: DesignMetrics.cornerRadius, style: .continuous))
+        .padding(.top)
+        .font(.subheadline)
+        .foregroundStyle(.secondary)
     }
+
+    private func categoryAverageSection(for items: [BestItem]) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Divider()
+                .padding(.vertical, 4)
+            Text("Average Score per Category")
+                .font(.headline)
+                .padding(.bottom, 4)
+            let grouped = Dictionary(grouping: items, by: { $0.category })
+            let mapped = grouped.map { (category: $0.key, average: Double($0.value.map { $0.score }.reduce(0, +)) / Double($0.value.count)) }
+            let averages = mapped.sorted(by: { $0.category < $1.category })
+
+            ForEach(averages, id: \.category) { entry in
+                Label("\(entry.category): \(String(format: "%.1f", entry.average))", systemImage: "chart.bar.xaxis")
+            }
+        }
+        .padding()
+        .background(Color(.secondarySystemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: DesignMetrics.cornerRadius, style: .continuous))
+        .padding(.top)
+        .font(.subheadline)
+        .foregroundStyle(.secondary)
+    }
+
+    private func top5ItemsSection(for items: [BestItem]) -> some View {
+        let topItems = items.sorted(by: { $0.score > $1.score }).prefix(5)
+        return VStack(alignment: .leading, spacing: 8) {
+            Divider()
+                .padding(.vertical, 4)
+            Text("Top 5 Items")
+                .font(.headline)
+                .padding(.bottom, 4)
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 12) {
+                    ForEach(Array(topItems.enumerated()), id: \.offset) { index, item in
+                        VStack(alignment: .leading, spacing: 6) {
+                            Text("#\(index + 1)")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                            Text(item.title)
+                                .font(.subheadline)
+                                .fontWeight(.semibold)
+                            Text("Score: \(item.score)")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                        .padding()
+                        .background(Color(.secondarySystemBackground))
+                        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                    }
+                }
+                .padding(.horizontal)
+            }
+        }
+        .padding(.top)
+    }
+}
+
+// MARK: - ShareImage
+
+final class ShareImage: Identifiable {
+    let id = UUID()
+    let image: UIImage
+
+    init(image: UIImage) {
+        self.image = image
+    }
+}
+
+// MARK: - ShareSheet
+
+struct ShareSheet: UIViewControllerRepresentable {
+    var activityItems: [Any]
+    var applicationActivities: [UIActivity]? = nil
+
+    func makeUIViewController(context: Context) -> UIActivityViewController {
+        UIActivityViewController(activityItems: activityItems, applicationActivities: applicationActivities)
+    }
+
+    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
 }
 
 // MARK: - InsightsView
@@ -442,318 +965,185 @@ struct InsightsView: View {
     }
 }
 
-// MARK: - ContentView
+struct InsightsCard<Content: View>: View {
+    let title: String
+    let content: Content
 
-struct ContentView: View {
-    @State private var selectedTab = 0
+    init(title: String, @ViewBuilder content: () -> Content) {
+        self.title = title
+        self.content = content()
+    }
 
     var body: some View {
-        TabView(selection: $selectedTab) {
-            BestItemListView()
-                .tabItem {
-                    Label("Items", systemImage: "list.bullet")
-                }
-                .tag(0)
-            RecapView()
-                .tabItem {
-                    Label("Recap", systemImage: "star.circle")
-                }
-                .tag(1)
-            InsightsView()
-                .tabItem {
-                    Label("Insights", systemImage: "chart.bar")
-                }
-                .tag(2)
-            SettingsView()
-                .tabItem {
-                    Label("Settings", systemImage: "gear")
-                }
-                .tag(3)
+        VStack(alignment: .leading, spacing: 12) {
+            Text(title)
+                .font(.headline)
+                .foregroundStyle(.primary)
+            content
         }
+        .padding()
+        .background(.thinMaterial)
+        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .shadow(color: .black.opacity(0.05), radius: 8, x: 0, y: 4)
     }
 }
 
-#Preview {
-    let config = ModelConfiguration(isStoredInMemoryOnly: true)
-    let container = try! ModelContainer(for: BestItem.self, configurations: config)
-    let context = container.mainContext
+// MARK: - SettingsView
 
-    BestItem.create(context: context, title: "AirPods Pro", score: 5, category: "Tech", note: "Great for daily use", tags: ["audio", "Apple"])
-    BestItem.create(context: context, title: "The Alchemist", score: 4, category: "Books", note: "Inspiring story", tags: ["novel", "life"])
-    BestItem.create(context: context, title: "Uniqlo Jacket", score: 3, category: "Fashion", note: "Affordable and warm", tags: ["winter", "clothing"])
-    BestItem.create(context: context, title: "Sushi Lunch", score: 5, category: "Food", note: "Fresh and delicious", tags: ["restaurant", "lunch"])
-    BestItem.create(context: context, title: "Spotify Premium", score: 4, category: "Music", note: "Good variety of playlists", tags: ["subscription", "music"])
-
-    return ContentView()
-        .modelContainer(container)
-}
-
-// MARK: - BestItem Model
-
-@Model
-final class BestItem {
-    var timestamp: Date = Date.now
-    var title: String = ""
-    var score: Int = 0
-    var category: String = "General"
-    var note: String = ""
-    var tags: [String] = []
-    var imageData: Data? = nil
-    var purchaseDate: Date? = nil
-    var price: Double? = nil
-    var recommendLevel: Int = 3
-
-    private init() {}
-
-    @discardableResult
-    static func create(
-        context: ModelContext,
-        title: String,
-        score: Int,
-        category: String = "General",
-        note: String = "",
-        tags: [String] = [],
-        imageData: Data? = nil,
-        purchaseDate: Date? = nil,
-        price: Double? = nil,
-        recommendLevel: Int = 3
-    ) -> BestItem {
-        let item = BestItem()
-        item.timestamp = .now
-        item.title = title
-        item.score = score
-        item.category = category
-        item.note = note
-        item.tags = tags
-        item.imageData = imageData
-        item.purchaseDate = purchaseDate
-        item.price = price
-        item.recommendLevel = recommendLevel
-        context.insert(item)
-        return item
-    }
-}
-
-// MARK: - BestItem Gradient Extension
-
-extension BestItem {
-    var gradient: LinearGradient {
-        switch score {
-        case 1, 2:
-            return LinearGradient(
-                colors: [Color.gray, Color.blue],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-        case 3:
-            return LinearGradient(
-                colors: [Color.gray, Color.gray],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-        case 4, 5:
-            return LinearGradient(
-                colors: [Color.accentColor, Color.accentColor],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-        default:
-            return LinearGradient(
-                colors: [Color.gray, Color.blue],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-        }
-    }
-}
-
-// MARK: - BestItemListView
-
-struct BestItemListView: View {
+struct SettingsView: View {
+    @AppStorage("isDarkMode") private var isDarkMode = false
+    @AppStorage("dynamicAppIcon") private var dynamicAppIcon = false
     @Environment(\.modelContext) private var modelContext
     @Query private var allItems: [BestItem]
-
-    var bestItems: [BestItem] {
-        allItems.filter {
-            ($0.title.localizedStandardContains(searchText) || $0.category.localizedStandardContains(searchText)) &&
-            $0.score >= minimumScore
-        }
-    }
-    @State private var isPresentingAddSheet = false
-    @State private var editingItem: BestItem? = nil
-    @State private var searchText: String = ""
-    @State private var sortOption: SortOption = .byDate
-    @State private var minimumScore: Int = 1
-    @State private var pendingDeletion: BestItem? = nil
-
-    enum SortOption {
-        case byDate, byScore
-    }
-
+    @AppStorage("hapticsEnabled") private var hapticsEnabled = true
+    @State private var showingResetAlert = false
 
     var body: some View {
         NavigationStack {
-        List {
+            Form {
+                Section(header: Text("Theme")) {
+                    Toggle("Auto Dark Mode", isOn: $isDarkMode)
+                        .onChange(of: isDarkMode) { _, _ in
+                            if let windowScene = UIApplication.shared.connectedScenes
+                                .compactMap({ $0 as? UIWindowScene }).first {
+                                for window in windowScene.windows {
+                                    window.overrideUserInterfaceStyle = isDarkMode ? .dark : .light
+                                }
+                            }
+                        }
+                    Toggle("Auto Switch App Icon", isOn: $dynamicAppIcon)
+                        .onChange(of: dynamicAppIcon) { _, newValue in
+                            let iconName = newValue
+                                ? (UITraitCollection.current.userInterfaceStyle == .dark ? "AppIconDark" : "AppIconLight")
+                                : nil
+                            UIApplication.shared.setAlternateIconName(iconName)
+                        }
+                    Text("Override system dark mode preference")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                Section {
+                    Label("Version \(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "Unknown")", systemImage: "number")
+                }
+                // TODO: Replace this placeholder with actual subscription functionality
+                Section(header: Text("Subscription")) {
+                    Label("Rate us on the App Store", systemImage: "star")
+                }
+                // TODO: Replace this placeholder with actual license list view
+                Section(header: Text("Licenses")) {
+                    Label("Open Source Licenses", systemImage: "doc.plaintext")
+                }
+                // TODO: Replace this placeholder with actual notification settings
+                Section(header: Text("Notifications")) {
+                    Label("Manage Notifications", systemImage: "bell.badge")
+                        .foregroundColor(.gray)
+                        .opacity(0.5)
+                        .disabled(true)
+                }
             Section {
-                Text("Track and reflect on your favorite purchases. Use filters above to customize the view.")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                    .padding(.vertical, 4)
-            }
-            let sortedItems = bestItems.sorted { (sortOption == .byDate) ? $0.timestamp < $1.timestamp : $0.score > $1.score }
-                if sortedItems.isEmpty {
-                    if allItems.isEmpty {
-                        Section {
-                            VStack(alignment: .center, spacing: 16) {
-                                Image(systemName: "sparkles")
-                                    .font(.system(size: 40))
-                                    .foregroundColor(.accentColor)
-                                Text("Start tracking your favorites!")
-                                    .font(.headline)
-                                Text("Tap the + button to add your first Best Item.")
-                                    .font(.subheadline)
-                                    .foregroundStyle(.secondary)
-                            }
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 40)
-                        }
-                    } else {
-                        Section {
-                            VStack(alignment: .center, spacing: 12) {
-                                Text("No matching items found.")
-                                    .font(.headline)
-                                if searchText.isEmpty {
-                                    Text("Here are some of your recent top-rated items:")
-                                        .font(.subheadline)
-                                        .foregroundStyle(.secondary)
-
-                                    let recentItems = allItems
-                                        .sorted(by: { $0.timestamp > $1.timestamp })
-                                        .prefix(3)
-
-                                    ForEach(recentItems) { item in
-                                        VStack(alignment: .leading, spacing: 4) {
-                                            Text(item.title)
-                                                .font(AppFont.title)
-                                            Text("Score: \(item.score)")
-                                                .font(AppFont.body)
-                                                .foregroundStyle(.secondary)
-                                        }
-                                        .bestCardStyle(using: item.gradient)
-                                            .onTapGesture {
-                                                Haptic.impact()
-                                                withAnimation(.spring()) {
-                                                    editingItem = item
-                                                }
-                                            }
-                                    }
-                                }
-                            }
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 40)
-                        }
-                    }
-                } else {
-                    let flatItems = sortedItems
-                    ForEach(Dictionary(grouping: flatItems, by: { $0.category }).sorted(by: { $0.key < $1.key }), id: \.key) { category, items in
-                        Section(header: Text(category).foregroundColor(.accentColor)) {
-                            ForEach(items) { item in
-                                VStack(alignment: .leading, spacing: 6) {
-                                    if let data = item.imageData,
-                                       let uiImage = UIImage(data: data) {
-                                        Image(uiImage: uiImage)
-                                            .resizable()
-                                            .scaledToFill()
-                                            .frame(height: 140)
-                                            .clipped()
-                                            .cornerRadius(8)
-                                    }
-                                    Text(item.category.uppercased())
-                                        .font(.caption2)
-                                        .padding(.horizontal, 6)
-                                        .padding(.vertical, 2)
-                                        .background(Color.accentColor.opacity(0.15))
-                                        .clipShape(Capsule())
-                                    Text(item.title)
-                                        .font(AppFont.title)
-                                    Text("Score: \(item.score)")
-                                        .font(AppFont.body)
-                                        .foregroundStyle(.secondary)
-                                    Text(item.timestamp.formatted(date: .abbreviated, time: .omitted))
-                                        .font(AppFont.caption)
-                                        .foregroundStyle(.gray)
-                                    if !item.note.isEmpty {
-                                        Text(item.note)
-                                            .font(AppFont.body)
-                                            .foregroundStyle(.primary)
-                                            .padding(.top, 4)
-                                    }
-                                    if !item.tags.isEmpty {
-                                        HStack {
-                                            ForEach(item.tags, id: \.self) { tag in
-                                                Text("#\(tag)")
-                                                    .font(.caption2)
-                                                    .padding(.horizontal, 4)
-                                                    .padding(.vertical, 2)
-                                                    .background(Color.accentColor.opacity(0.1))
-                                                    .clipShape(Capsule())
-                                            }
-                                        }
-                                    }
-                                }
-                                .bestCardStyle(using: item.gradient)
-                                .onTapGesture {
-                                    Haptic.impact()
-                                    withAnimation(.spring()) {
-                                        editingItem = item
-                                    }
-                                }
-                            }
-                            .onDelete { indexSet in
-                                if let index = indexSet.first {
-                                    pendingDeletion = items[index]
-                                }
-                            }
-                        }
-                    }
-                }
-        }
-        .navigationTitle("Your Best Picks")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        Haptic.impact()
-                        isPresentingAddSheet = true
-                    } label: {
-                        Label("Add Item", systemImage: "plus")
-                    }
-                }
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Picker("Min Score", selection: $minimumScore) {
-                        ForEach(1..<6) { value in
-                            Text("\(value)").tag(value)
-                        }
-                    }
-                    .pickerStyle(.segmented)
-                }
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Picker("Sort", selection: $sortOption) {
-                        Text("Date").tag(SortOption.byDate)
-                        Text("Score").tag(SortOption.byScore)
-                    }
-                    .pickerStyle(.segmented)
+                Button(role: .destructive) {
+                    showingResetAlert = true
+                } label: {
+                    Label("Reset All Data", systemImage: "trash")
                 }
             }
-            .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always))
-            .sheet(isPresented: $isPresentingAddSheet) {
-                AddItemView(isPresented: $isPresentingAddSheet)
+            .alert("Reset All Data", isPresented: $showingResetAlert) {
+                Button("Delete All", role: .destructive) {
+                    for item in allItems {
+                        modelContext.delete(item)
+                    }
+                }
+                Button("Cancel", role: .cancel) { }
+            } message: {
+                Text("This will permanently delete all your items.")
             }
-            .sheet(item: $editingItem) { item in
-                EditItemView(item: item, isPresented: $editingItem)
+                Section(header: Text("Categories")) {
+                    NavigationLink(destination: CategoryManagerView()) {
+                        Label("Manage Categories", systemImage: "folder")
+                    }
+                }
+                Section(header: Text("Tags")) {
+                    NavigationLink(destination: TagManagerView()) {
+                        Label("Manage Tags", systemImage: "tag")
+                    }
+                }
+                Section(header: Text("Preferences")) {
+                    Toggle("Enable Haptics", isOn: $hapticsEnabled)
+                }
             }
+            .navigationTitle("Settings")
         }
     }
+}
 
+struct CategoryManagerView: View {
+    @Query private var allItems: [BestItem]
+    @Environment(\.modelContext) private var modelContext
+
+    var categories: [(name: String, count: Int)] {
+        Dictionary(grouping: allItems.map { $0.category }, by: { $0 })
+            .map { ($0.key, $0.value.count) }
+            .sorted { $0.name < $1.name }
+    }
+
+    var body: some View {
+        List {
+            ForEach(categories, id: \.name) { entry in
+                HStack {
+                    Text(entry.name)
+                    Spacer()
+                    Text("\(entry.count)")
+                        .foregroundColor(.secondary)
+                }
+                .swipeActions {
+                    Button(role: .destructive) {
+                        for item in allItems where item.category == entry.name {
+                            item.category = "General"
+                        }
+                        try? modelContext.save()
+                    } label: {
+                        Label("Delete", systemImage: "trash")
+                    }
+                }
+            }
+        }
+        .navigationTitle("Manage Categories")
+    }
+}
+
+struct TagManagerView: View {
+    @Query private var allItems: [BestItem]
+    @Environment(\.modelContext) private var modelContext
+
+    var tagCounts: [(tag: String, count: Int)] {
+        Dictionary(grouping: allItems.flatMap { $0.tags }, by: { $0 })
+            .map { ($0.key, $0.value.count) }
+            .sorted { $0.count > $1.count }
+    }
+
+    var body: some View {
+        List {
+            ForEach(tagCounts, id: \.tag) { entry in
+                HStack {
+                    Text("#\(entry.tag)")
+                    Spacer()
+                    Text("\(entry.count)")
+                        .foregroundColor(.secondary)
+                }
+                .swipeActions {
+                    Button(role: .destructive) {
+                        for item in allItems where item.tags.contains(entry.tag) {
+                            item.tags.removeAll { $0 == entry.tag }
+                        }
+                        try? modelContext.save()
+                    } label: {
+                        Label("Delete", systemImage: "trash")
+                    }
+                }
+            }
+        }
+        .navigationTitle("Manage Tags")
+    }
 }
 
 // MARK: - AddItemView
@@ -851,96 +1241,6 @@ struct AddItemView: View {
         }
     }
 }
-
-
-// MARK: - SettingsView
-
-struct SettingsView: View {
-    @AppStorage("isDarkMode") private var isDarkMode = false
-    @AppStorage("dynamicAppIcon") private var dynamicAppIcon = false
-    @Environment(\.modelContext) private var modelContext
-    @Query private var allItems: [BestItem]
-    @AppStorage("hapticsEnabled") private var hapticsEnabled = true
-    @State private var showingResetAlert = false
-
-    var body: some View {
-        NavigationStack {
-            Form {
-                Section(header: Text("Theme")) {
-                    Toggle("Auto Dark Mode", isOn: $isDarkMode)
-                        .onChange(of: isDarkMode) { _, _ in
-                            if let windowScene = UIApplication.shared.connectedScenes
-                                .compactMap({ $0 as? UIWindowScene }).first {
-                                for window in windowScene.windows {
-                                    window.overrideUserInterfaceStyle = isDarkMode ? .dark : .light
-                                }
-                            }
-                        }
-                    Toggle("Auto Switch App Icon", isOn: $dynamicAppIcon)
-                        .onChange(of: dynamicAppIcon) { _, newValue in
-                            let iconName = newValue
-                                ? (UITraitCollection.current.userInterfaceStyle == .dark ? "AppIconDark" : "AppIconLight")
-                                : nil
-                            UIApplication.shared.setAlternateIconName(iconName)
-                        }
-                    Text("Override system dark mode preference")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-                Section {
-                    Label("Version \(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "Unknown")", systemImage: "number")
-                }
-                // TODO: Replace this placeholder with actual subscription functionality
-                Section(header: Text("Subscription")) {
-                    Label("Rate us on the App Store", systemImage: "star")
-                }
-                // TODO: Replace this placeholder with actual license list view
-                Section(header: Text("Licenses")) {
-                    Label("Open Source Licenses", systemImage: "doc.plaintext")
-                }
-                // TODO: Replace this placeholder with actual notification settings
-                Section(header: Text("Notifications")) {
-                    Label("Manage Notifications", systemImage: "bell.badge")
-                        .foregroundColor(.gray)
-                        .opacity(0.5)
-                        .disabled(true)
-                }
-            Section {
-                Button(role: .destructive) {
-                    showingResetAlert = true
-                } label: {
-                    Label("Reset All Data", systemImage: "trash")
-                }
-            }
-            .alert("Reset All Data", isPresented: $showingResetAlert) {
-                Button("Delete All", role: .destructive) {
-                    for item in allItems {
-                        modelContext.delete(item)
-                    }
-                }
-                Button("Cancel", role: .cancel) { }
-            } message: {
-                Text("This will permanently delete all your items.")
-            }
-                Section(header: Text("Categories")) {
-                    NavigationLink(destination: CategoryManagerView()) {
-                        Label("Manage Categories", systemImage: "folder")
-                    }
-                }
-                Section(header: Text("Tags")) {
-                    NavigationLink(destination: TagManagerView()) {
-                        Label("Manage Tags", systemImage: "tag")
-                    }
-                }
-                Section(header: Text("Preferences")) {
-                    Toggle("Enable Haptics", isOn: $hapticsEnabled)
-                }
-            }
-            .navigationTitle("Settings")
-        }
-    }
-}
-
 
 // MARK: - EditItemView
 
@@ -1096,308 +1396,35 @@ struct EditItemView: View {
     }
 }
 
-// MARK: - RecapView
+// MARK: - RatingView
 
-struct RecapView: View {
-    @Query private var bestItems: [BestItem]
-    @State private var sharedImage: ShareImage?
-    @State private var editingItem: BestItem? = nil
-    @State private var selectedDate: Date = Date()
-
-    private var filteredItems: [BestItem] {
-        let components = Calendar.current.dateComponents([.year, .month], from: selectedDate)
-        return bestItems.filter {
-            let itemComponents = Calendar.current.dateComponents([.year, .month], from: $0.timestamp)
-            return itemComponents.year == components.year && itemComponents.month == components.month
-        }
-        .sorted { $0.score > $1.score }
-    }
-
-    private var totalCount: Int {
-        filteredItems.count
-    }
-
-    private var totalScore: Int {
-        filteredItems.map(\.score).reduce(0, +)
-    }
-
-    private var averageScore: Double {
-        totalCount > 0 ? Double(totalScore) / Double(totalCount) : 0
-    }
+struct RatingView: View {
+    @Binding var rating: Int
+    var maxRating: Int = 100
+    // Removed step parameter as it's no longer needed
 
     var body: some View {
-        return NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 12) {
-                    VStack(alignment: .leading, spacing: 12) {
-                        DatePicker("Select Month", selection: $selectedDate, displayedComponents: [.date])
-                            .datePickerStyle(.compact)
-                            .labelsHidden()
-                            .padding(.horizontal)
-
-                        if totalCount > 0 {
-                            HStack(spacing: 16) {
-                                Label("\(totalCount) items", systemImage: "square.stack.3d.up")
-                                Label("Avg. \(String(format: "%.1f", averageScore))", systemImage: "chart.bar.xaxis")
-                                Label("Total \(totalScore)", systemImage: "sum")
-                            }
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                            .padding(.horizontal)
-                        }
-                    }
-                    recapContentView(for: filteredItems)
-                        .padding()
-                }
-            }
-            .navigationTitle("This Month's Recap")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Share") {
-                        let shareContent = VStack(spacing: 12) {
-                            HStack {
-                                Image("AppIcon")
-                                    .resizable()
-                                    .frame(width: 24, height: 24)
-                                Text(DateFormatter.localizedString(from: selectedDate, dateStyle: .long, timeStyle: .none))
-                                    .font(.headline)
-                            }
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(.ultraThinMaterial)
-                            .cornerRadius(12)
-
-                            recapContentView(for: filteredItems)
-                                .padding()
-                        }
-                        let renderer = ImageRenderer(content: shareContent.padding())
-                        renderer.scale = UIScreen.main.scale
-                        if let uiImage = renderer.uiImage {
-                            sharedImage = ShareImage(image: uiImage)
-                        }
-                    }
-                }
-            }
-            .sheet(item: $sharedImage) { item in
-                ShareSheet(activityItems: [item.image])
+        Picker("Rating", selection: $rating) {
+            ForEach(0...maxRating, id: \.self) { value in
+                Text("\(value)")
             }
         }
-        .sheet(item: $editingItem) { item in
-            EditItemView(item: item, isPresented: $editingItem)
-        }
-    }
-
-    private func recapContentView(for items: [BestItem]) -> some View {
-        return VStack(alignment: .leading, spacing: 12) {
-            if items.isEmpty {
-                Text("No items added this month.")
-            } else {
-                VStack(spacing: 8) {
-                    HStack(spacing: 8) {
-                        Image("AppIcon") // Assuming "AppIcon" is in the asset catalog
-                            .resizable()
-                            .frame(width: 24, height: 24)
-                            .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
-                        Text(DateFormatter.localizedString(from: selectedDate, dateStyle: .long, timeStyle: .none))
-                            .font(.headline)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(.ultraThinMaterial)
-                    .cornerRadius(12)
-                }
-                .padding(.bottom)
-
-                ForEach(Array(items.enumerated()), id: \.offset) { index, item in
-                    ZStack(alignment: .topLeading) {
-                        VStack(alignment: .leading, spacing: 6) {
-                            if let data = item.imageData, let uiImage = UIImage(data: data) {
-                                Image(uiImage: uiImage)
-                                    .resizable()
-                                    .scaledToFill()
-                                    .frame(height: 200)
-                                    .clipped()
-                                    .cornerRadius(8)
-                            } else {
-                                ZStack {
-                                    RoundedRectangle(cornerRadius: 8)
-                                        .fill(Color.gray.opacity(0.3))
-                                    Text(item.category.prefix(1))
-                                        .font(.largeTitle.bold())
-                                        .foregroundColor(.white)
-                                }
-                                .frame(height: 200)
-                            }
-                            Text(item.category.uppercased())
-                                .font(.caption2)
-                                .padding(.horizontal, 6)
-                                .padding(.vertical, 2)
-                                .background(Color.accentColor.opacity(0.15))
-                                .clipShape(Capsule())
-                            if index == 0 {
-                                Text(item.title)
-                                    .font(.largeTitle.bold())
-                                    .foregroundStyle(.primary)
-                            } else {
-                                Text(item.title)
-                                    .font(AppFont.title)
-                                    .fontWeight(.semibold)
-                            }
-                            Text("Score: \(item.score)")
-                                .font(AppFont.body)
-                                .foregroundStyle(.secondary)
-                            Text(item.timestamp.formatted(date: .abbreviated, time: .omitted))
-                                .font(AppFont.caption)
-                                .foregroundStyle(.gray)
-                            if !item.note.isEmpty {
-                                Text(item.note)
-                                    .font(AppFont.body)
-                                    .foregroundStyle(.primary)
-                                    .padding(.top, 4)
-                            }
-                            if !item.tags.isEmpty {
-                                HStack {
-                                    ForEach(item.tags, id: \.self) { tag in
-                                        Text("#\(tag)")
-                                            .font(.caption2)
-                                            .padding(.horizontal, 4)
-                                            .padding(.vertical, 2)
-                                            .background(Color.accentColor.opacity(0.1))
-                                            .clipShape(Capsule())
-                                    }
-                                }
-                            }
-                        }
-                        .padding()
-                        .background(
-                            RoundedRectangle(cornerRadius: DesignMetrics.cornerRadius, style: .continuous)
-                                .fill(Color.white.opacity(0.8))
-                                .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 4)
-                        )
-                        Text("#\(index + 1)")
-                            .font(.headline)
-                            .padding(6)
-                            .background(Color.black.opacity(0.7))
-                            .foregroundColor(.white)
-                            .clipShape(Capsule())
-                            .padding(8)
-                    }
-                    .bestCardStyle(using: item.gradient)
-                    .onTapGesture {
-                        Haptic.impact()
-                        withAnimation(.spring()) {
-                            editingItem = item
-                        }
-                    }
-                    Divider()
-                }
-
-                summarySection()
-
-                categoryAverageSection(for: items)
-                top5ItemsSection(for: items)
-            }
-        }
-    }
-
-    private func summarySection() -> some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Divider()
-                .padding(.vertical, 4)
-            Text("Summary")
-                .font(.headline)
-                .padding(.bottom, 4)
-
-            Label("Total Score: \(totalScore)", systemImage: "sum")
-            Label("Average Score: \(String(format: "%.1f", averageScore))", systemImage: "chart.bar.xaxis")
-            Label("Total Items: \(totalCount)", systemImage: "square.stack.3d.up")
-        }
-        .padding()
-        .background(Color(.secondarySystemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: DesignMetrics.cornerRadius, style: .continuous))
-        .padding(.top)
-        .font(.subheadline)
-        .foregroundStyle(.secondary)
-    }
-
-    private func categoryAverageSection(for items: [BestItem]) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Divider()
-                .padding(.vertical, 4)
-            Text("Average Score per Category")
-                .font(.headline)
-                .padding(.bottom, 4)
-            let grouped = Dictionary(grouping: items, by: { $0.category })
-            let mapped = grouped.map { (category: $0.key, average: Double($0.value.map { $0.score }.reduce(0, +)) / Double($0.value.count)) }
-            let averages = mapped.sorted(by: { $0.category < $1.category })
-
-            ForEach(averages, id: \.category) { entry in
-                Label("\(entry.category): \(String(format: "%.1f", entry.average))", systemImage: "chart.bar.xaxis")
-            }
-        }
-        .padding()
-        .background(Color(.secondarySystemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: DesignMetrics.cornerRadius, style: .continuous))
-        .padding(.top)
-        .font(.subheadline)
-        .foregroundStyle(.secondary)
-    }
-
-    private func top5ItemsSection(for items: [BestItem]) -> some View {
-        let topItems = items.sorted(by: { $0.score > $1.score }).prefix(5)
-        return VStack(alignment: .leading, spacing: 8) {
-            Divider()
-                .padding(.vertical, 4)
-            Text("Top 5 Items")
-                .font(.headline)
-                .padding(.bottom, 4)
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 12) {
-                    ForEach(Array(topItems.enumerated()), id: \.offset) { index, item in
-                        VStack(alignment: .leading, spacing: 6) {
-                            Text("#\(index + 1)")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                            Text(item.title)
-                                .font(.subheadline)
-                                .fontWeight(.semibold)
-                            Text("Score: \(item.score)")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-                        .padding()
-                        .background(Color(.secondarySystemBackground))
-                        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-                    }
-                }
-                .padding(.horizontal)
-            }
-        }
-        .padding(.top)
+        .pickerStyle(.wheel)
+        .frame(height: 120)
     }
 }
 
-// MARK: - ShareImage
-final class ShareImage: Identifiable {
-    let id = UUID()
-    let image: UIImage
+// MARK: - Style Definitions
 
-    init(image: UIImage) {
-        self.image = image
-    }
+enum AppFont {
+    static let title = Font.title3.weight(.semibold)
+    static let body = Font.subheadline
+    static let caption = Font.caption2
 }
-
-// MARK: - ShareSheet
-
-struct ShareSheet: UIViewControllerRepresentable {
-    var activityItems: [Any]
-    var applicationActivities: [UIActivity]? = nil
-
-    func makeUIViewController(context: Context) -> UIActivityViewController {
-        UIActivityViewController(activityItems: activityItems, applicationActivities: applicationActivities)
-    }
-
-    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
+enum DesignMetrics {
+    static let cornerRadius: CGFloat = 12
+    static let shadowRadius: CGFloat = 4
+    static let shadowOpacity: Double = 0.05
 }
 
 // MARK: - CardViewModifier
@@ -1423,37 +1450,6 @@ extension View {
     }
 }
 
-// MARK: - Style Definitions
-
-enum AppFont {
-    static let title = Font.title3.weight(.semibold)
-    static let body = Font.subheadline
-    static let caption = Font.caption2
-}
-enum DesignMetrics {
-    static let cornerRadius: CGFloat = 12
-    static let shadowRadius: CGFloat = 4
-    static let shadowOpacity: Double = 0.05
-}
-
-// MARK: - RatingView
-
-struct RatingView: View {
-    @Binding var rating: Int
-    var maxRating: Int = 100
-    // Removed step parameter as it's no longer needed
-
-    var body: some View {
-        Picker("Rating", selection: $rating) {
-            ForEach(0...maxRating, id: \.self) { value in
-                Text("\(value)")
-            }
-        }
-        .pickerStyle(.wheel)
-        .frame(height: 120)
-    }
-}
-
 // MARK: - Haptic Feedback Utility
 
 enum Haptic {
@@ -1464,6 +1460,8 @@ enum Haptic {
         }
     }
 }
+
+// MARK: - ItemDetailView
 
 struct ItemDetailView: View {
     let item: BestItem
