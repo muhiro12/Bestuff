@@ -294,6 +294,19 @@ struct BestItemListView: View {
                                     }
                                 }
                                 .bestCardStyle(using: item.gradient)
+                                .contextMenu {
+                                    Button {
+                                        selectedItem = item
+                                    } label: {
+                                        Label("View Details", systemImage: "eye")
+                                    }
+
+                                    Button {
+                                        editingItem = item
+                                    } label: {
+                                        Label("Edit", systemImage: "pencil")
+                                    }
+                                }
                                 .onTapGesture {
                                     Haptic.impact()
                                     withAnimation(.spring()) {
@@ -541,6 +554,19 @@ struct RecapView: View {
                             .padding(8)
                     }
                     .bestCardStyle(using: item.gradient)
+                    .contextMenu {
+                        Button {
+                            selectedItem = item
+                        } label: {
+                            Label("View Details", systemImage: "eye")
+                        }
+
+                        Button {
+                            editingItem = item
+                        } label: {
+                            Label("Edit", systemImage: "pencil")
+                        }
+                    }
                     .onTapGesture {
                         Haptic.impact()
                         withAnimation(.spring()) {
