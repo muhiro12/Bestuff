@@ -14,6 +14,7 @@ struct BestItemListToolbar: ToolbarContent {
     @Binding var selectedMonth: Date?
     @Binding var selectedCategory: String?
     @Binding var selectedTags: Set<String>
+    @Binding var isPresentingTagPicker: Bool
     var allItems: [BestItem]
 
     var body: some ToolbarContent {
@@ -72,24 +73,8 @@ struct BestItemListToolbar: ToolbarContent {
             }
         }
         ToolbarItem(placement: .bottomBar) {
-            Menu {
-                ForEach(Array(Set(allItems.flatMap(\.tags))).sorted(), id: \.self) { tag in
-                    Button {
-                        if selectedTags.contains(tag) {
-                            selectedTags.remove(tag)
-                        } else {
-                            selectedTags.insert(tag)
-                        }
-                    } label: {
-                        Label(tag, systemImage: selectedTags.contains(tag) ? "checkmark.circle.fill" : "circle")
-                    }
-                }
-                if !selectedTags.isEmpty {
-                    Divider()
-                    Button("Clear Tags") {
-                        selectedTags.removeAll()
-                    }
-                }
+            Button {
+                isPresentingTagPicker = true
             } label: {
                 Label("Tags", systemImage: "tag.circle")
             }

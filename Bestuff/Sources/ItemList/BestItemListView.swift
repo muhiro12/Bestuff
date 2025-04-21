@@ -15,6 +15,7 @@ struct BestItemListView: View {
     @State private var selectedMonth: Date? = nil
     @State private var selectedCategory: String? = nil
     @State private var selectedTags: Set<String> = []
+    @State private var isPresentingTagPicker: Bool = false
 
     var bestItems: [BestItem] {
         allItems.filter {
@@ -46,7 +47,12 @@ struct BestItemListView: View {
                         .foregroundStyle(.secondary)
                         .padding(.vertical, 4)
                 }
-                let sortedItems = bestItems.sorted { (sortOption == .byDate) ? $0.timestamp < $1.timestamp : $0.score > $1.score }
+                let sortedItems = bestItems.sorted {
+                    if $0.isPinned != $1.isPinned {
+                        return $0.isPinned && !$1.isPinned
+                    }
+                    return (sortOption == .byDate) ? $0.timestamp < $1.timestamp : $0.score > $1.score
+                }
                 if sortedItems.isEmpty {
                     if allItems.isEmpty {
                         EmptyPlaceholderView()
@@ -69,6 +75,7 @@ struct BestItemListView: View {
                     selectedMonth: $selectedMonth,
                     selectedCategory: $selectedCategory,
                     selectedTags: $selectedTags,
+                    isPresentingTagPicker: $isPresentingTagPicker,
                     allItems: allItems
                 )
             }
@@ -81,12 +88,17 @@ struct BestItemListView: View {
             }) { item in
                 EditItemView(item: item, isPresented: $navigation.editingItem)
             }
+            .sheet(isPresented: $isPresentingTagPicker) {
+                TagPickerView(
+                    allTags: Array(Set(allItems.flatMap(\.tags))).sorted(),
+                    selectedTags: $selectedTags
+                )
+            }
             .navigationDestination(item: $navigation.selectedItem) { item in
                 ItemDetailView(item: item)
             }
         }
     }
-
 }
 
 #Preview {

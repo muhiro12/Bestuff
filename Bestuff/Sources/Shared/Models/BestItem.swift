@@ -20,6 +20,7 @@ final class BestItem {
     var purchaseDate: Date? = nil
     var price: Double? = nil
     var recommendLevel: Int = 3
+    var isPinned: Bool = false
 
     private init() {}
 
