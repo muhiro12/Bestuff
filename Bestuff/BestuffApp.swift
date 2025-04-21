@@ -171,8 +171,7 @@ struct BestItemListView: View {
         }
     }
     @State private var isPresentingAddSheet = false
-    @State private var editingItem: BestItem? = nil
-    @State private var selectedItem: BestItem? = nil
+    @StateObject private var navigation = NavigationViewModel()
     @State private var searchText: String = ""
     @State private var sortOption: SortOption = .byDate
     @State private var minimumScore: Int = 1
@@ -185,14 +184,14 @@ struct BestItemListView: View {
 
     var body: some View {
         NavigationStack {
-        List {
-            Section {
-                Text("Track and reflect on your favorite purchases. Use filters above to customize the view.")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                    .padding(.vertical, 4)
-            }
-            let sortedItems = bestItems.sorted { (sortOption == .byDate) ? $0.timestamp < $1.timestamp : $0.score > $1.score }
+            List {
+                Section {
+                    Text("Track and reflect on your favorite purchases. Use filters above to customize the view.")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                        .padding(.vertical, 4)
+                }
+                let sortedItems = bestItems.sorted { (sortOption == .byDate) ? $0.timestamp < $1.timestamp : $0.score > $1.score }
                 if sortedItems.isEmpty {
                     if allItems.isEmpty {
                         Section {
@@ -235,7 +234,7 @@ struct BestItemListView: View {
                                         .onTapGesture {
                                             Haptic.impact()
                                             withAnimation(.spring()) {
-                                                selectedItem = item
+                                                navigation.selectedItem = item
                                             }
                                         }
                                     }
@@ -296,13 +295,13 @@ struct BestItemListView: View {
                                 .bestCardStyle(using: item.gradient)
                                 .contextMenu {
                                     Button {
-                                        selectedItem = item
+                                        navigation.selectedItem = item
                                     } label: {
                                         Label("View Details", systemImage: "eye")
                                     }
 
                                     Button {
-                                        editingItem = item
+                                        navigation.editingItem = item
                                     } label: {
                                         Label("Edit", systemImage: "pencil")
                                     }
@@ -310,7 +309,7 @@ struct BestItemListView: View {
                                 .onTapGesture {
                                     Haptic.impact()
                                     withAnimation(.spring()) {
-                                        selectedItem = item
+                                        navigation.selectedItem = item
                                     }
                                 }
                             }
@@ -322,8 +321,8 @@ struct BestItemListView: View {
                         }
                     }
                 }
-        }
-        .navigationTitle("Your Best Picks")
+            }
+            .navigationTitle("Your Best Picks")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
@@ -353,10 +352,10 @@ struct BestItemListView: View {
             .sheet(isPresented: $isPresentingAddSheet) {
                 AddItemView(isPresented: $isPresentingAddSheet)
             }
-            .sheet(item: $editingItem) { item in
-                EditItemView(item: item, isPresented: $editingItem)
+            .sheet(item: $navigation.editingItem) { item in
+                EditItemView(item: item, isPresented: $navigation.editingItem)
             }
-            .navigationDestination(item: $selectedItem) { item in
+            .navigationDestination(item: $navigation.selectedItem) { item in
                 ItemDetailView(item: item)
             }
         }
@@ -368,8 +367,7 @@ struct BestItemListView: View {
 struct RecapView: View {
     @Query private var bestItems: [BestItem]
     @State private var sharedImage: ShareImage?
-    @State private var editingItem: BestItem? = nil
-    @State private var selectedItem: BestItem? = nil
+    @StateObject private var navigation = NavigationViewModel()
     @State private var selectedDate: Date = Date()
 
     private var filteredItems: [BestItem] {
@@ -449,12 +447,12 @@ struct RecapView: View {
             .sheet(item: $sharedImage) { item in
                 ShareSheet(activityItems: [item.image])
             }
-            .navigationDestination(item: $selectedItem) { item in
+            .navigationDestination(item: $navigation.selectedItem) { item in
                 ItemDetailView(item: item)
             }
         }
-        .sheet(item: $editingItem) { item in
-            EditItemView(item: item, isPresented: $editingItem)
+        .sheet(item: $navigation.editingItem) { item in
+            EditItemView(item: item, isPresented: $navigation.editingItem)
         }
     }
 
@@ -527,16 +525,7 @@ struct RecapView: View {
                                     .padding(.top, 4)
                             }
                             if !item.tags.isEmpty {
-                                HStack {
-                                    ForEach(item.tags, id: \.self) { tag in
-                                        Text("#\(tag)")
-                                            .font(.caption2)
-                                            .padding(.horizontal, 4)
-                                            .padding(.vertical, 2)
-                                            .background(Color.accentColor.opacity(0.1))
-                                            .clipShape(Capsule())
-                                    }
-                                }
+                                TagCapsuleView(tags: item.tags)
                             }
                         }
                         .padding()
@@ -556,13 +545,13 @@ struct RecapView: View {
                     .bestCardStyle(using: item.gradient)
                     .contextMenu {
                         Button {
-                            selectedItem = item
+                            navigation.selectedItem = item
                         } label: {
                             Label("View Details", systemImage: "eye")
                         }
 
                         Button {
-                            editingItem = item
+                            navigation.editingItem = item
                         } label: {
                             Label("Edit", systemImage: "pencil")
                         }
@@ -570,62 +559,20 @@ struct RecapView: View {
                     .onTapGesture {
                         Haptic.impact()
                         withAnimation(.spring()) {
-                            selectedItem = item
+                            navigation.selectedItem = item
                         }
                     }
                     Divider()
                 }
 
-                summarySection()
+                SummarySectionView(totalScore: totalScore, averageScore: averageScore, totalCount: totalCount)
 
-                categoryAverageSection(for: items)
+                CategoryAverageSectionView(items: items)
                 top5ItemsSection(for: items)
             }
         }
     }
 
-    private func summarySection() -> some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Divider()
-                .padding(.vertical, 4)
-            Text("Summary")
-                .font(.headline)
-                .padding(.bottom, 4)
-
-            Label("Total Score: \(totalScore)", systemImage: "sum")
-            Label("Average Score: \(String(format: "%.1f", averageScore))", systemImage: "chart.bar.xaxis")
-            Label("Total Items: \(totalCount)", systemImage: "square.stack.3d.up")
-        }
-        .padding()
-        .background(Color(.secondarySystemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: DesignMetrics.cornerRadius, style: .continuous))
-        .padding(.top)
-        .font(.subheadline)
-        .foregroundStyle(.secondary)
-    }
-
-    private func categoryAverageSection(for items: [BestItem]) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Divider()
-                .padding(.vertical, 4)
-            Text("Average Score per Category")
-                .font(.headline)
-                .padding(.bottom, 4)
-            let grouped = Dictionary(grouping: items, by: { $0.category })
-            let mapped = grouped.map { (category: $0.key, average: Double($0.value.map { $0.score }.reduce(0, +)) / Double($0.value.count)) }
-            let averages = mapped.sorted(by: { $0.category < $1.category })
-
-            ForEach(averages, id: \.category) { entry in
-                Label("\(entry.category): \(String(format: "%.1f", entry.average))", systemImage: "chart.bar.xaxis")
-            }
-        }
-        .padding()
-        .background(Color(.secondarySystemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: DesignMetrics.cornerRadius, style: .continuous))
-        .padding(.top)
-        .font(.subheadline)
-        .foregroundStyle(.secondary)
-    }
 
     private func top5ItemsSection(for items: [BestItem]) -> some View {
         let topItems = items.sorted(by: { $0.score > $1.score }).prefix(5)
@@ -658,6 +605,23 @@ struct RecapView: View {
             }
         }
         .padding(.top)
+    }
+}
+
+struct TagCapsuleView: View {
+    let tags: [String]
+
+    var body: some View {
+        HStack {
+            ForEach(tags, id: \.self) { tag in
+                Text("#\(tag)")
+                    .font(.caption2)
+                    .padding(.horizontal, 4)
+                    .padding(.vertical, 2)
+                    .background(Color.accentColor.opacity(0.1))
+                    .clipShape(Capsule())
+            }
+        }
     }
 }
 
@@ -728,31 +692,31 @@ struct InsightsView: View {
 
     var body: some View {
         NavigationStack {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 16) {
-                VStack(alignment: .leading, spacing: 12) {
-                    HStack {
-                        Picker("Category", selection: $selectedCategory) {
-                            Text("All").tag("All")
-                            ForEach(Array(Set(allItems.map(\.category))), id: \.self) {
-                                Text($0).tag($0)
+            ScrollView {
+                VStack(alignment: .leading, spacing: 16) {
+                    VStack(alignment: .leading, spacing: 12) {
+                        HStack {
+                            Picker("Category", selection: $selectedCategory) {
+                                Text("All").tag("All")
+                                ForEach(Array(Set(allItems.map(\.category))), id: \.self) {
+                                    Text($0).tag($0)
+                                }
                             }
-                        }
-                        .pickerStyle(.menu)
+                            .pickerStyle(.menu)
 
-                        Picker("Year", selection: $selectedYear) {
-                            ForEach((2020...Calendar.current.component(.year, from: Date())).reversed(), id: \.self) {
-                                Text("\($0)").tag($0)
+                            Picker("Year", selection: $selectedYear) {
+                                ForEach((2020...Calendar.current.component(.year, from: Date())).reversed(), id: \.self) {
+                                    Text("\($0)").tag($0)
+                                }
                             }
+                            .pickerStyle(.menu)
                         }
-                        .pickerStyle(.menu)
                     }
-                }
-                Text("Insights")
-                    .font(.largeTitle.bold())
-                Text("Visualize trends and analyze your best items by category, score, and more.")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    Text("Insights")
+                        .font(.largeTitle.bold())
+                    Text("Visualize trends and analyze your best items by category, score, and more.")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
 
                     InsightsCard(title: "Items per Category") {
                         Chart {
@@ -1024,6 +988,32 @@ struct InsightsCard<Content: View>: View {
 
 // MARK: - SettingsView
 
+extension BestItem {
+    static var sample: BestItem {
+        let item = BestItem()
+        item.title = "Sample Item"
+        item.category = "Books"
+        item.score = 4
+        item.note = "Sample note"
+        item.tags = ["tag1", "tag2"]
+        return item
+    }
+}
+
+struct RecapView_Previews: PreviewProvider {
+    static var previews: some View {
+        RecapView()
+            .modelContainer(for: BestItem.self)
+    }
+}
+
+struct BestItemListView_Previews: PreviewProvider {
+    static var previews: some View {
+        BestItemListView()
+            .modelContainer(for: BestItem.self)
+    }
+}
+
 struct SettingsView: View {
     @AppStorage("isDarkMode") private var isDarkMode = false
     @AppStorage("dynamicAppIcon") private var dynamicAppIcon = false
@@ -1048,8 +1038,8 @@ struct SettingsView: View {
                     Toggle("Auto Switch App Icon", isOn: $dynamicAppIcon)
                         .onChange(of: dynamicAppIcon) { _, newValue in
                             let iconName = newValue
-                                ? (UITraitCollection.current.userInterfaceStyle == .dark ? "AppIconDark" : "AppIconLight")
-                                : nil
+                            ? (UITraitCollection.current.userInterfaceStyle == .dark ? "AppIconDark" : "AppIconLight")
+                            : nil
                             UIApplication.shared.setAlternateIconName(iconName)
                         }
                     Text("Override system dark mode preference")
@@ -1074,23 +1064,23 @@ struct SettingsView: View {
                         .opacity(0.5)
                         .disabled(true)
                 }
-            Section {
-                Button(role: .destructive) {
-                    showingResetAlert = true
-                } label: {
-                    Label("Reset All Data", systemImage: "trash")
-                }
-            }
-            .alert("Reset All Data", isPresented: $showingResetAlert) {
-                Button("Delete All", role: .destructive) {
-                    for item in allItems {
-                        modelContext.delete(item)
+                Section {
+                    Button(role: .destructive) {
+                        showingResetAlert = true
+                    } label: {
+                        Label("Reset All Data", systemImage: "trash")
                     }
                 }
-                Button("Cancel", role: .cancel) { }
-            } message: {
-                Text("This will permanently delete all your items.")
-            }
+                .alert("Reset All Data", isPresented: $showingResetAlert) {
+                    Button("Delete All", role: .destructive) {
+                        for item in allItems {
+                            modelContext.delete(item)
+                        }
+                    }
+                    Button("Cancel", role: .cancel) { }
+                } message: {
+                    Text("This will permanently delete all your items.")
+                }
                 Section(header: Text("Categories")) {
                     NavigationLink(destination: CategoryManagerView()) {
                         Label("Manage Categories", systemImage: "folder")
@@ -1523,6 +1513,13 @@ struct RatingView: View {
     }
 }
 
+// MARK: - NavigationViewModel
+
+final class NavigationViewModel: ObservableObject {
+    @Published var selectedItem: BestItem? = nil
+    @Published var editingItem: BestItem? = nil
+}
+
 // MARK: - Style Definitions
 
 enum AppFont {
@@ -1567,5 +1564,63 @@ enum Haptic {
             let generator = UIImpactFeedbackGenerator(style: .medium)
             generator.impactOccurred()
         }
+    }
+}
+
+// MARK: - SummarySectionView
+
+struct SummarySectionView: View {
+    let totalScore: Int
+    let averageScore: Double
+    let totalCount: Int
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Divider()
+                .padding(.vertical, 4)
+            Text("Summary")
+                .font(.headline)
+                .padding(.bottom, 4)
+
+            Label("Total Score: \(totalScore)", systemImage: "sum")
+            Label("Average Score: \(String(format: "%.1f", averageScore))", systemImage: "chart.bar.xaxis")
+            Label("Total Items: \(totalCount)", systemImage: "square.stack.3d.up")
+        }
+        .padding()
+        .background(Color(.secondarySystemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: DesignMetrics.cornerRadius, style: .continuous))
+        .padding(.top)
+        .font(.subheadline)
+        .foregroundStyle(.secondary)
+    }
+}
+
+// MARK: - CategoryAverageSectionView
+
+struct CategoryAverageSectionView: View {
+    let items: [BestItem]
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Divider()
+                .padding(.vertical, 4)
+            Text("Average Score per Category")
+                .font(.headline)
+                .padding(.bottom, 4)
+
+            let grouped = Dictionary(grouping: items, by: { $0.category })
+            let mapped = grouped.map { (category: $0.key, average: Double($0.value.map { $0.score }.reduce(0, +)) / Double($0.value.count)) }
+            let averages = mapped.sorted(by: { $0.category < $1.category })
+
+            ForEach(averages, id: \.category) { entry in
+                Label("\(entry.category): \(String(format: "%.1f", entry.average))", systemImage: "chart.bar.xaxis")
+            }
+        }
+        .padding()
+        .background(Color(.secondarySystemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: DesignMetrics.cornerRadius, style: .continuous))
+        .padding(.top)
+        .font(.subheadline)
+        .foregroundStyle(.secondary)
     }
 }
