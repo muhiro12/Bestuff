@@ -105,18 +105,27 @@ struct CategoryManagerView: View {
     }
 }
 
-@ViewBuilder
-private func insightsCard<T: View>(title: String, @ViewBuilder content: () -> T) -> some View {
-    VStack(alignment: .leading, spacing: 12) {
-        Text(title)
-            .font(.headline)
-            .foregroundStyle(.primary)
-        content()
+struct InsightsCard<Content: View>: View {
+    let title: String
+    let content: Content
+
+    init(title: String, @ViewBuilder content: () -> Content) {
+        self.title = title
+        self.content = content()
     }
-    .padding()
-    .background(.thinMaterial)
-    .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-    .shadow(color: .black.opacity(0.05), radius: 8, x: 0, y: 4)
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text(title)
+                .font(.headline)
+                .foregroundStyle(.primary)
+            content
+        }
+        .padding()
+        .background(.thinMaterial)
+        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .shadow(color: .black.opacity(0.05), radius: 8, x: 0, y: 4)
+    }
 }
 
 // MARK: - InsightsView
@@ -188,7 +197,7 @@ struct InsightsView: View {
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
 
-                    insightsCard(title: "Items per Category") {
+                    InsightsCard(title: "Items per Category") {
                         Chart {
                             ForEach(categoryCounts, id: \.category) { entry in
                                 BarMark(
@@ -209,7 +218,7 @@ struct InsightsView: View {
                         }
                         .frame(height: CGFloat(categoryCounts.count * 40 + 40))
                     }
-                    insightsCard(title: "Top Items This Year") {
+                    InsightsCard(title: "Top Items This Year") {
                         let calendar = Calendar.current
                         let year = calendar.component(.year, from: Date())
 
@@ -239,7 +248,7 @@ struct InsightsView: View {
                         .frame(height: 260)
                     }
 
-                    insightsCard(title: "Top Categories by Average Score") {
+                    InsightsCard(title: "Top Categories by Average Score") {
                         let categoryAverages = Dictionary(grouping: allItems, by: \.category)
                             .mapValues { items in
                                 Double(items.map(\.score).reduce(0, +)) / Double(items.count)
@@ -267,7 +276,7 @@ struct InsightsView: View {
                         .frame(height: CGFloat(min(categoryAverages.count, 5) * 30 + 40))
                     }
 
-                    insightsCard(title: "Score Distribution") {
+                    InsightsCard(title: "Score Distribution") {
                         Chart {
                             ForEach(scoreCounts, id: \.score) { entry in
                                 BarMark(
@@ -289,7 +298,7 @@ struct InsightsView: View {
                         .frame(height: 240)
                     }
 
-                    insightsCard(title: "Monthly Activity") {
+                    InsightsCard(title: "Monthly Activity") {
                         Chart {
                             ForEach(monthlyCounts, id: \.month) { entry in
                                 BarMark(
@@ -313,7 +322,7 @@ struct InsightsView: View {
                         .frame(height: 240)
                     }
 
-                    insightsCard(title: "Top Tags") {
+                    InsightsCard(title: "Top Tags") {
                         Chart {
                             ForEach(tagCounts.prefix(10), id: \.tag) { entry in
                                 BarMark(
@@ -335,7 +344,7 @@ struct InsightsView: View {
                         .frame(height: CGFloat(min(tagCounts.count, 10) * 30 + 40))
                     }
 
-                    insightsCard(title: "Average Price by Category") {
+                    InsightsCard(title: "Average Price by Category") {
                         let categoryAverages = Dictionary(grouping: allItems.filter { $0.price != nil }, by: \.category)
                             .mapValues { items in
                                 items.compactMap(\.price).reduce(0, +) / Double(items.count)
@@ -363,7 +372,7 @@ struct InsightsView: View {
                         .frame(height: CGFloat(min(categoryAverages.count, 6) * 30 + 40))
                     }
 
-                    insightsCard(title: "Most Expensive Items") {
+                    InsightsCard(title: "Most Expensive Items") {
                         let expensiveItems = allItems.filter { $0.price != nil }
                             .sorted { ($0.price ?? 0) > ($1.price ?? 0) }
                             .prefix(5)
@@ -387,7 +396,7 @@ struct InsightsView: View {
                         .frame(height: 260)
                     }
 
-                    insightsCard(title: "Items per Recommend Level") {
+                    InsightsCard(title: "Items per Recommend Level") {
                         let recommendLevelCounts = Dictionary(grouping: allItems, by: \.recommendLevel)
                             .map { ($0.key, $0.value.count) }
                             .sorted { $0.0 < $1.0 }
