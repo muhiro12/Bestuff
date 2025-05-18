@@ -21,7 +21,7 @@ struct BestItemListView: View {
         allItems.filter {
             ($0.title.localizedStandardContains(searchText) || $0.category.localizedStandardContains(searchText)) &&
             $0.score >= minimumScore &&
-            (selectedMonth == nil || Calendar.current.isDate($0.timestamp, equalTo: selectedMonth!, toGranularity: .month)) &&
+            (selectedMonth == nil || Calendar.current.isDate($0.createdTimestamp, equalTo: selectedMonth!, toGranularity: .month)) &&
             (selectedCategory == nil || $0.category == selectedCategory) &&
             selectedTags.allSatisfy { $0.isEmpty || $0 == "" || $0 == "All" }
         }
@@ -51,7 +51,7 @@ struct BestItemListView: View {
                     if $0.isPinned != $1.isPinned {
                         return $0.isPinned && !$1.isPinned
                     }
-                    return (sortOption == .byDate) ? $0.timestamp < $1.timestamp : $0.score > $1.score
+                    return (sortOption == .byDate) ? $0.createdTimestamp < $1.createdTimestamp : $0.score > $1.score
                 }
                 if sortedItems.isEmpty {
                     if allItems.isEmpty {

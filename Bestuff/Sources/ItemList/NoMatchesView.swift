@@ -23,7 +23,7 @@ struct NoMatchesView: View {
                         .foregroundStyle(.secondary)
 
                     let recentItems = allItems
-                        .sorted(by: { $0.timestamp > $1.timestamp })
+                        .sorted(by: { $0.createdTimestamp > $1.createdTimestamp })
                         .prefix(3)
 
                     ForEach(recentItems) { item in

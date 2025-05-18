@@ -16,27 +16,36 @@ struct EditItemView: View {
     @Query private var allItems: [BestItem]
     @State private var currentTag: String = ""
 
+    @State private var title: String = ""
+    @State private var note: String = ""
+    @State private var category: String = "General"
+    @State private var score: Int = 0
+    @State private var recommendLevel: Int = 3
+    @State private var purchaseDate: Date = .now
+    @State private var price: String = ""
+    @State private var tags: [String] = []
+
     var body: some View {
         NavigationStack {
             Form {
-                TextField("Title", text: $item.title)
+                TextField("Title", text: $title)
                 Menu {
                     ForEach(categoryOptions, id: \.self) { option in
                         Button(option) {
-                            item.category = option
+                            category = option
                         }
                     }
                 } label: {
                     HStack {
-                        Text(item.category.isEmpty ? "Select Category" : item.category)
-                            .foregroundColor(item.category.isEmpty ? .gray : .primary)
+                        Text(category.isEmpty ? "Select Category" : category)
+                            .foregroundColor(category.isEmpty ? .gray : .primary)
                         Spacer()
                         Image(systemName: "chevron.down")
                             .foregroundColor(.gray)
                     }
                 }
                 .padding(.vertical, 4)
-                TextField("Note", text: $item.note, axis: .vertical)
+                TextField("Note", text: $note, axis: .vertical)
                     .lineLimit(3...5)
 
                 Section(header: Text("Tags")) {
@@ -49,7 +58,7 @@ struct EditItemView: View {
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack {
                                 ForEach(tagSuggestions.filter {
-                                    $0.lowercased().hasPrefix(currentTag.lowercased()) && !item.tags.contains($0)
+                                    $0.lowercased().hasPrefix(currentTag.lowercased()) && !tags.contains($0)
                                 }, id: \.self) { suggestion in
                                     Button(action: {
                                         currentTag = suggestion
@@ -67,9 +76,9 @@ struct EditItemView: View {
                         .padding(.top, 4)
                     }
 
-                    if !item.tags.isEmpty {
+                    if !tags.isEmpty {
                         HStack {
-                            ForEach(item.tags, id: \.self) { tag in
+                            ForEach(tags, id: \.self) { tag in
                                 Text("#\(tag)")
                                     .font(.caption2)
                                     .padding(.horizontal, 6)
@@ -83,38 +92,17 @@ struct EditItemView: View {
                 }
 
                 Section(header: Text("Rating")) {
-                    RatingView(rating: $item.score)
+                    RatingView(rating: $score)
                 }
 
                 Section(header: Text("Details")) {
-                    DatePicker("Purchase Date", selection:
-                                Binding(
-                                    get: { item.purchaseDate ?? .now },
-                                    set: { item.purchaseDate = $0 }
-                                ),
-                               displayedComponents: .date
-                    )
-                    TextField("Price", text: Binding(
-                        get: {
-                            if let price = item.price {
-                                let formatter = NumberFormatter()
-                                formatter.numberStyle = .currency
-                                formatter.locale = Locale.current
-                                return formatter.string(from: NSNumber(value: price)) ?? ""
-                            } else {
-                                return ""
-                            }
-                        },
-                        set: {
-                            let sanitized = $0.replacingOccurrences(of: "[^0-9.]", with: "", options: .regularExpression)
-                            item.price = Double(sanitized)
-                        }
-                    ))
-                    .keyboardType(.decimalPad)
+                    DatePicker("Purchase Date", selection: $purchaseDate, displayedComponents: .date)
+                    TextField("Price", text: $price)
+                        .keyboardType(.decimalPad)
 
                     VStack(alignment: .leading) {
                         Text("Recommend Level")
-                        RatingView(rating: $item.recommendLevel)
+                        RatingView(rating: $recommendLevel)
                     }
                 }
             }
@@ -127,11 +115,33 @@ struct EditItemView: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
+                        item.update(
+                            title: title,
+                            score: score,
+                            category: category,
+                            note: note,
+                            tags: tags,
+                            imageData: item.imageData,
+                            purchaseDate: purchaseDate,
+                            price: Double(price),
+                            recommendLevel: recommendLevel,
+                            isPinned: item.isPinned
+                        )
                         try? modelContext.save()
                         isPresented = nil
                     }
                     .tint(.accentColor)
                 }
+            }
+            .onAppear {
+                title = item.title
+                note = item.note
+                category = item.category
+                score = item.score
+                recommendLevel = item.recommendLevel
+                purchaseDate = item.purchaseDate ?? .now
+                price = item.price.map { String($0) } ?? ""
+                tags = item.tags
             }
         }
     }
@@ -141,11 +151,11 @@ struct EditItemView: View {
         for item in allItems {
             for tag in item.tags {
                 if let existing = tagUsage[tag] {
-                    if item.timestamp > existing {
-                        tagUsage[tag] = item.timestamp
+                    if item.createdTimestamp > existing {
+                        tagUsage[tag] = item.createdTimestamp
                     }
                 } else {
-                    tagUsage[tag] = item.timestamp
+                    tagUsage[tag] = item.createdTimestamp
                 }
             }
         }
@@ -154,8 +164,8 @@ struct EditItemView: View {
 
     private func addTag() {
         let trimmed = currentTag.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty && !item.tags.contains(trimmed) else { return }
-        item.tags.append(trimmed)
+        guard !trimmed.isEmpty && !tags.contains(trimmed) else { return }
+        tags.append(trimmed)
         currentTag = ""
     }
 }

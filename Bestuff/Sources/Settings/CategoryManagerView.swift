@@ -30,7 +30,18 @@ struct CategoryManagerView: View {
                 .swipeActions {
                     Button(role: .destructive) {
                         for item in allItems where item.category == entry.name {
-                            item.category = "General"
+                            item.update(
+                                title: item.title,
+                                score: item.score,
+                                category: "General",
+                                note: item.note,
+                                tags: item.tags,
+                                imageData: item.imageData,
+                                purchaseDate: item.purchaseDate,
+                                price: item.price,
+                                recommendLevel: item.recommendLevel,
+                                isPinned: item.isPinned
+                            )
                         }
                         try? modelContext.save()
                     } label: {

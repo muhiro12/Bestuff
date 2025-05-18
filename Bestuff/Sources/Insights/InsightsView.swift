@@ -31,7 +31,7 @@ struct InsightsView: View {
     var monthlyCounts: [(month: String, count: Int)] {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM"
-        let grouped = Dictionary(grouping: filteredItems) { formatter.string(from: $0.timestamp) }
+        let grouped = Dictionary(grouping: filteredItems) { formatter.string(from: $0.createdTimestamp) }
         return grouped.map { ($0.key, $0.value.count) }
             .sorted { $0.month < $1.month }
     }
@@ -44,7 +44,7 @@ struct InsightsView: View {
     private var filteredItems: [BestItem] {
         allItems.filter {
             (selectedCategory == "All" || $0.category == selectedCategory) &&
-            Calendar.current.component(.year, from: $0.timestamp) == selectedYear
+            Calendar.current.component(.year, from: $0.createdTimestamp) == selectedYear
         }
     }
 
@@ -102,13 +102,13 @@ struct InsightsView: View {
                         let year = calendar.component(.year, from: Date())
 
                         let topItemsThisYear = filteredItems.filter {
-                            calendar.component(.year, from: $0.timestamp) == year
+                            calendar.component(.year, from: $0.createdTimestamp) == year
                         }
                             .sorted { $0.score > $1.score }
                             .prefix(5)
 
                         Chart {
-                            ForEach(Array(topItemsThisYear.enumerated()), id: \.1.timestamp) { index, item in
+                            ForEach(Array(topItemsThisYear.enumerated()), id: \.1.createdTimestamp) { index, item in
                                 BarMark(
                                     x: .value("Score", item.score),
                                     y: .value("Item", item.title)
@@ -256,7 +256,7 @@ struct InsightsView: View {
                             .sorted { ($0.price ?? 0) > ($1.price ?? 0) }
                             .prefix(5)
                         Chart {
-                            ForEach(expensiveItems, id: \.timestamp) { item in
+                            ForEach(expensiveItems, id: \.createdTimestamp) { item in
                                 BarMark(
                                     x: .value("Price", item.price ?? 0),
                                     y: .value("Item", item.title)

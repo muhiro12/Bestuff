@@ -30,11 +30,11 @@ struct AddItemView: View {
         for item in allItems {
             for tag in item.tags {
                 if let existing = tagUsage[tag] {
-                    if item.timestamp > existing {
-                        tagUsage[tag] = item.timestamp
+                    if item.createdTimestamp > existing {
+                        tagUsage[tag] = item.createdTimestamp
                     }
                 } else {
-                    tagUsage[tag] = item.timestamp
+                    tagUsage[tag] = item.createdTimestamp
                 }
             }
         }

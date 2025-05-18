@@ -37,7 +37,7 @@ struct BestItemSectionView: View {
                     Text("Score: \(item.score)")
                         .font(AppFont.body)
                         .foregroundStyle(.secondary)
-                    Text(item.timestamp.formatted(date: .abbreviated, time: .omitted))
+                    Text(item.createdTimestamp.formatted(date: .abbreviated, time: .omitted))
                         .font(AppFont.caption)
                         .foregroundStyle(.gray)
                     if !item.note.isEmpty {

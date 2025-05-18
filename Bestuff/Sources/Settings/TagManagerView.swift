@@ -30,7 +30,19 @@ struct TagManagerView: View {
                 .swipeActions {
                     Button(role: .destructive) {
                         for item in allItems where item.tags.contains(entry.tag) {
-                            item.tags.removeAll { $0 == entry.tag }
+                            let newTags = item.tags.filter { $0 != entry.tag }
+                            item.update(
+                                title: item.title,
+                                score: item.score,
+                                category: item.category,
+                                note: item.note,
+                                tags: newTags,
+                                imageData: item.imageData,
+                                purchaseDate: item.purchaseDate,
+                                price: item.price,
+                                recommendLevel: item.recommendLevel,
+                                isPinned: item.isPinned
+                            )
                         }
                         try? modelContext.save()
                     } label: {

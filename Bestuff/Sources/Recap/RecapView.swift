@@ -17,7 +17,7 @@ struct RecapView: View {
     private var filteredItems: [BestItem] {
         let components = Calendar.current.dateComponents([.year, .month], from: selectedDate)
         return bestItems.filter {
-            let itemComponents = Calendar.current.dateComponents([.year, .month], from: $0.timestamp)
+            let itemComponents = Calendar.current.dateComponents([.year, .month], from: $0.createdTimestamp)
             return itemComponents.year == components.year && itemComponents.month == components.month
         }
         .sorted { $0.score > $1.score }
@@ -159,7 +159,7 @@ struct RecapView: View {
                             Text("Score: \(item.score)")
                                 .font(AppFont.body)
                                 .foregroundStyle(.secondary)
-                            Text(item.timestamp.formatted(date: .abbreviated, time: .omitted))
+                            Text(item.createdTimestamp.formatted(date: .abbreviated, time: .omitted))
                                 .font(AppFont.caption)
                                 .foregroundStyle(.gray)
                             if !item.note.isEmpty {

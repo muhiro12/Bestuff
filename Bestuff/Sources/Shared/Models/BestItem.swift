@@ -10,17 +10,20 @@ import SwiftData
 
 @Model
 final class BestItem {
-    var timestamp: Date = Date.now
-    var title: String = ""
-    var score: Int = 0
-    var category: String = "General"
-    var note: String = ""
-    var tags: [String] = []
-    var imageData: Data? = nil
-    var purchaseDate: Date? = nil
-    var price: Double? = nil
-    var recommendLevel: Int = 3
-    var isPinned: Bool = false
+    private(set) var id = UUID()
+    private(set) var title = ""
+    private(set) var score = 0
+    private(set) var category = "General"
+    private(set) var note = ""
+    private(set) var tags: [String] = []
+    private(set) var imageData: Data?
+    private(set) var purchaseDate: Date?
+    private(set) var price: Double?
+    private(set) var recommendLevel = 3
+    private(set) var isPinned = false
+
+    private(set) var createdTimestamp = Date.now
+    private(set) var modifiedTimestamp = Date.now
 
     private init() {}
 
@@ -38,7 +41,7 @@ final class BestItem {
         recommendLevel: Int = 3
     ) -> BestItem {
         let item = BestItem()
-        item.timestamp = .now
+        context.insert(item)
         item.title = title
         item.score = score
         item.category = category
@@ -48,8 +51,34 @@ final class BestItem {
         item.purchaseDate = purchaseDate
         item.price = price
         item.recommendLevel = recommendLevel
-        context.insert(item)
+        item.createdTimestamp = .now
+        item.modifiedTimestamp = .now
         return item
+    }
+
+    func update(
+        title: String,
+        score: Int,
+        category: String,
+        note: String,
+        tags: [String],
+        imageData: Data?,
+        purchaseDate: Date?,
+        price: Double?,
+        recommendLevel: Int,
+        isPinned: Bool
+    ) {
+        self.title = title
+        self.score = score
+        self.category = category
+        self.note = note
+        self.tags = tags
+        self.imageData = imageData
+        self.purchaseDate = purchaseDate
+        self.price = price
+        self.recommendLevel = recommendLevel
+        self.isPinned = isPinned
+        self.modifiedTimestamp = .now
     }
 }
 
