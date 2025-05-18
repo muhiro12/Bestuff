@@ -109,7 +109,9 @@ struct AddItemView: View {
                     }
 
                     if !tags.isEmpty {
-                        TagCapsuleView(tags: tags)
+                        TagCapsuleView(tags: tags, onDelete: { tag in
+                            tags.removeAll { $0 == tag }
+                        })
                             .padding(.top, 4)
                     }
                 }

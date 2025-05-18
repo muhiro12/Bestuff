@@ -101,7 +101,7 @@ struct RecapView: View {
     }
 
     private func recapContentView(for items: [BestItem]) -> some View {
-        return VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: 12) {
             if items.isEmpty {
                 Text("No items added this month.")
             } else {
@@ -169,7 +169,7 @@ struct RecapView: View {
                                     .padding(.top, 4)
                             }
                             if !item.tags.isEmpty {
-                                TagCapsuleView(tags: item.tags)
+                                TagCapsuleView(tags: item.tags, onDelete: nil)
                             }
                         }
                         .padding()
@@ -206,17 +206,16 @@ struct RecapView: View {
                             navigation.selectedItem = item
                         }
                     }
-                    Divider()
                 }
-
-                SummarySectionView(totalScore: totalScore, averageScore: averageScore, totalCount: totalCount)
-
-                CategoryAverageSectionView(items: items)
-                top5ItemsSection(for: items)
+                Divider()
             }
+
+            SummarySectionView(totalScore: totalScore, averageScore: averageScore, totalCount: totalCount)
+
+            CategoryAverageSectionView(items: items)
+            top5ItemsSection(for: items)
         }
     }
-
 
     private func top5ItemsSection(for items: [BestItem]) -> some View {
         let topItems = items.sorted(by: { $0.score > $1.score }).prefix(5)
