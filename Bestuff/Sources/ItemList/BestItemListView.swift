@@ -23,7 +23,7 @@ struct BestItemListView: View {
             $0.score >= minimumScore &&
             (selectedMonth == nil || Calendar.current.isDate($0.createdTimestamp, equalTo: selectedMonth!, toGranularity: .month)) &&
             (selectedCategory == nil || $0.category == selectedCategory) &&
-            selectedTags.allSatisfy { $0.isEmpty || $0 == "" || $0 == "All" }
+            (selectedTags.isEmpty || selectedTags.isSubset(of: Set($0.tags)))
         }
     }
 
