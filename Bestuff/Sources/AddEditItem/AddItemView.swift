@@ -7,6 +7,7 @@
 
 import SwiftUI
 import PhotosUI
+import SwiftData
 
 struct AddItemView: View {
     @Environment(\.modelContext) private var modelContext
@@ -20,6 +21,25 @@ struct AddItemView: View {
     @State private var recommendLevel: Int = 3
     @State private var selectedImageItem: PhotosPickerItem? = nil
     @State private var selectedImageData: Data? = nil
+    @Query private var allItems: [BestItem]
+    @State private var currentTag: String = ""
+    @State private var tags: [String] = []
+
+    private var tagSuggestions: [String] {
+        var tagUsage: [String: Date] = [:]
+        for item in allItems {
+            for tag in item.tags {
+                if let existing = tagUsage[tag] {
+                    if item.timestamp > existing {
+                        tagUsage[tag] = item.timestamp
+                    }
+                } else {
+                    tagUsage[tag] = item.timestamp
+                }
+            }
+        }
+        return tagUsage.sorted(by: { $0.value > $1.value }).map { $0.key }
+    }
 
     var body: some View {
         NavigationStack {
@@ -54,6 +74,46 @@ struct AddItemView: View {
                 TextField("Note", text: $note, axis: .vertical)
                     .lineLimit(3...5)
 
+                Section(header: Text("Tags")) {
+                    TextField("Enter a tag", text: $currentTag)
+                        .onSubmit {
+                            let trimmed = currentTag.trimmingCharacters(in: .whitespacesAndNewlines)
+                            guard !trimmed.isEmpty && !tags.contains(trimmed) else { return }
+                            tags.append(trimmed)
+                            currentTag = ""
+                        }
+
+                    if !tagSuggestions.isEmpty {
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack {
+                                ForEach(tagSuggestions.filter {
+                                    $0.lowercased().hasPrefix(currentTag.lowercased()) && !tags.contains($0)
+                                }, id: \.self) { suggestion in
+                                    Button(action: {
+                                        currentTag = suggestion
+                                        let trimmed = currentTag.trimmingCharacters(in: .whitespacesAndNewlines)
+                                        guard !trimmed.isEmpty && !tags.contains(trimmed) else { return }
+                                        tags.append(trimmed)
+                                        currentTag = ""
+                                    }) {
+                                        Text("#\(suggestion)")
+                                            .font(.caption)
+                                            .padding(6)
+                                            .background(Color.accentColor.opacity(0.15))
+                                            .clipShape(Capsule())
+                                    }
+                                }
+                            }
+                        }
+                        .padding(.top, 4)
+                    }
+
+                    if !tags.isEmpty {
+                        TagCapsuleView(tags: tags)
+                            .padding(.top, 4)
+                    }
+                }
+
                 Section(header: Text("Rating")) {
                     RatingView(rating: $score, maxRating: 100)
                 }
@@ -85,7 +145,7 @@ struct AddItemView: View {
                                 score: score,
                                 category: category.isEmpty ? "General" : category,
                                 note: note,
-                                tags: [],
+                                tags: tags,
                                 imageData: selectedImageData,
                                 purchaseDate: purchaseDate,
                                 price: Double(price),
