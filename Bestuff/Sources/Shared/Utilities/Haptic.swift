@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+@MainActor
 enum Haptic {
     static func impact() {
         if UserDefaults.standard.bool(forKey: "hapticsEnabled") {
