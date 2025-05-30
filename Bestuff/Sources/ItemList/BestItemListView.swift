@@ -10,14 +10,14 @@ import SwiftData
 
 struct BestItemListView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query private var allItems: [BestItem]
+    @Query private var allItems: [BestItemModel]
 
     @State private var selectedMonth: Date? = nil
     @State private var selectedCategory: String? = nil
     @State private var selectedTags: Set<String> = []
     @State private var isPresentingTagPicker: Bool = false
 
-    var bestItems: [BestItem] {
+    var bestItems: [BestItemModel] {
         allItems.filter {
             ($0.title.localizedStandardContains(searchText) || $0.category.localizedStandardContains(searchText)) &&
             $0.score >= minimumScore &&
@@ -32,7 +32,7 @@ struct BestItemListView: View {
     @State private var searchText: String = ""
     @State private var sortOption: SortOption = .byDate
     @State private var minimumScore: Int = 1
-    @State private var pendingDeletion: BestItem? = nil
+    @State private var pendingDeletion: BestItemModel? = nil
 
     enum SortOption {
         case byDate, byScore
@@ -103,5 +103,5 @@ struct BestItemListView: View {
 
 #Preview {
     BestItemListView()
-        .modelContainer(for: BestItem.self)
+        .modelContainer(for: BestItemModel.self)
 }

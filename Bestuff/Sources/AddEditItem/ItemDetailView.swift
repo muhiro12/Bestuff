@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct ItemDetailView: View {
-    let item: BestItem
-    @State private var editingItem: BestItem? = nil
+    let item: BestItemModel
+    @State private var editingItem: BestItemModel? = nil
 
     var body: some View {
         ScrollView {

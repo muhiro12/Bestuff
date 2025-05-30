@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct NoMatchesView: View {
-    let allItems: [BestItem]
+    let allItems: [BestItemModel]
     let searchText: String
     @ObservedObject var navigation: NavigationViewModel
 

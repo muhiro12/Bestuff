@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CategoryAverageSectionView: View {
-    let items: [BestItem]
+    let items: [BestItemModel]
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {

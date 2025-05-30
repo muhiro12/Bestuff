@@ -9,9 +9,9 @@ import SwiftUI
 
 struct BestItemSectionView: View {
     let category: String
-    let items: [BestItem]
+    let items: [BestItemModel]
     @ObservedObject var navigation: NavigationViewModel
-    @Binding var pendingDeletion: BestItem?
+    @Binding var pendingDeletion: BestItemModel?
 
     var body: some View {
         Section(header: Text(category).foregroundColor(.accentColor)) {

@@ -10,10 +10,10 @@ import SwiftData
 
 struct EditItemView: View {
     @Environment(\.modelContext) private var modelContext
-    @Bindable var item: BestItem
-    @Binding var isPresented: BestItem?
+    @Bindable var item: BestItemModel
+    @Binding var isPresented: BestItemModel?
     let categoryOptions = ["Books", "Music", "Tech", "Fashion", "Food", "Other"]
-    @Query private var allItems: [BestItem]
+    @Query private var allItems: [BestItemModel]
     @State private var currentTag: String = ""
 
     @State private var title: String = ""

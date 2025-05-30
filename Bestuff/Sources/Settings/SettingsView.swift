@@ -12,7 +12,7 @@ struct SettingsView: View {
     @AppStorage("isDarkMode") private var isDarkMode = false
     @AppStorage("dynamicAppIcon") private var dynamicAppIcon = false
     @Environment(\.modelContext) private var modelContext
-    @Query private var allItems: [BestItem]
+    @Query private var allItems: [BestItemModel]
     @AppStorage("hapticsEnabled") private var hapticsEnabled = true
     @State private var showingResetAlert = false
 

@@ -8,6 +8,6 @@
 import Foundation
 
 final class NavigationViewModel: ObservableObject {
-    @Published var selectedItem: BestItem? = nil
-    @Published var editingItem: BestItem? = nil
+    @Published var selectedItem: BestItemModel? = nil
+    @Published var editingItem: BestItemModel? = nil
 }

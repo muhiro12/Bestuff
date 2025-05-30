@@ -9,12 +9,12 @@ import SwiftUI
 import SwiftData
 
 struct RecapView: View {
-    @Query private var bestItems: [BestItem]
+    @Query private var bestItems: [BestItemModel]
     @State private var sharedImage: ShareImage?
     @StateObject private var navigation = NavigationViewModel()
     @State private var selectedDate: Date = Date()
 
-    private var filteredItems: [BestItem] {
+    private var filteredItems: [BestItemModel] {
         let components = Calendar.current.dateComponents([.year, .month], from: selectedDate)
         return bestItems.filter {
             let itemComponents = Calendar.current.dateComponents([.year, .month], from: $0.createdTimestamp)
@@ -100,7 +100,7 @@ struct RecapView: View {
         }
     }
 
-    private func recapContentView(for items: [BestItem]) -> some View {
+    private func recapContentView(for items: [BestItemModel]) -> some View {
         VStack(alignment: .leading, spacing: 12) {
             if items.isEmpty {
                 Text("No items added this month.")
@@ -217,7 +217,7 @@ struct RecapView: View {
         }
     }
 
-    private func top5ItemsSection(for items: [BestItem]) -> some View {
+    private func top5ItemsSection(for items: [BestItemModel]) -> some View {
         let topItems = items.sorted(by: { $0.score > $1.score }).prefix(5)
         return VStack(alignment: .leading, spacing: 8) {
             Divider()
@@ -253,5 +253,5 @@ struct RecapView: View {
 
 #Preview {
     RecapView()
-        .modelContainer(for: BestItem.self)
+        .modelContainer(for: BestItemModel.self)
 }

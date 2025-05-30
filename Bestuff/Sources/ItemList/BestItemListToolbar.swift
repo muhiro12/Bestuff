@@ -15,7 +15,7 @@ struct BestItemListToolbar: ToolbarContent {
     @Binding var selectedCategory: String?
     @Binding var selectedTags: Set<String>
     @Binding var isPresentingTagPicker: Bool
-    var allItems: [BestItem]
+    var allItems: [BestItemModel]
 
     var body: some ToolbarContent {
         ToolbarItem(placement: .navigationBarTrailing) {

@@ -10,10 +10,10 @@ import SwiftData
 import Charts
 
 struct InsightsView: View {
-    @Query private var allItems: [BestItem]
+    @Query private var allItems: [BestItemModel]
     @State private var selectedCategory: String = "All"
     @State private var selectedYear: Int = Calendar.current.component(.year, from: Date())
-    @State private var pendingDeletion: BestItem? = nil
+    @State private var pendingDeletion: BestItemModel? = nil
     @Environment(\.modelContext) private var modelContext
 
     var categoryCounts: [(category: String, count: Int)] {
@@ -41,7 +41,7 @@ struct InsightsView: View {
             .map { ($0.key, $0.value.count) }
             .sorted { $0.count > $1.count }
     }
-    private var filteredItems: [BestItem] {
+    private var filteredItems: [BestItemModel] {
         allItems.filter {
             (selectedCategory == "All" || $0.category == selectedCategory) &&
             Calendar.current.component(.year, from: $0.createdTimestamp) == selectedYear

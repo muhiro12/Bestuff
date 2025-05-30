@@ -12,7 +12,7 @@ import SwiftData
 struct BestuffApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            BestItem.self,
+            BestItemModel.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 

@@ -21,7 +21,7 @@ struct AddItemView: View {
     @State private var recommendLevel: Int = 3
     @State private var selectedImageItem: PhotosPickerItem? = nil
     @State private var selectedImageData: Data? = nil
-    @Query private var allItems: [BestItem]
+    @Query private var allItems: [BestItemModel]
     @State private var currentTag: String = ""
     @State private var tags: [String] = []
 
@@ -141,7 +141,7 @@ struct AddItemView: View {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Add") {
                         withAnimation(.spring()) {
-                            _ = BestItem.create(
+                            _ = BestItemModel.create(
                                 context: modelContext,
                                 title: title,
                                 score: score,

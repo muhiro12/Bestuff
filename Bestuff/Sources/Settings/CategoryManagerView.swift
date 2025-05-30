@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct CategoryManagerView: View {
-    @Query private var allItems: [BestItem]
+    @Query private var allItems: [BestItemModel]
     @Environment(\.modelContext) private var modelContext
 
     var categories: [(name: String, count: Int)] {
