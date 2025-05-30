@@ -141,18 +141,21 @@ struct AddItemView: View {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Add") {
                         withAnimation(.spring()) {
-                            _ = BestItemModel.create(
-                                context: modelContext,
-                                title: title,
-                                score: score,
-                                category: category.isEmpty ? "General" : category,
-                                note: note,
-                                tags: tags,
-                                imageData: selectedImageData,
-                                purchaseDate: purchaseDate,
-                                price: Double(price),
-                                recommendLevel: recommendLevel
-                            )
+                            do {
+                                _ = try CreateBestItemIntent.perform(
+                                    title: title,
+                                    score: score,
+                                    category: category.isEmpty ? "General" : category,
+                                    note: note,
+                                    tags: tags,
+                                    imageData: selectedImageData,
+                                    purchaseDate: purchaseDate,
+                                    price: Double(price),
+                                    recommendLevel: recommendLevel
+                                )
+                            } catch {
+                                assertionFailure()
+                            }
                         }
                         isPresented = false
                     }

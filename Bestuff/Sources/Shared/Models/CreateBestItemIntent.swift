@@ -16,7 +16,6 @@ struct CreateBestItemIntent: AppIntent {
     @Parameter(title: "Category", default: "General") var category: String
     @Parameter(title: "Note") var note: String
     @Parameter(title: "Tags") var tags: [String]
-    @Parameter(title: "Is Pinned") var isPinned: Bool
 
     func perform() async throws -> some IntentResult & ReturnsValue<BestItem> {
         return .result(value: try Self.perform(
@@ -24,18 +23,20 @@ struct CreateBestItemIntent: AppIntent {
             score: score,
             category: category,
             note: note,
-            tags: tags,
-            isPinned: isPinned
+            tags: tags
         ))
     }
 
     static func perform(
         title: String,
         score: Int,
-        category: String,
-        note: String,
-        tags: [String],
-        isPinned: Bool
+        category: String = "General",
+        note: String = "",
+        tags: [String] = [],
+        imageData: Data? = nil,
+        purchaseDate: Date? = nil,
+        price: Double? = nil,
+        recommendLevel: Int = 3
     ) throws -> BestItem {
         let context = try ModelContext(ModelContainer(for: BestItemModel.self))
         let model = BestItemModel.create(
@@ -45,10 +46,10 @@ struct CreateBestItemIntent: AppIntent {
             category: category,
             note: note,
             tags: tags,
-            imageData: nil,
-            purchaseDate: nil,
-            price: nil,
-            recommendLevel: 3
+            imageData: imageData,
+            purchaseDate: purchaseDate,
+            price: price,
+            recommendLevel: recommendLevel
         )
         return BestItem(model: model)
     }

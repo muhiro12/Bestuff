@@ -42,11 +42,11 @@ struct ContentView: View {
     let container = try! ModelContainer(for: BestItemModel.self, configurations: config)
     let context = container.mainContext
 
-    BestItemModel.create(context: context, title: "AirPods Pro", score: 5, category: "Tech", note: "Great for daily use", tags: ["audio", "Apple"])
-    BestItemModel.create(context: context, title: "The Alchemist", score: 4, category: "Books", note: "Inspiring story", tags: ["novel", "life"])
-    BestItemModel.create(context: context, title: "Uniqlo Jacket", score: 3, category: "Fashion", note: "Affordable and warm", tags: ["winter", "clothing"])
-    BestItemModel.create(context: context, title: "Sushi Lunch", score: 5, category: "Food", note: "Fresh and delicious", tags: ["restaurant", "lunch"])
-    BestItemModel.create(context: context, title: "Spotify Premium", score: 4, category: "Music", note: "Good variety of playlists", tags: ["subscription", "music"])
+    _ = try! CreateBestItemIntent.perform(title: "AirPods Pro", score: 5, category: "Tech", note: "Great for daily use", tags: ["audio", "Apple"])
+    _ = try! CreateBestItemIntent.perform(title: "The Alchemist", score: 4, category: "Books", note: "Inspiring story", tags: ["novel", "life"])
+    _ = try! CreateBestItemIntent.perform(title: "Uniqlo Jacket", score: 3, category: "Fashion", note: "Affordable and warm", tags: ["winter", "clothing"])
+    _ = try! CreateBestItemIntent.perform(title: "Sushi Lunch", score: 5, category: "Food", note: "Fresh and delicious", tags: ["restaurant", "lunch"])
+    _ = try! CreateBestItemIntent.perform(title: "Spotify Premium", score: 4, category: "Music", note: "Good variety of playlists", tags: ["subscription", "music"])
 
     return ContentView()
         .modelContainer(container)
