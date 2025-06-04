@@ -66,6 +66,8 @@ struct BestItemListView: View {
                     }
                 }
             }
+            .listStyle(.insetGrouped)
+            .scrollContentBackground(.hidden)
             .navigationTitle("Your Best Picks")
             .toolbar {
                 BestItemListToolbar(
@@ -98,6 +100,8 @@ struct BestItemListView: View {
                 ItemDetailView(item: item)
             }
         }
+        .appNavigationStyle()
+        .appBackground()
     }
 }
 

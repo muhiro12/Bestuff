@@ -106,6 +106,7 @@ struct EditItemView: View {
                     }
                 }
             }
+            .scrollContentBackground(.hidden)
             .navigationTitle("Edit Item")
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -144,6 +145,8 @@ struct EditItemView: View {
                 tags = item.tags
             }
         }
+        .appNavigationStyle()
+        .appBackground()
     }
 
     private var tagSuggestions: [String] {
