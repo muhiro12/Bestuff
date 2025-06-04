@@ -95,6 +95,8 @@ struct RecapView: View {
                 ItemDetailView(item: item)
             }
         }
+        .appNavigationStyle()
+        .appBackground()
         .sheet(item: $navigation.editingItem) { item in
             EditItemView(item: item, isPresented: $navigation.editingItem)
         }

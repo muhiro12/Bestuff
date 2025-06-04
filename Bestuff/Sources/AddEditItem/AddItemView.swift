@@ -131,6 +131,7 @@ struct AddItemView: View {
                     }
                 }
             }
+            .scrollContentBackground(.hidden)
             .navigationTitle("Add Item")
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -161,5 +162,7 @@ struct AddItemView: View {
                 }
             }
         }
+        .appNavigationStyle()
+        .appBackground()
     }
 }
