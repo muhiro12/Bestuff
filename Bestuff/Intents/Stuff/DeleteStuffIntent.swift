@@ -1,7 +1,8 @@
 import AppIntents
 import SwiftData
+import SwiftUtilities
 
-struct DeleteStuffIntent: AppIntent {
+struct DeleteStuffIntent: AppIntent, IntentPerformer {
     typealias Input = (context: ModelContext, item: StuffEntity)
     typealias Output = Void
 
@@ -10,7 +11,7 @@ struct DeleteStuffIntent: AppIntent {
 
     @Dependency private var modelContainer: ModelContainer
 
-    static let title: LocalizedStringResource = "Delete Stuff"
+    nonisolated static let title: LocalizedStringResource = "Delete Stuff"
 
     static func perform(_ input: Input) throws -> Output {
         let (context, entity) = input

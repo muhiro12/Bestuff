@@ -1,7 +1,8 @@
 import AppIntents
 import SwiftData
+import SwiftUtilities
 
-struct CreateStuffIntent: AppIntent {
+struct CreateStuffIntent: AppIntent, IntentPerformer {
     typealias Input = (context: ModelContext, title: String, category: String, note: String?)
     typealias Output = StuffEntity
 
@@ -16,7 +17,7 @@ struct CreateStuffIntent: AppIntent {
 
     @Dependency private var modelContainer: ModelContainer
 
-    static let title: LocalizedStringResource = "Create Stuff"
+    nonisolated static let title: LocalizedStringResource = "Create Stuff"
 
     static func perform(_ input: Input) throws -> Output {
         let (context, title, category, note) = input

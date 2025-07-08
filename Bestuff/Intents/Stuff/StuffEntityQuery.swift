@@ -1,5 +1,6 @@
 import AppIntents
 import SwiftData
+import SwiftUtilities
 
 struct StuffEntityQuery: EntityStringQuery {
     @Dependency private var modelContainer: ModelContainer
@@ -28,11 +29,12 @@ struct StuffEntityQuery: EntityStringQuery {
     }
 
     func suggestedEntities() throws -> [StuffEntity] {
-        try modelContainer.mainContext.fetch(
-            FetchDescriptor(
-                sortBy: [SortDescriptor(\Stuff.createdAt, order: .reverse)],
-                fetchLimit: 5
-            )
+        var descriptor = FetchDescriptor(
+            sortBy: [SortDescriptor(\Stuff.createdAt, order: .reverse)]
+        )
+        descriptor.fetchLimit = 5
+        return try modelContainer.mainContext.fetch(
+            descriptor
         ).compactMap(StuffEntity.init)
     }
 }

@@ -1,21 +1,14 @@
 import AppIntents
 import SwiftData
+import SwiftUtilities
 
-@Observable
-final class StuffEntity: AppEntity {
-    static let typeDisplayRepresentation: TypeDisplayRepresentation = .init(name: "Stuff")
-    static var defaultQuery = StuffEntityQuery()
-
-    var displayRepresentation: DisplayRepresentation {
-        .init(title: title, subtitle: category)
-    }
-
+nonisolated struct StuffEntity {
     let id: String
     let title: String
     let category: String
     let note: String?
 
-    fileprivate init(id: String, title: String, category: String, note: String?) {
+    private init(id: String, title: String, category: String, note: String?) {
         self.id = id
         self.title = title
         self.category = category
@@ -23,8 +16,24 @@ final class StuffEntity: AppEntity {
     }
 }
 
-extension StuffEntity {
-    convenience init?(_ model: Stuff) {
+extension StuffEntity: AppEntity {
+    static var typeDisplayRepresentation: TypeDisplayRepresentation {
+        .init(name: "Stuff")
+    }
+    static var defaultQuery: StuffEntityQuery {
+        .init()
+    }
+
+    var displayRepresentation: DisplayRepresentation {
+        .init(
+            title: .init(stringLiteral: title),
+            subtitle: .init(stringLiteral: category)
+        )
+    }
+}
+
+extension StuffEntity: ModelBridgeable {
+    init?(_ model: Stuff) {
         guard let encodedID = try? model.id.base64Encoded() else {
             return nil
         }
