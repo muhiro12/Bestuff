@@ -12,6 +12,7 @@ struct StuffListView: View {
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \Stuff.createdAt, order: .reverse) private var items: [Stuff]
     @State private var searchText = ""
+    @State private var isSettingsPresented = false
 
     var body: some View {
         NavigationStack {
@@ -30,6 +31,14 @@ struct StuffListView: View {
             .navigationTitle(Text("Best Stuff"))
             .toolbar {
                 AddStuffButton()
+                Button {
+                    isSettingsPresented = true
+                } label: {
+                    Label("Settings", systemImage: "gearshape")
+                }
+            }
+            .sheet(isPresented: $isSettingsPresented) {
+                SettingsView()
             }
         }
     }
