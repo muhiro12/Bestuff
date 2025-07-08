@@ -47,7 +47,12 @@ struct StuffListView: View {
 
     private func delete(at offsets: IndexSet) {
         withAnimation {
-            offsets.map { items[$0] }.forEach(modelContext.delete)
+            for index in offsets {
+                let item = items[index]
+                if let entity = StuffEntity(item) {
+                    try? DeleteStuffIntent.perform((context: modelContext, item: entity))
+                }
+            }
         }
     }
 }
