@@ -5,6 +5,7 @@
 //  Created by Hiromu Nakano on 2025/07/08.
 //
 
+import SwiftData
 import SwiftUI
 
 struct AddStuffButton: View {
@@ -26,4 +27,3 @@ struct AddStuffButton: View {
     AddStuffButton()
         .modelContainer(for: Stuff.self, inMemory: true)
 }
-
