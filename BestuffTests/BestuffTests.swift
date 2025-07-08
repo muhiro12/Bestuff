@@ -6,11 +6,14 @@
 //
 
 import Testing
+@testable import Bestuff
 
 struct BestuffTests {
-
-    @Test func example() async throws {
-        // Write your test here and use APIs like `#expect(...)` to check expected conditions.
+    @Test func stuffInitialization() async throws {
+        let stuff = Stuff(title: "Sample", category: "General", note: "Note")
+        #expect(stuff.title == "Sample")
+        #expect(stuff.category == "General")
+        #expect(stuff.note == "Note")
     }
-
 }
+
