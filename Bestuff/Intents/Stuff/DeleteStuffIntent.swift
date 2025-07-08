@@ -6,12 +6,14 @@ struct DeleteStuffIntent: AppIntent, IntentPerformer {
     typealias Input = (context: ModelContext, item: StuffEntity)
     typealias Output = Void
 
+    nonisolated static var title: LocalizedStringResource {
+        "Delete Stuff"
+    }
+
     @Parameter(title: "Stuff")
     private var item: StuffEntity
 
     @Dependency private var modelContainer: ModelContainer
-
-    nonisolated static let title: LocalizedStringResource = "Delete Stuff"
 
     static func perform(_ input: Input) throws -> Output {
         let (context, entity) = input

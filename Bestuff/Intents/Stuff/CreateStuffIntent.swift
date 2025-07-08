@@ -6,6 +6,10 @@ struct CreateStuffIntent: AppIntent, IntentPerformer {
     typealias Input = (context: ModelContext, title: String, category: String, note: String?)
     typealias Output = StuffEntity
 
+    nonisolated static var title: LocalizedStringResource {
+        "Create Stuff"
+    }
+
     @Parameter(title: "Title")
     private var title: String
 
@@ -16,8 +20,6 @@ struct CreateStuffIntent: AppIntent, IntentPerformer {
     private var note: String?
 
     @Dependency private var modelContainer: ModelContainer
-
-    nonisolated static let title: LocalizedStringResource = "Create Stuff"
 
     static func perform(_ input: Input) throws -> Output {
         let (context, title, category, note) = input
