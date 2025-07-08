@@ -60,6 +60,8 @@ struct BestItemSectionView: View {
                     }
                 }
                 .bestCardStyle(using: item.gradient)
+                .listRowInsets(.init())
+                .listRowSeparator(.hidden)
                 .contextMenu {
                     Button {
                         navigation.selectedItem = item

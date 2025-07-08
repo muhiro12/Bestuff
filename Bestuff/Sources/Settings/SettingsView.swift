@@ -89,7 +89,10 @@ struct SettingsView: View {
                     Toggle("Enable Haptics", isOn: $hapticsEnabled)
                 }
             }
+            .scrollContentBackground(.hidden)
             .navigationTitle("Settings")
         }
+        .appNavigationStyle()
+        .appBackground()
     }
 }

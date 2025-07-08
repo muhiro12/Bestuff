@@ -306,6 +306,8 @@ struct InsightsView: View {
             }
 
         }
+        .appNavigationStyle()
+        .appBackground()
         .alert(item: $pendingDeletion) { item in
             Alert(
                 title: Text("Delete Item"),

@@ -16,10 +16,10 @@ struct NoMatchesView: View {
         Section {
             VStack(alignment: .center, spacing: 12) {
                 Text("No matching items found.")
-                    .font(.headline)
+                    .font(AppFont.title)
                 if searchText.isEmpty {
                     Text("Here are some of your recent top-rated items:")
-                        .font(.subheadline)
+                        .font(AppFont.body)
                         .foregroundStyle(.secondary)
 
                     let recentItems = allItems

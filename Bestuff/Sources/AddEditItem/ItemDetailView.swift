@@ -59,7 +59,9 @@ struct ItemDetailView: View {
             }
             .padding()
         }
+        .appBackground()
         .navigationTitle("Item Details")
+        .appNavigationStyle()
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button("Edit") {

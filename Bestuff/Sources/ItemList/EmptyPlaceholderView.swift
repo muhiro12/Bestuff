@@ -15,9 +15,9 @@ struct EmptyPlaceholderView: View {
                     .font(.system(size: 40))
                     .foregroundColor(.accentColor)
                 Text("Start tracking your favorites!")
-                    .font(.headline)
+                    .font(AppFont.title)
                 Text("Tap the + button to add your first Best Item.")
-                    .font(.subheadline)
+                    .font(AppFont.body)
                     .foregroundStyle(.secondary)
             }
             .frame(maxWidth: .infinity)

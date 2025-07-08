@@ -39,6 +39,7 @@ struct TagPickerView: View {
                     }
                 }
             }
+            .scrollContentBackground(.hidden)
             .searchable(text: $searchText)
             .navigationTitle("Select Tags")
             .toolbar {
@@ -55,5 +56,7 @@ struct TagPickerView: View {
                 }
             }
         }
+        .appNavigationStyle()
+        .appBackground()
     }
 }

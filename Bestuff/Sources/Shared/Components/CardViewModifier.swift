@@ -14,11 +14,19 @@ struct CardViewModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
             .padding()
-            .background(background)
-            .clipShape(RoundedRectangle(cornerRadius: DesignMetrics.cornerRadius, style: .continuous))
-            .shadow(color: .black.opacity(isTopItem ? 0.1 : DesignMetrics.shadowOpacity),
-                    radius: isTopItem ? 10 : DesignMetrics.shadowRadius,
-                    x: 0, y: isTopItem ? 4 : 2)
+            .background {
+                background
+                    .overlay(AppTheme.gradient.opacity(0.3))
+                    .overlay(.thinMaterial)
+                    .clipShape(RoundedRectangle(cornerRadius: DesignMetrics.cornerRadius, style: .continuous))
+            }
+            .overlay(
+                RoundedRectangle(cornerRadius: DesignMetrics.cornerRadius, style: .continuous)
+                    .stroke(Color.white.opacity(0.3))
+            )
+            .shadow(color: .black.opacity(isTopItem ? 0.3 : DesignMetrics.shadowOpacity),
+                    radius: isTopItem ? 14 : DesignMetrics.shadowRadius,
+                    x: 0, y: isTopItem ? 7 : 3)
     }
 }
 

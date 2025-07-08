@@ -8,7 +8,7 @@
 import Foundation
 
 enum DesignMetrics {
-    static let cornerRadius: CGFloat = 12
-    static let shadowRadius: CGFloat = 4
-    static let shadowOpacity: Double = 0.05
+    static let cornerRadius: CGFloat = 16
+    static let shadowRadius: CGFloat = 6
+    static let shadowOpacity: Double = 0.1
 }
