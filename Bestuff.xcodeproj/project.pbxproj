@@ -10,7 +10,6 @@
 		AD585EDA2E1D62FD003BB6D1 /* SwiftUtilities in Frameworks */ = {isa = PBXBuildFile; productRef = AD585ED92E1D62FD003BB6D1 /* SwiftUtilities */; };
 		AD585EDD2E1D631B003BB6D1 /* StoreKitWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = AD585EDC2E1D631B003BB6D1 /* StoreKitWrapper */; };
 		AD585EE02E1D6334003BB6D1 /* LicenseListWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = AD585EDF2E1D6334003BB6D1 /* LicenseListWrapper */; };
-		AD585EE32E1D6357003BB6D1 /* GoogleMobileAdsWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = AD585EE22E1D6357003BB6D1 /* GoogleMobileAdsWrapper */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -72,7 +71,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AD585EE32E1D6357003BB6D1 /* GoogleMobileAdsWrapper in Frameworks */,
 				AD585EDA2E1D62FD003BB6D1 /* SwiftUtilities in Frameworks */,
 				AD585EE02E1D6334003BB6D1 /* LicenseListWrapper in Frameworks */,
 				AD585EDD2E1D631B003BB6D1 /* StoreKitWrapper in Frameworks */,
@@ -139,7 +137,6 @@
 				AD585ED92E1D62FD003BB6D1 /* SwiftUtilities */,
 				AD585EDC2E1D631B003BB6D1 /* StoreKitWrapper */,
 				AD585EDF2E1D6334003BB6D1 /* LicenseListWrapper */,
-				AD585EE22E1D6357003BB6D1 /* GoogleMobileAdsWrapper */,
 			);
 			productName = Bestuff;
 			productReference = AD585E872E1D5EF1003BB6D1 /* Bestuff.app */;
@@ -227,7 +224,6 @@
 				AD585ED82E1D62FD003BB6D1 /* XCRemoteSwiftPackageReference "SwiftUtilities" */,
 				AD585EDB2E1D631B003BB6D1 /* XCRemoteSwiftPackageReference "StoreKitWrapper" */,
 				AD585EDE2E1D6334003BB6D1 /* XCRemoteSwiftPackageReference "LicenseListWrapper" */,
-				AD585EE12E1D6357003BB6D1 /* XCRemoteSwiftPackageReference "GoogleMobileAdsWrapper" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = AD585E882E1D5EF1003BB6D1 /* Products */;
@@ -671,14 +667,6 @@
 				minimumVersion = 1.0.0;
 			};
 		};
-		AD585EE12E1D6357003BB6D1 /* XCRemoteSwiftPackageReference "GoogleMobileAdsWrapper" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/muhiro12/GoogleMobileAdsWrapper";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -696,11 +684,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = AD585EDE2E1D6334003BB6D1 /* XCRemoteSwiftPackageReference "LicenseListWrapper" */;
 			productName = LicenseListWrapper;
-		};
-		AD585EE22E1D6357003BB6D1 /* GoogleMobileAdsWrapper */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = AD585EE12E1D6357003BB6D1 /* XCRemoteSwiftPackageReference "GoogleMobileAdsWrapper" */;
-			productName = GoogleMobileAdsWrapper;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
