@@ -40,8 +40,14 @@ struct StuffFormView: View {
 
     private func save() {
         withAnimation {
-            let newItem = Stuff(title: title, category: category, note: note.isEmpty ? nil : note)
-            modelContext.insert(newItem)
+            _ = try? CreateStuffIntent.perform(
+                (
+                    context: modelContext,
+                    title: title,
+                    category: category,
+                    note: note.isEmpty ? nil : note
+                )
+            )
             dismiss()
         }
     }

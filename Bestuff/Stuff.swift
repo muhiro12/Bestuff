@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-final class Stuff {
+nonisolated final class Stuff {
     var title: String
     var category: String
     var note: String?
@@ -22,4 +22,3 @@ final class Stuff {
         self.createdAt = createdAt
     }
 }
-
