@@ -1,5 +1,4 @@
 @testable import Bestuff
-import Foundation
 import SwiftData
 import Testing
 
@@ -13,7 +12,7 @@ struct DeleteStuffIntentTests {
 
     @Test func perform() throws {
         let model = try CreateStuffIntent.perform(
-            (context: context, title: "Title", category: "General", note: nil, occurredAt: .now)
+            (context: context, title: "Title", category: "General", note: nil)
         )
         #expect(try context.fetch(FetchDescriptor<Stuff>()).count == 1)
         try DeleteStuffIntent.perform(model)

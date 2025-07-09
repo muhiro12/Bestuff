@@ -42,9 +42,6 @@ struct RecapView: View {
             }
         }
         .navigationTitle(Text("Recap"))
-        .toolbar {
-            SuggestPlanButton()
-        }
     }
 
     private var groupedStuffs: [Date: [Stuff]] {

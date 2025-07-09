@@ -31,8 +31,7 @@ struct StuffRowView: View {
         .environment(
             Stuff(
                 title: "Sample",
-                category: "General",
-                occurredAt: .now
+                category: "General"
             )
         )
 }
