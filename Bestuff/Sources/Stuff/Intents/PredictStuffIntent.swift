@@ -24,7 +24,8 @@ struct PredictStuffIntent: AppIntent, IntentPerformer {
             title: prediction.title,
             category: prediction.category,
             note: prediction.note,
-            score: prediction.score
+            score: prediction.score,
+            occurredAt: .now
         )
         context.insert(model)
         return model
