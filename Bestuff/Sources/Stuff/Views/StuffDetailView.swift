@@ -39,6 +39,6 @@ struct StuffDetailView: View {
 #Preview {
     NavigationStack {
         StuffDetailView()
-            .environment(.init(title: "Sample", category: "General", note: "Notes"))
+            .environment(Stuff(title: "Sample", category: "General", note: "Notes"))
     }
 }

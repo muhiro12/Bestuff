@@ -28,5 +28,5 @@ struct StuffRowView: View {
 
 #Preview {
     StuffRowView()
-        .environment(.init(title: "Sample", category: "General"))
+        .environment(Stuff(title: "Sample", category: "General"))
 }
