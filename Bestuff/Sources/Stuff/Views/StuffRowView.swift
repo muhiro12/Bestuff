@@ -17,6 +17,9 @@ struct StuffRowView: View {
                 .font(.headline)
             Text(stuff.category)
                 .font(.subheadline)
+            Text(stuff.occurredAt.formatted(.dateTime.year().month().day()))
+                .font(.footnote)
+                .foregroundStyle(.secondary)
             if let note = stuff.note, !note.isEmpty {
                 Text(note)
                     .font(.footnote)
@@ -31,7 +34,8 @@ struct StuffRowView: View {
         .environment(
             Stuff(
                 title: "Sample",
-                category: "General"
+                category: "General",
+                occurredAt: .now
             )
         )
 }

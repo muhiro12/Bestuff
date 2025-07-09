@@ -10,6 +10,7 @@ nonisolated struct StuffEntity {
     let category: String
     let note: String?
     let score: Int
+    let occurredAt: Date
 }
 
 extension StuffEntity: AppEntity {
@@ -38,7 +39,8 @@ extension StuffEntity: ModelBridgeable {
             title: model.title,
             category: model.category,
             note: model.note,
-            score: model.score
+            score: model.score,
+            occurredAt: model.occurredAt
         )
     }
 

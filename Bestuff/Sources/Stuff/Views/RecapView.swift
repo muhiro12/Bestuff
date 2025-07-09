@@ -18,7 +18,7 @@ enum RecapPeriod: String, CaseIterable, Identifiable {
 }
 
 struct RecapView: View {
-    @Query(sort: \Stuff.createdAt, order: .reverse)
+    @Query(sort: \Stuff.occurredAt, order: .reverse)
     private var stuffs: [Stuff]
     @State private var period: RecapPeriod = .monthly
 
@@ -50,11 +50,11 @@ struct RecapView: View {
             let components: DateComponents
             switch period {
             case .monthly:
-                components = calendar.dateComponents([.year, .month], from: model.createdAt)
+                components = calendar.dateComponents([.year, .month], from: model.occurredAt)
             case .yearly:
-                components = calendar.dateComponents([.year], from: model.createdAt)
+                components = calendar.dateComponents([.year], from: model.occurredAt)
             }
-            return calendar.date(from: components) ?? model.createdAt
+            return calendar.date(from: components) ?? model.occurredAt
         }
     }
 

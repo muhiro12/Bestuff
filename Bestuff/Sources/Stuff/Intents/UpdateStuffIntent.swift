@@ -2,9 +2,10 @@ import AppIntents
 import SwiftData
 import SwiftUtilities
 
-struct CreateStuffIntent: AppIntent, IntentPerformer {
+struct UpdateStuffIntent: AppIntent, IntentPerformer {
     typealias Input = (
         context: ModelContext,
+        model: Stuff,
         title: String,
         category: String,
         note: String?,
@@ -13,8 +14,11 @@ struct CreateStuffIntent: AppIntent, IntentPerformer {
     typealias Output = Stuff
 
     nonisolated static var title: LocalizedStringResource {
-        "Create Stuff"
+        "Update Stuff"
     }
+
+    @Parameter(title: "Stuff")
+    private var stuff: StuffEntity
 
     @Parameter(title: "Title")
     private var title: String
@@ -31,28 +35,27 @@ struct CreateStuffIntent: AppIntent, IntentPerformer {
     @Dependency private var modelContainer: ModelContainer
 
     static func perform(_ input: Input) throws -> Output {
-        let (context, title, category, note, occurredAt) = input
-        let model = Stuff(
-            title: title,
-            category: category,
-            note: note,
-            occurredAt: occurredAt
-        )
-        context.insert(model)
+        let (context, model, title, category, note, occurredAt) = input
+        model.title = title
+        model.category = category
+        model.note = note
+        model.occurredAt = occurredAt
         return model
     }
 
     func perform() throws -> some ReturnsValue<StuffEntity> {
-        let model = try Self.perform(
+        let model = try stuff.model(in: modelContainer.mainContext)
+        let updated = try Self.perform(
             (
                 context: modelContainer.mainContext,
+                model: model,
                 title: title,
                 category: category,
                 note: note,
                 occurredAt: occurredAt
             )
         )
-        guard let entity = StuffEntity(model) else {
+        guard let entity = StuffEntity(updated) else {
             throw StuffError.stuffNotFound
         }
         return .result(value: entity)
