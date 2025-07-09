@@ -15,16 +15,38 @@ struct StuffDetailView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
                 Text(stuff.title)
-                    .font(.title)
+                    .font(.largeTitle.bold())
                 Text(stuff.category)
-                    .font(.headline)
+                    .font(.title3)
+                    .foregroundStyle(.secondary)
                 if let note = stuff.note {
                     Text(note)
                 }
+                Text("Score: \(stuff.score)")
+                    .font(.headline)
+                Text("Created \(stuff.createdAt.formatted(.dateTime))")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding()
+            .background(
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .fill(.ultraThinMaterial)
+            )
+            .padding()
         }
+        .background(
+            LinearGradient(
+                colors: [
+                    .blue.opacity(0.3),
+                    .purple.opacity(0.3)
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+            .ignoresSafeArea()
+        )
         .navigationTitle(Text(stuff.title))
         .toolbar {
             ShareLink(item: description)
@@ -32,7 +54,12 @@ struct StuffDetailView: View {
     }
 
     private var description: String {
-        [stuff.title, stuff.category, stuff.note].compactMap(\.self).joined(separator: "\n")
+        [
+            stuff.title,
+            stuff.category,
+            "Score: \(stuff.score)",
+            stuff.note
+        ].compactMap(\.self).joined(separator: "\n")
     }
 }
 
@@ -43,7 +70,9 @@ struct StuffDetailView: View {
                 Stuff(
                     title: "Sample",
                     category: "General",
-                    note: "Notes"
+                    note: "Notes",
+                    score: 80,
+                    createdAt: .now
                 )
             )
     }
