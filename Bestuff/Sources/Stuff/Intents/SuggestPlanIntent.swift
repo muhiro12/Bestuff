@@ -45,8 +45,8 @@ struct SuggestPlanIntent: AppIntent, IntentPerformer {
         return response.content
     }
 
-    func perform() async throws -> some ReturnsValue<PlanSuggestions> {
+    func perform() async throws -> some ReturnsValue<[String]> {
         let suggestions = try await Self.perform((context: modelContainer.mainContext, period: period))
-        return .result(value: suggestions)
+        return .result(value: suggestions.tasks)
     }
 }

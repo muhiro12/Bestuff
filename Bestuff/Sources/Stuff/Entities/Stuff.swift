@@ -13,6 +13,7 @@ nonisolated final class Stuff {
     var title: String
     var category: String
     var note: String?
+    var occurredAt: Date
     var score: Int
     var createdAt: Date
 
@@ -20,12 +21,14 @@ nonisolated final class Stuff {
         title: String,
         category: String,
         note: String? = nil,
+        occurredAt: Date = .now,
         score: Int = 0,
         createdAt: Date = .now
     ) {
         self.title = title
         self.category = category
         self.note = note
+        self.occurredAt = occurredAt
         self.score = score
         self.createdAt = createdAt
     }

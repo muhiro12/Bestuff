@@ -4,9 +4,11 @@ enum PlanPeriod: String, CaseIterable, AppEnum {
     case nextMonth
     case nextYear
 
-    static var typeDisplayName: LocalizedStringResource { "Plan Period" }
+    nonisolated static var typeDisplayRepresentation: TypeDisplayRepresentation {
+        "Plan Period"
+    }
 
-    static var caseDisplayRepresentations: [PlanPeriod: DisplayRepresentation] {
+    nonisolated static var caseDisplayRepresentations: [Self: DisplayRepresentation] {
         [
             .nextMonth: .init(title: "Next Month"),
             .nextYear: .init(title: "Next Year")
