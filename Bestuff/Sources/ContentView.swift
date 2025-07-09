@@ -9,8 +9,24 @@ import SwiftData
 import SwiftUI
 
 struct ContentView: View {
+    @State private var selection: Stuff?
+
     var body: some View {
-        StuffListView()
+        NavigationSplitView {
+            StuffListView(selection: $selection)
+        } detail: {
+            if let stuff = selection {
+                StuffDetailView()
+                    .environment(stuff)
+            } else {
+                Text("Select Stuff")
+                    .foregroundStyle(.secondary)
+            }
+        }
+        .navigationDestination(for: Stuff.self) { stuff in
+            StuffDetailView()
+                .environment(stuff)
+        }
     }
 }
 

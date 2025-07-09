@@ -9,6 +9,7 @@ import SwiftData
 import SwiftUI
 
 struct StuffListView: View {
+    @Binding var selection: Stuff?
     @Environment(\.modelContext)
     private var modelContext
     @Query(sort: \Stuff.createdAt, order: .reverse)
@@ -17,34 +18,28 @@ struct StuffListView: View {
     @State private var isSettingsPresented = false
 
     var body: some View {
-        NavigationStack {
-            List {
-                ForEach(filteredStuffs) { stuff in
-                    NavigationLink(value: stuff) {
-                        StuffRowView()
-                            .environment(stuff)
-                    }
-                }
-                .onDelete(perform: delete)
-            }
-            .searchable(text: $searchText)
-            .navigationDestination(for: Stuff.self) { stuff in
-                StuffDetailView()
-                    .environment(stuff)
-            }
-            .navigationTitle(Text("Best Stuff"))
-            .toolbar {
-                AddStuffButton()
-                PredictStuffButton()
-                Button {
-                    isSettingsPresented = true
-                } label: {
-                    Label("Settings", systemImage: "gearshape")
+        List(selection: $selection) {
+            ForEach(filteredStuffs) { stuff in
+                NavigationLink(value: stuff) {
+                    StuffRowView()
+                        .environment(stuff)
                 }
             }
-            .sheet(isPresented: $isSettingsPresented) {
-                SettingsView()
+            .onDelete(perform: delete)
+        }
+        .searchable(text: $searchText)
+        .navigationTitle(Text("Best Stuff"))
+        .toolbar {
+            AddStuffButton()
+            PredictStuffButton()
+            Button {
+                isSettingsPresented = true
+            } label: {
+                Label("Settings", systemImage: "gearshape")
             }
+        }
+        .sheet(isPresented: $isSettingsPresented) {
+            SettingsView()
         }
     }
 
@@ -70,5 +65,9 @@ struct StuffListView: View {
 }
 
 #Preview(traits: .sampleData) {
-    StuffListView()
+    NavigationSplitView {
+        StuffListView(selection: .constant(nil))
+    } detail: {
+        Text("Detail")
+    }
 }
