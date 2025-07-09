@@ -12,7 +12,7 @@ struct StuffListView: View {
     @Binding var selection: Stuff?
     @Environment(\.modelContext)
     private var modelContext
-    @Query(sort: \Stuff.createdAt, order: .reverse)
+    @Query(sort: \Stuff.occurredAt, order: .reverse)
     private var stuffs: [Stuff]
     @State private var searchText = ""
     @State private var isSettingsPresented = false

@@ -12,7 +12,7 @@ struct CreateStuffIntentTests {
 
     @Test func perform() throws {
         let _ = try CreateStuffIntent.perform(
-            (context: context, title: "Title", category: "General", note: nil)
+            (context: context, title: "Title", category: "General", note: nil, occurredAt: .now)
         )
         let stuffs = try context.fetch(FetchDescriptor<Stuff>())
         #expect(stuffs.count == 1)

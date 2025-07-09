@@ -77,7 +77,8 @@ struct DebugView: View {
             context: modelContext,
             title: stuff.title,
             category: stuff.category,
-            note: stuff.note
+            note: stuff.note,
+            occurredAt: .now
           )
         )
       }

@@ -10,6 +10,7 @@ import SwiftUI
 struct StuffDetailView: View {
     @Environment(Stuff.self)
     private var stuff
+    @State private var isEditPresented = false
 
     var body: some View {
         ScrollView {
@@ -24,6 +25,9 @@ struct StuffDetailView: View {
                 }
                 Text("Score: \(stuff.score)")
                     .font(.headline)
+                Text("Date \(stuff.occurredAt.formatted(.dateTime))")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
                 Text("Created \(stuff.createdAt.formatted(.dateTime))")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
@@ -50,6 +54,10 @@ struct StuffDetailView: View {
         .navigationTitle(Text(stuff.title))
         .toolbar {
             ShareLink(item: description)
+            Button("Edit") { isEditPresented = true }
+        }
+        .sheet(isPresented: $isEditPresented) {
+            EditStuffFormView(stuff: stuff)
         }
     }
 
@@ -72,6 +80,7 @@ struct StuffDetailView: View {
                     category: "General",
                     note: "Notes",
                     score: 80,
+                    occurredAt: .now,
                     createdAt: .now
                 )
             )

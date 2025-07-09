@@ -1,23 +1,30 @@
 //
-//  StuffFormView.swift
+//  EditStuffFormView.swift
 //  Bestuff
 //
-//  Created by Hiromu Nakano on 2025/07/08.
+//  Created by Codex on 2025/07/10.
 //
 
 import SwiftData
 import SwiftUI
 
-struct StuffFormView: View {
+struct EditStuffFormView: View {
     @Environment(\.dismiss)
     private var dismiss
-    @Environment(\.modelContext)
-    private var modelContext
+    @Bindable var stuff: Stuff
 
-    @State private var title = ""
-    @State private var category = ""
-    @State private var note = ""
-    @State private var eventAt = Date()
+    @State private var title: String
+    @State private var category: String
+    @State private var note: String
+    @State private var eventAt: Date
+
+    init(stuff: Stuff) {
+        _stuff = Bindable(wrappedValue: stuff)
+        _title = State(initialValue: stuff.title)
+        _category = State(initialValue: stuff.category)
+        _note = State(initialValue: stuff.note ?? "")
+        _eventAt = State(initialValue: stuff.occurredAt)
+    }
 
     var body: some View {
         NavigationStack {
@@ -29,7 +36,7 @@ struct StuffFormView: View {
                     DatePicker("Date", selection: $eventAt, displayedComponents: .date)
                 }
             }
-            .navigationTitle(Text("Add Stuff"))
+            .navigationTitle(Text("Edit Stuff"))
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { dismiss() }
@@ -46,20 +53,17 @@ struct StuffFormView: View {
 
     private func save() {
         withAnimation {
-            _ = try? CreateStuffIntent.perform(
-                (
-                    context: modelContext,
-                    title: title,
-                    category: category,
-                    note: note.isEmpty ? nil : note,
-                    occurredAt: eventAt
-                )
-            )
+            stuff.title = title
+            stuff.category = category
+            stuff.note = note.isEmpty ? nil : note
+            stuff.occurredAt = eventAt
             dismiss()
         }
     }
 }
 
 #Preview(traits: .sampleData) {
-    StuffFormView()
+    EditStuffFormView(
+        stuff: .init(title: "Sample", category: "General")
+    )
 }
