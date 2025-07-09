@@ -11,11 +11,11 @@ struct DeleteStuffIntentTests {
     }
 
     @Test func perform() throws {
-        let entity = try CreateStuffIntent.perform(
+        let model = try CreateStuffIntent.perform(
             (context: context, title: "Title", category: "General", note: nil)
         )
         #expect(try context.fetch(FetchDescriptor<Stuff>()).count == 1)
-        try DeleteStuffIntent.perform((context: context, item: entity))
+        try DeleteStuffIntent.perform(model)
         let items = try context.fetch(FetchDescriptor<Stuff>())
         #expect(items.isEmpty)
     }

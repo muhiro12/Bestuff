@@ -41,10 +41,8 @@ extension StuffEntity: ModelBridgeable {
     }
 
     func model(in context: ModelContext) throws -> Stuff {
-        guard
-            let id = try? PersistentIdentifier(base64Encoded: id),
-            let model = try context.fetch(FetchDescriptor<Stuff>(predicate: #Predicate { $0.id == id })).first
-        else {
+        guard let id = try? PersistentIdentifier(base64Encoded: id),
+              let model = try context.fetch(FetchDescriptor<Stuff>(predicate: #Predicate { $0.id == id })).first else {
             throw StuffError.stuffNotFound
         }
         return model

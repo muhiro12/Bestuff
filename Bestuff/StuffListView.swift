@@ -10,7 +10,7 @@ import SwiftUI
 
 struct StuffListView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query(sort: \Stuff.createdAt, order: .reverse) private var items: [Stuff]
+    @Query(sort: \Stuff.createdAt, order: .reverse) private var stuffs: [Stuff]
     @State private var searchText = ""
     @State private var isSettingsPresented = false
 
@@ -45,9 +45,9 @@ struct StuffListView: View {
 
     private var filteredItems: [Stuff] {
         if searchText.isEmpty {
-            items
+            stuffs
         } else {
-            items.filter { stuff in
+            stuffs.filter { stuff in
                 stuff.title.localizedCaseInsensitiveContains(searchText) ||
                     stuff.category.localizedCaseInsensitiveContains(searchText)
             }
@@ -57,10 +57,8 @@ struct StuffListView: View {
     private func delete(at offsets: IndexSet) {
         withAnimation {
             for index in offsets {
-                let item = items[index]
-                if let entity = StuffEntity(item) {
-                    try? DeleteStuffIntent.perform((context: modelContext, item: entity))
-                }
+                let stuff = stuffs[index]
+                try? DeleteStuffIntent.perform(stuff)
             }
         }
     }
@@ -70,4 +68,3 @@ struct StuffListView: View {
     StuffListView()
         .modelContainer(for: Stuff.self, inMemory: true)
 }
-

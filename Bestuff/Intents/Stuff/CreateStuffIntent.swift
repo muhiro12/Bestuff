@@ -4,7 +4,7 @@ import SwiftUtilities
 
 struct CreateStuffIntent: AppIntent, IntentPerformer {
     typealias Input = (context: ModelContext, title: String, category: String, note: String?)
-    typealias Output = StuffEntity
+    typealias Output = Stuff
 
     nonisolated static var title: LocalizedStringResource {
         "Create Stuff"
@@ -25,14 +25,14 @@ struct CreateStuffIntent: AppIntent, IntentPerformer {
         let (context, title, category, note) = input
         let model = Stuff(title: title, category: category, note: note)
         context.insert(model)
-        guard let entity = StuffEntity(model) else {
-            throw StuffError.stuffNotFound
-        }
-        return entity
+        return model
     }
 
     func perform() throws -> some ReturnsValue<StuffEntity> {
-        let result = try Self.perform((context: modelContainer.mainContext, title: title, category: category, note: note))
-        return .result(value: result)
+        let model = try Self.perform((context: modelContainer.mainContext, title: title, category: category, note: note))
+        guard let entity = StuffEntity(model) else {
+            throw StuffError.stuffNotFound
+        }
+        return .result(value: entity)
     }
 }

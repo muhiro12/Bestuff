@@ -3,7 +3,7 @@ import SwiftData
 import SwiftUtilities
 
 struct DeleteStuffIntent: AppIntent, IntentPerformer {
-    typealias Input = (context: ModelContext, item: StuffEntity)
+    typealias Input = Stuff
     typealias Output = Void
 
     nonisolated static var title: LocalizedStringResource {
@@ -11,18 +11,19 @@ struct DeleteStuffIntent: AppIntent, IntentPerformer {
     }
 
     @Parameter(title: "Stuff")
-    private var item: StuffEntity
+    private var stuff: StuffEntity
 
     @Dependency private var modelContainer: ModelContainer
 
     static func perform(_ input: Input) throws -> Output {
-        let (context, entity) = input
-        let model = try entity.model(in: context)
-        context.delete(model)
+        let model = input
+        model.delete()
     }
 
     func perform() throws -> some IntentResult {
-        try Self.perform((context: modelContainer.mainContext, item: item))
+        let entity = stuff
+        let model = try entity.model(in: modelContainer.mainContext)
+        try Self.perform(model)
         return .result()
     }
 }
