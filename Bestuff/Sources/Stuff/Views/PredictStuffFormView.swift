@@ -7,8 +7,6 @@ struct PredictStuffFormView: View {
     @Environment(\.modelContext)
     private var modelContext
 
-    @State private var speechRecognizer = SpeechRecognizer()
-
     @State private var speech = ""
     @State private var isProcessing = false
 
@@ -18,23 +16,6 @@ struct PredictStuffFormView: View {
                 Section("Speech") {
                     TextEditor(text: $speech)
                         .frame(minHeight: 120, alignment: .topLeading)
-                        .onChange(of: speechRecognizer.transcript) { _, newValue in
-                            speech = newValue
-                        }
-                    Button {
-                        if speechRecognizer.isTranscribing {
-                            speechRecognizer.stopTranscribing()
-                        } else {
-                            Task {
-                                try? await speechRecognizer.startTranscribing()
-                            }
-                        }
-                    } label: {
-                        Label(
-                            speechRecognizer.isTranscribing ? "Stop Recording" : "Record",
-                            systemImage: speechRecognizer.isTranscribing ? "stop.circle" : "mic"
-                        )
-                    }
                 }
             }
             .navigationTitle(Text("Predict Stuff"))
