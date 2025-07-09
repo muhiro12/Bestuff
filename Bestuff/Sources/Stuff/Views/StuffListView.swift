@@ -35,6 +35,7 @@ struct StuffListView: View {
             .navigationTitle(Text("Best Stuff"))
             .toolbar {
                 AddStuffButton()
+                PredictStuffButton()
                 Button {
                     isSettingsPresented = true
                 } label: {
