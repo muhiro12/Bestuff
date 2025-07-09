@@ -9,8 +9,10 @@ import SwiftData
 import SwiftUI
 
 struct StuffFormView: View {
-    @Environment(\.dismiss) private var dismiss
-    @Environment(\.modelContext) private var modelContext
+    @Environment(\.dismiss)
+    private var dismiss
+    @Environment(\.modelContext)
+    private var modelContext
 
     @State private var title = ""
     @State private var category = ""

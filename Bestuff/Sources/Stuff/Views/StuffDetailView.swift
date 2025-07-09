@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct StuffDetailView: View {
-    let stuff: Stuff
+    @Environment(Stuff.self)
+    private var stuff
 
     var body: some View {
         ScrollView {
@@ -37,6 +38,7 @@ struct StuffDetailView: View {
 
 #Preview {
     NavigationStack {
-        StuffDetailView(stuff: .init(title: "Sample", category: "General", note: "Notes"))
+        StuffDetailView()
+            .environment(Stuff(title: "Sample", category: "General", note: "Notes"))
     }
 }

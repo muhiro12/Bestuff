@@ -9,8 +9,10 @@ import SwiftData
 import SwiftUI
 
 struct StuffListView: View {
-    @Environment(\.modelContext) private var modelContext
-    @Query(sort: \Stuff.createdAt, order: .reverse) private var stuffs: [Stuff]
+    @Environment(\.modelContext)
+    private var modelContext
+    @Query(sort: \Stuff.createdAt, order: .reverse)
+    private var stuffs: [Stuff]
     @State private var searchText = ""
     @State private var isSettingsPresented = false
 
@@ -19,14 +21,16 @@ struct StuffListView: View {
             List {
                 ForEach(filteredStuffs) { stuff in
                     NavigationLink(value: stuff) {
-                        StuffRowView(stuff: stuff)
+                        StuffRowView()
+                            .environment(stuff)
                     }
                 }
                 .onDelete(perform: delete)
             }
             .searchable(text: $searchText)
             .navigationDestination(for: Stuff.self) { stuff in
-                StuffDetailView(stuff: stuff)
+                StuffDetailView()
+                    .environment(stuff)
             }
             .navigationTitle(Text("Best Stuff"))
             .toolbar {
