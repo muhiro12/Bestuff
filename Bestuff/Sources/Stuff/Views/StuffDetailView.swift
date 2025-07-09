@@ -71,7 +71,6 @@ struct StuffDetailView: View {
                     title: "Sample",
                     category: "General",
                     note: "Notes",
-                    occurredAt: .now,
                     score: 80,
                     createdAt: .now
                 )

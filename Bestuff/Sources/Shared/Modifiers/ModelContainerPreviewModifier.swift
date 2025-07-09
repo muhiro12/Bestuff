@@ -18,8 +18,7 @@ struct ModelContainerPreviewModifier: PreviewModifier {
                 Stuff(
                     title: stuff.title,
                     category: stuff.category,
-                    note: stuff.note,
-                    occurredAt: stuff.occurredAt
+                    note: stuff.note
                 )
             )
         }
