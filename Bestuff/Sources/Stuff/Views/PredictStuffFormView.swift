@@ -32,6 +32,8 @@ struct PredictStuffFormView: View {
                         Button("Predict") {
                             predict()
                         }
+                        .buttonStyle(.borderedProminent)
+                        .tint(.pink)
                         .disabled(speech.isEmpty)
                     }
                 }

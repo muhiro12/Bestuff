@@ -10,6 +10,7 @@ struct PredictStuffButton: View {
         } label: {
             Label("Predict Stuff", systemImage: "wand.and.stars")
         }
+        .glassEffect()
         .sheet(isPresented: $isPresented) {
             PredictStuffFormView()
         }

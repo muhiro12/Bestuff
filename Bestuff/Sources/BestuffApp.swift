@@ -30,5 +30,8 @@ struct BestuffApp: App {
         .preferredColorScheme(isDarkMode ? .dark : .light)
     }
     .modelContainer(sharedModelContainer)
+    .commands {
+      TextEditingCommands()
+    }
   }
 }

@@ -10,6 +10,7 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var selection: Stuff?
+    @State private var searchText = ""
 
     var body: some View {
         TabView {
@@ -34,7 +35,14 @@ struct ContentView: View {
                 RecapView()
             }
             .tabItem { Label("Recap", systemImage: "calendar") }
+
+            Tab(role: .search) {
+                NavigationStack {
+                    StuffListView(selection: $selection)
+                }
+            }
         }
+        .searchable(text: $searchText)
     }
 }
 
