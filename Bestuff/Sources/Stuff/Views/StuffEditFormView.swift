@@ -1,23 +1,33 @@
 //
-//  StuffFormView.swift
+//  StuffEditFormView.swift
 //  Bestuff
 //
-//  Created by Hiromu Nakano on 2025/07/08.
+//  Created by Codex on 2025/07/15.
 //
 
 import SwiftData
 import SwiftUI
 
-struct StuffFormView: View {
+struct StuffEditFormView: View {
     @Environment(\.dismiss)
     private var dismiss
     @Environment(\.modelContext)
     private var modelContext
 
-    @State private var title = ""
-    @State private var category = ""
-    @State private var note = ""
-    @State private var occurredAt = Date.now
+    let stuff: Stuff
+
+    @State private var title: String
+    @State private var category: String
+    @State private var note: String
+    @State private var occurredAt: Date
+
+    init(stuff: Stuff) {
+        self.stuff = stuff
+        _title = State(initialValue: stuff.title)
+        _category = State(initialValue: stuff.category)
+        _note = State(initialValue: stuff.note ?? "")
+        _occurredAt = State(initialValue: stuff.occurredAt)
+    }
 
     var body: some View {
         NavigationStack {
@@ -26,10 +36,10 @@ struct StuffFormView: View {
                     TextField("Title", text: $title)
                     TextField("Category", text: $category)
                     TextField("Note", text: $note)
-                    DatePicker("Occurred At", selection: $occurredAt)
+                    DatePicker("Date", selection: $occurredAt, displayedComponents: .date)
                 }
             }
-            .navigationTitle(Text("Add Stuff"))
+            .navigationTitle(Text("Edit Stuff"))
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { dismiss() }
@@ -46,9 +56,10 @@ struct StuffFormView: View {
 
     private func save() {
         withAnimation {
-            _ = try? CreateStuffIntent.perform(
+            _ = try? UpdateStuffIntent.perform(
                 (
                     context: modelContext,
+                    model: stuff,
                     title: title,
                     category: category,
                     note: note.isEmpty ? nil : note,
@@ -61,5 +72,12 @@ struct StuffFormView: View {
 }
 
 #Preview(traits: .sampleData) {
-    StuffFormView()
+    StuffEditFormView(
+        stuff: Stuff(
+            title: "Sample",
+            category: "General",
+            note: "Notes",
+            occurredAt: .now
+        )
+    )
 }
