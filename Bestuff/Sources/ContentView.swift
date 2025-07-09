@@ -14,32 +14,40 @@ struct ContentView: View {
 
     var body: some View {
         TabView {
-            NavigationSplitView {
-                StuffListView(selection: $selection)
-            } detail: {
-                if let stuff = selection {
+            Tab {
+                NavigationSplitView {
+                    StuffListView(selection: $selection)
+                } detail: {
+                    if let stuff = selection {
+                        StuffDetailView()
+                            .environment(stuff)
+                    } else {
+                        Text("Select Stuff")
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                .navigationDestination(for: Stuff.self) { stuff in
                     StuffDetailView()
                         .environment(stuff)
-                } else {
-                    Text("Select Stuff")
-                        .foregroundStyle(.secondary)
                 }
+            } label: {
+                Label("Stuffs", systemImage: "list.bullet")
             }
-            .navigationDestination(for: Stuff.self) { stuff in
-                StuffDetailView()
-                    .environment(stuff)
-            }
-            .tabItem { Label("Stuffs", systemImage: "list.bullet") }
 
-            NavigationStack {
-                RecapView()
+            Tab {
+                NavigationStack {
+                    RecapView()
+                }
+            } label: {
+                Label("Recap", systemImage: "calendar")
             }
-            .tabItem { Label("Recap", systemImage: "calendar") }
 
             Tab(role: .search) {
                 NavigationStack {
                     StuffListView(selection: $selection)
                 }
+            } label: {
+                Label("Search", systemImage: "magnifyingglass")
             }
         }
         .searchable(text: $searchText)
