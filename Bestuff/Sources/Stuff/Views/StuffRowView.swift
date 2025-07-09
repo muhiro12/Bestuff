@@ -26,7 +26,12 @@ struct StuffRowView: View {
     }
 }
 
-#Preview {
+#Preview(traits: .sampleData) {
     StuffRowView()
-        .environment(Stuff(title: "Sample", category: "General"))
+        .environment(
+            Stuff(
+                title: "Sample",
+                category: "General"
+            )
+        )
 }

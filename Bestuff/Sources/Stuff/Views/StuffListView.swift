@@ -68,7 +68,6 @@ struct StuffListView: View {
     }
 }
 
-#Preview {
+#Preview(traits: .sampleData) {
     StuffListView()
-        .modelContainer(for: Stuff.self, inMemory: true)
 }

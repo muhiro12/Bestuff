@@ -36,9 +36,15 @@ struct StuffDetailView: View {
     }
 }
 
-#Preview {
+#Preview(traits: .sampleData) {
     NavigationStack {
         StuffDetailView()
-            .environment(Stuff(title: "Sample", category: "General", note: "Notes"))
+            .environment(
+                Stuff(
+                    title: "Sample",
+                    category: "General",
+                    note: "Notes"
+                )
+            )
     }
 }

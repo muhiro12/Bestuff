@@ -55,7 +55,6 @@ struct StuffFormView: View {
     }
 }
 
-#Preview {
+#Preview(traits: .sampleData) {
     StuffFormView()
-        .modelContainer(for: Stuff.self, inMemory: true)
 }
