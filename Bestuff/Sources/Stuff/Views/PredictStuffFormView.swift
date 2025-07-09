@@ -54,7 +54,7 @@ struct PredictStuffFormView: View {
                             predict()
                         }
                         .buttonStyle(.borderedProminent)
-                        .tint(.pink)
+                        .tint(.accentColor)
                         .disabled(speech.isEmpty)
                     }
                 }

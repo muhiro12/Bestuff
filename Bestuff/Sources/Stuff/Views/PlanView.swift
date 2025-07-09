@@ -43,7 +43,7 @@ struct PlanView: View {
                 } else {
                     Button("Generate") { generate() }
                         .buttonStyle(.borderedProminent)
-                        .tint(.pink)
+                        .tint(.accentColor)
                 }
             }
         }
