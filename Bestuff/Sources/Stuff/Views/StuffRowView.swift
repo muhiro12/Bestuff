@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct StuffRowView: View {
-    let stuff: Stuff
+    @Environment(Stuff.self)
+    private var stuff
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -26,5 +27,6 @@ struct StuffRowView: View {
 }
 
 #Preview {
-    StuffRowView(stuff: .init(title: "Sample", category: "General"))
+    StuffRowView()
+        .environment(.init(title: "Sample", category: "General"))
 }
