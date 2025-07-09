@@ -42,6 +42,14 @@ struct ContentView: View {
                 Label("Recap", systemImage: "calendar")
             }
 
+            Tab {
+                NavigationStack {
+                    PlanView()
+                }
+            } label: {
+                Label("Plan", systemImage: "lightbulb")
+            }
+
             Tab(role: .search) {
                 NavigationStack {
                     StuffListView(selection: $selection)
