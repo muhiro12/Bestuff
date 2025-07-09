@@ -37,20 +37,20 @@ struct DebugView: View {
             Button("Cancel", role: .cancel) {}
             Button("Create") { createSampleData() }
         } message: {
-            Text("This will add example items to the list.")
+            Text("This will add example stuff to the list.")
         }
         .navigationTitle(Text("Debug"))
     }
 
     private func createSampleData() {
         withAnimation {
-            for item in SampleData.items {
+            for stuff in SampleData.stuffs {
                 _ = try? CreateStuffIntent.perform(
                     (
                         context: modelContext,
-                        title: item.title,
-                        category: item.category,
-                        note: item.note
+                        title: stuff.title,
+                        category: stuff.category,
+                        note: stuff.note
                     )
                 )
             }
@@ -59,13 +59,13 @@ struct DebugView: View {
 }
 
 struct SampleData {
-    struct Item {
+    struct StuffData {
         let title: String
         let category: String
         let note: String?
     }
 
-    static let items: [Item] = [
+    static let stuffs: [StuffData] = [
         .init(title: "Coffee Beans", category: "Groceries", note: "Order from the local roastery."),
         .init(title: "Running Shoes", category: "Fitness", note: "Replace the worn-out pair."),
         .init(title: "Conference Tickets", category: "Work", note: "WWDC 2025"),

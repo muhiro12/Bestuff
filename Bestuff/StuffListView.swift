@@ -17,16 +17,16 @@ struct StuffListView: View {
     var body: some View {
         NavigationStack {
             List {
-                ForEach(filteredItems) { item in
-                    NavigationLink(value: item) {
-                        StuffRowView(stuff: item)
+                ForEach(filteredStuffs) { stuff in
+                    NavigationLink(value: stuff) {
+                        StuffRowView(stuff: stuff)
                     }
                 }
                 .onDelete(perform: delete)
             }
             .searchable(text: $searchText)
-            .navigationDestination(for: Stuff.self) { item in
-                StuffDetailView(stuff: item)
+            .navigationDestination(for: Stuff.self) { stuff in
+                StuffDetailView(stuff: stuff)
             }
             .navigationTitle(Text("Best Stuff"))
             .toolbar {
@@ -43,7 +43,7 @@ struct StuffListView: View {
         }
     }
 
-    private var filteredItems: [Stuff] {
+    private var filteredStuffs: [Stuff] {
         if searchText.isEmpty {
             stuffs
         } else {

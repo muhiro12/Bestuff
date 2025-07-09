@@ -39,7 +39,7 @@ struct PredictStuffIntent: AppIntent, IntentPerformer {
 
     private static func generatePrediction(from text: String) async throws -> StuffEntity {
         let prompt = """
-            Based on the following user speech, guess a title, category, optional note and a score from 0 to 100 for an item the user might want to create.
+            Based on the following user speech, guess a title, category, optional note and a score from 0 to 100 for stuff the user might want to create.
             Speech: \(text)
             """
         let session = LanguageModelSession()
