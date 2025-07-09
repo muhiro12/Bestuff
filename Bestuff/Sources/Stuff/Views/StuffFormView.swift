@@ -5,8 +5,8 @@
 //  Created by Hiromu Nakano on 2025/07/08.
 //
 
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct StuffFormView: View {
     @Environment(\.dismiss) private var dismiss
@@ -57,4 +57,3 @@ struct StuffFormView: View {
     StuffFormView()
         .modelContainer(for: Stuff.self, inMemory: true)
 }
-

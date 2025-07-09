@@ -31,7 +31,7 @@ struct StuffDetailView: View {
     }
 
     private var description: String {
-        [stuff.title, stuff.category, stuff.note].compactMap { $0 }.joined(separator: "\n")
+        [stuff.title, stuff.category, stuff.note].compactMap(\.self).joined(separator: "\n")
     }
 }
 
@@ -40,4 +40,3 @@ struct StuffDetailView: View {
         StuffDetailView(stuff: .init(title: "Sample", category: "General", note: "Notes"))
     }
 }
-

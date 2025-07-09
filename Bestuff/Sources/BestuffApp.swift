@@ -5,14 +5,14 @@
 //  Created by Hiromu Nakano on 2025/07/08.
 //
 
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 @main
 struct BestuffApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Stuff.self,
+            Stuff.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
@@ -30,4 +30,3 @@ struct BestuffApp: App {
         .modelContainer(sharedModelContainer)
     }
 }
-

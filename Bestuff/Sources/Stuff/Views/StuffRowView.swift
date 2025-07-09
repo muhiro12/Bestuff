@@ -28,4 +28,3 @@ struct StuffRowView: View {
 #Preview {
     StuffRowView(stuff: .init(title: "Sample", category: "General"))
 }
-
