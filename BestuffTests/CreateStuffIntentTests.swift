@@ -14,8 +14,8 @@ struct CreateStuffIntentTests {
         let _ = try CreateStuffIntent.perform(
             (context: context, title: "Title", category: "General", note: nil)
         )
-        let items = try context.fetch(FetchDescriptor<Stuff>())
-        #expect(items.count == 1)
-        #expect(items.first?.title == "Title")
+        let stuffs = try context.fetch(FetchDescriptor<Stuff>())
+        #expect(stuffs.count == 1)
+        #expect(stuffs.first?.title == "Title")
     }
 }
