@@ -30,12 +30,19 @@ struct StuffListView: View {
         .searchable(text: $searchText)
         .navigationTitle(Text("Best Stuff"))
         .toolbar {
-            AddStuffButton()
-            PredictStuffButton()
-            Button {
-                isSettingsPresented = true
-            } label: {
-                Label("Settings", systemImage: "gearshape")
+            ToolbarItemGroup(placement: .primaryAction) {
+                AddStuffButton()
+                PredictStuffButton()
+            }
+
+            ToolbarSpacer(.fixed, placement: .primaryAction)
+
+            ToolbarItem(placement: .primaryAction) {
+                Button {
+                    isSettingsPresented = true
+                } label: {
+                    Label("Settings", systemImage: "gearshape")
+                }
             }
         }
         .sheet(isPresented: $isSettingsPresented) {

@@ -17,6 +17,7 @@ struct AddStuffButton: View {
         } label: {
             Label("Add Stuff", systemImage: "plus")
         }
+        .glassEffect()
         .sheet(isPresented: $isPresented) {
             StuffFormView()
         }
