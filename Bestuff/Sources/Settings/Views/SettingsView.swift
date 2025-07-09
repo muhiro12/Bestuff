@@ -47,7 +47,6 @@ struct SettingsView: View {
                 }
             }
         }
-        .windowResizeAnchor(.top)
     }
 }
 
