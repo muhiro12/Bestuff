@@ -57,7 +57,7 @@ struct PredictStuffFormView: View {
                     }
                 }
             }
-            .onChange(of: transcriber.transcript) { newValue in
+            .onChange(of: transcriber.transcript) { _, newValue in
                 speech = newValue
             }
         }
