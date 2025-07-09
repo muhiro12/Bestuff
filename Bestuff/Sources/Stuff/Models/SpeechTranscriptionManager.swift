@@ -11,6 +11,7 @@ import Speech
 
 @Observable
 final class SpeechTranscriptionManager {
+    private(set) var transcriptionError: Error?
     private(set) var transcript: String = ""
     private(set) var isRecording = false
 
@@ -29,7 +30,17 @@ final class SpeechTranscriptionManager {
             return
         }
         isRecording = true
-        recognizerTask = Task { try? await record() }
+        transcriptionError = nil
+        recognizerTask = Task { [weak self] in
+            guard let self else {
+                return
+            }
+            do {
+                try await record()
+            } catch {
+                transcriptionError = error
+            }
+        }
     }
 
     func stopRecording() {

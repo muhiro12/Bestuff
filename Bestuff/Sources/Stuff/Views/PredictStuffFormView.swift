@@ -16,6 +16,7 @@ struct PredictStuffFormView: View {
 
     @State private var speech = ""
     @State private var isProcessing = false
+    @State private var errorMessage: String?
     @State private var transcriber = SpeechTranscriptionManager()
 
     var body: some View {
@@ -62,7 +63,20 @@ struct PredictStuffFormView: View {
             .onChange(of: transcriber.transcript) { _, newValue in
                 speech = newValue
             }
+            .onChange(of: transcriber.transcriptionError?.localizedDescription) { _, newErrorMessage in
+                errorMessage = newErrorMessage
+            }
         }
+        .alert("Speech Recognition Error", isPresented: Binding(
+            get: { errorMessage != nil },
+            set: { if !$0 { errorMessage = nil } }
+        ), actions: {
+            Button("OK", role: .cancel) { errorMessage = nil }
+        }, message: {
+            if let errorMessage {
+                Text(errorMessage)
+            }
+        })
     }
 
     private func predict() {
