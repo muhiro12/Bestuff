@@ -16,14 +16,14 @@ struct EditStuffFormView: View {
     @State private var title: String
     @State private var category: String
     @State private var note: String
-    @State private var eventAt: Date
+    @State private var occurredAt: Date
 
     init(stuff: Stuff) {
         _stuff = Bindable(wrappedValue: stuff)
         _title = State(initialValue: stuff.title)
         _category = State(initialValue: stuff.category)
         _note = State(initialValue: stuff.note ?? "")
-        _eventAt = State(initialValue: stuff.occurredAt)
+        _occurredAt = State(initialValue: stuff.occurredAt)
     }
 
     var body: some View {
@@ -33,7 +33,7 @@ struct EditStuffFormView: View {
                     TextField("Title", text: $title)
                     TextField("Category", text: $category)
                     TextField("Note", text: $note)
-                    DatePicker("Date", selection: $eventAt, displayedComponents: .date)
+                    DatePicker("Date", selection: $occurredAt, displayedComponents: .date)
                 }
             }
             .navigationTitle(Text("Edit Stuff"))
@@ -56,7 +56,7 @@ struct EditStuffFormView: View {
             stuff.title = title
             stuff.category = category
             stuff.note = note.isEmpty ? nil : note
-            stuff.occurredAt = eventAt
+            stuff.occurredAt = occurredAt
             dismiss()
         }
     }

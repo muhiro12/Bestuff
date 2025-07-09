@@ -17,7 +17,7 @@ struct StuffFormView: View {
     @State private var title = ""
     @State private var category = ""
     @State private var note = ""
-    @State private var eventAt = Date()
+    @State private var occurredAt = Date()
 
     var body: some View {
         NavigationStack {
@@ -26,7 +26,7 @@ struct StuffFormView: View {
                     TextField("Title", text: $title)
                     TextField("Category", text: $category)
                     TextField("Note", text: $note)
-                    DatePicker("Date", selection: $eventAt, displayedComponents: .date)
+                    DatePicker("Date", selection: $occurredAt, displayedComponents: .date)
                 }
             }
             .navigationTitle(Text("Add Stuff"))
@@ -52,7 +52,7 @@ struct StuffFormView: View {
                     title: title,
                     category: category,
                     note: note.isEmpty ? nil : note,
-                    occurredAt: eventAt
+                    occurredAt: occurredAt
                 )
             )
             dismiss()
