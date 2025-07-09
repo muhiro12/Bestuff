@@ -15,7 +15,7 @@ struct AddStuffButton: View {
         Button {
             isPresented = true
         } label: {
-            Label("Add Item", systemImage: "plus")
+            Label("Add Stuff", systemImage: "plus")
         }
         .sheet(isPresented: $isPresented) {
             StuffFormView()

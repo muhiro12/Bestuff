@@ -16,7 +16,7 @@ struct DeleteStuffIntentTests {
         )
         #expect(try context.fetch(FetchDescriptor<Stuff>()).count == 1)
         try DeleteStuffIntent.perform(model)
-        let items = try context.fetch(FetchDescriptor<Stuff>())
-        #expect(items.isEmpty)
+        let stuffs = try context.fetch(FetchDescriptor<Stuff>())
+        #expect(stuffs.isEmpty)
     }
 }

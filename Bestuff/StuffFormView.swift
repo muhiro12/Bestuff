@@ -25,7 +25,7 @@ struct StuffFormView: View {
                     TextField("Note", text: $note)
                 }
             }
-            .navigationTitle(Text("Add Item"))
+            .navigationTitle(Text("Add Stuff"))
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { dismiss() }
