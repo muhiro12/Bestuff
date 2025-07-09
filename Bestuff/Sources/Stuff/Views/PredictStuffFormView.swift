@@ -18,7 +18,7 @@ struct PredictStuffFormView: View {
                 Section("Speech") {
                     TextEditor(text: $speech)
                         .frame(minHeight: 120, alignment: .topLeading)
-                        .onChange(of: speechRecognizer.transcript) { newValue in
+                        .onChange(of: speechRecognizer.transcript) { _, newValue in
                             speech = newValue
                         }
                     Button {
