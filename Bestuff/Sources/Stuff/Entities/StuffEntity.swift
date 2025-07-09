@@ -10,6 +10,8 @@ nonisolated struct StuffEntity {
     let category: String
     let note: String?
     let score: Int
+    @Guide(description: "yyyyMMdd format")
+    let occurredAt: String
 }
 
 extension StuffEntity: AppEntity {
@@ -29,26 +31,38 @@ extension StuffEntity: AppEntity {
 }
 
 extension StuffEntity: ModelBridgeable {
+    private static let dateFormatter: DateFormatter = {
+        let f = DateFormatter()
+        f.dateFormat = "yyyyMMdd"
+        f.locale = Locale(identifier: "en_US_POSIX")
+        return f
+    }()
+
     init?(_ model: Stuff) {
         guard let encodedID = try? model.id.base64Encoded() else {
             return nil
         }
+        let occurredAtString = Self.dateFormatter.string(from: model.occurredAt)
         self.init(
             id: encodedID,
             title: model.title,
             category: model.category,
             note: model.note,
-            score: model.score
+            score: model.score,
+            occurredAt: occurredAtString
         )
     }
 
     func model(in context: ModelContext) throws -> Stuff {
         guard let persistentID = try? PersistentIdentifier(base64Encoded: id),
+              let occurredDate = Self.dateFormatter.date(from: occurredAt),
               let model = try context.fetch(
                 FetchDescriptor<Stuff>(predicate: #Predicate { $0.id == persistentID })
               ).first else {
             throw StuffError.stuffNotFound
         }
-        return model
+        let updatedModel = model
+        updatedModel.occurredAt = occurredDate
+        return updatedModel
     }
 }

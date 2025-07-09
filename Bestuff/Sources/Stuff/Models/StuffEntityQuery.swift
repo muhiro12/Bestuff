@@ -28,7 +28,7 @@ struct StuffEntityQuery: EntityStringQuery {
 
     func suggestedEntities() throws -> [StuffEntity] {
         var descriptor = FetchDescriptor(
-            sortBy: [SortDescriptor(\Stuff.createdAt, order: .reverse)]
+            sortBy: [SortDescriptor(\Stuff.occurredAt, order: .reverse)]
         )
         descriptor.fetchLimit = 5
         return try modelContainer.mainContext.fetch(
