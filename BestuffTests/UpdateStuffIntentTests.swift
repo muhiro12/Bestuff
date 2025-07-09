@@ -1,4 +1,5 @@
 @testable import Bestuff
+import Foundation
 import SwiftData
 import Testing
 

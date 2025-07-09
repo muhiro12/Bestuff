@@ -17,6 +17,7 @@ struct StuffFormView: View {
     @State private var title = ""
     @State private var category = ""
     @State private var note = ""
+    @State private var occurredAt = Date.now
 
     var body: some View {
         NavigationStack {
@@ -25,6 +26,7 @@ struct StuffFormView: View {
                     TextField("Title", text: $title)
                     TextField("Category", text: $category)
                     TextField("Note", text: $note)
+                    DatePicker("Occurred At", selection: $occurredAt)
                 }
             }
             .navigationTitle(Text("Add Stuff"))
@@ -49,7 +51,8 @@ struct StuffFormView: View {
                     context: modelContext,
                     title: title,
                     category: category,
-                    note: note.isEmpty ? nil : note
+                    note: note.isEmpty ? nil : note,
+                    occurredAt: occurredAt
                 )
             )
             dismiss()

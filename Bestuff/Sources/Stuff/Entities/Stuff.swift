@@ -21,7 +21,7 @@ nonisolated final class Stuff {
         title: String,
         category: String,
         note: String? = nil,
-        occurredAt: Date = .now,
+        occurredAt: Date,
         score: Int = 0,
         createdAt: Date = .now
     ) {
