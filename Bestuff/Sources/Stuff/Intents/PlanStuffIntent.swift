@@ -47,10 +47,10 @@ struct PlanStuffIntent: AppIntent, IntentPerformer {
         return response.content
     }
 
-    func perform() async throws -> some ReturnsValue<PlanSuggestion> {
+    func perform() async throws -> some ReturnsValue<[String]> {
         let result = try await Self.perform(
             (context: modelContainer.mainContext, period: period)
         )
-        return .result(value: result)
+        return .result(value: result.actions)
     }
 }

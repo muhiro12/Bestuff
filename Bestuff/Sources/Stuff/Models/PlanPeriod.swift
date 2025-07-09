@@ -13,14 +13,14 @@ enum PlanPeriod: String, CaseIterable, Identifiable, AppEnum {
 
     var id: Self { self }
 
-    static var typeDisplayRepresentation: TypeDisplayRepresentation {
+    nonisolated static var typeDisplayRepresentation: TypeDisplayRepresentation {
         .init(name: "Plan Period")
     }
 
-    static var caseDisplayRepresentations: [Self: DisplayRepresentation] {
+    nonisolated static var caseDisplayRepresentations: [Self: DisplayRepresentation] {
         [
-            .nextMonth: .init("Next Month"),
-            .nextYear: .init("Next Year")
+            .nextMonth: .init(stringLiteral: "Next Month"),
+            .nextYear: .init(stringLiteral: "Next Year")
         ]
     }
 
