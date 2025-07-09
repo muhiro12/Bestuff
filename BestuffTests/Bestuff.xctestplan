@@ -1,0 +1,38 @@
+{
+  "configurations" : [
+    {
+      "id" : "B7FA1823-F9C2-4EB4-BD83-7487B24AB5B0",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "performanceAntipatternCheckerEnabled" : true,
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:Bestuff.xcodeproj",
+      "identifier" : "AD585E862E1D5EF1003BB6D1",
+      "name" : "Bestuff"
+    }
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:Bestuff.xcodeproj",
+        "identifier" : "AD585E972E1D5EF3003BB6D1",
+        "name" : "BestuffTests"
+      }
+    },
+    {
+      "enabled" : false,
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:Bestuff.xcodeproj",
+        "identifier" : "AD585EA12E1D5EF3003BB6D1",
+        "name" : "BestuffUITests"
+      }
+    }
+  ],
+  "version" : 1
+}
