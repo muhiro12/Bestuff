@@ -14,7 +14,6 @@ struct ContentView: View {
     }
 }
 
-#Preview {
+#Preview(traits: .sampleData) {
     ContentView()
-        .modelContainer(for: Stuff.self, inMemory: true)
 }

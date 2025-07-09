@@ -74,7 +74,6 @@ struct SampleData {
     ]
 }
 
-#Preview {
+#Preview(traits: .sampleData) {
     NavigationStack { DebugView() }
-        .modelContainer(for: Stuff.self, inMemory: true)
 }

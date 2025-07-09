@@ -23,7 +23,6 @@ struct AddStuffButton: View {
     }
 }
 
-#Preview {
+#Preview(traits: .sampleData) {
     AddStuffButton()
-        .modelContainer(for: Stuff.self, inMemory: true)
 }
