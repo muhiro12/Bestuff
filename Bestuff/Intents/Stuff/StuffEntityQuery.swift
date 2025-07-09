@@ -8,6 +8,7 @@ struct StuffEntityQuery: EntityStringQuery {
     func entities(for identifiers: [StuffEntity.ID]) throws -> [StuffEntity] {
         try identifiers.compactMap { encodedID in
             guard
+                let encodedID,
                 let id = try? PersistentIdentifier(base64Encoded: encodedID),
                 let model = try modelContainer.mainContext.fetch(
                     FetchDescriptor<Stuff>(predicate: #Predicate { $0.id == id })
