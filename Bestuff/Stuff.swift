@@ -13,12 +13,20 @@ nonisolated final class Stuff {
     var title: String
     var category: String
     var note: String?
+    var score: Int
     var createdAt: Date
 
-    init(title: String, category: String, note: String? = nil, createdAt: Date = .now) {
+    init(
+        title: String,
+        category: String,
+        note: String? = nil,
+        score: Int = 0,
+        createdAt: Date = .now
+    ) {
         self.title = title
         self.category = category
         self.note = note
+        self.score = score
         self.createdAt = createdAt
     }
 }
