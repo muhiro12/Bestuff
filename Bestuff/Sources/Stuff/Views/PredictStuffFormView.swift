@@ -1,3 +1,10 @@
+//
+//  PredictStuffFormView.swift
+//  Bestuff
+//
+//  Created by Codex on 2025/07/10.
+//
+
 import SwiftData
 import SwiftUI
 
@@ -9,6 +16,7 @@ struct PredictStuffFormView: View {
 
     @State private var speech = ""
     @State private var isProcessing = false
+    @State private var transcriber = SpeechTranscriptionManager()
 
     var body: some View {
         NavigationStack {
@@ -16,6 +24,19 @@ struct PredictStuffFormView: View {
                 Section("Speech") {
                     TextEditor(text: $speech)
                         .frame(minHeight: 120, alignment: .topLeading)
+                    HStack {
+                        Spacer()
+                        Button {
+                            if transcriber.isRecording {
+                                transcriber.stopRecording()
+                            } else {
+                                transcriber.startRecording()
+                            }
+                        } label: {
+                            Image(systemName: transcriber.isRecording ? "stop.circle.fill" : "mic.circle.fill")
+                                .imageScale(.large)
+                        }
+                    }
                 }
             }
             .navigationTitle(Text("Predict Stuff"))
@@ -35,6 +56,9 @@ struct PredictStuffFormView: View {
                         .disabled(speech.isEmpty)
                     }
                 }
+            }
+            .onChange(of: transcriber.transcript) { _, newValue in
+                speech = newValue
             }
         }
     }
