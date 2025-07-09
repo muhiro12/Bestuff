@@ -1,4 +1,5 @@
 @testable import Bestuff
+import Foundation
 import SwiftData
 import Testing
 
@@ -11,7 +12,7 @@ struct CreateStuffIntentTests {
     }
 
     @Test func perform() throws {
-        let _ = try CreateStuffIntent.perform(
+        _ = try CreateStuffIntent.perform(
             (
                 context: context,
                 title: "Title",
