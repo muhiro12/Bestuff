@@ -1,10 +1,11 @@
 import AppIntents
+import FoundationModels
 import SwiftData
 import SwiftUtilities
 
 @Generable
 nonisolated struct StuffEntity {
-    let id: String?
+    let id: String
     let title: String
     let category: String
     let note: String?
@@ -12,7 +13,6 @@ nonisolated struct StuffEntity {
 }
 
 extension StuffEntity: AppEntity {
-    typealias ID = String?
     static var typeDisplayRepresentation: TypeDisplayRepresentation {
         .init(name: "Stuff")
     }
@@ -43,13 +43,10 @@ extension StuffEntity: ModelBridgeable {
     }
 
     func model(in context: ModelContext) throws -> Stuff {
-        guard
-            let encodedID = id,
-            let id = try? PersistentIdentifier(base64Encoded: encodedID),
-            let model = try context.fetch(
-                FetchDescriptor<Stuff>(predicate: #Predicate { $0.id == id })
-            ).first
-        else {
+        guard let persistentID = try? PersistentIdentifier(base64Encoded: id),
+              let model = try context.fetch(
+                FetchDescriptor<Stuff>(predicate: #Predicate { $0.id == persistentID })
+              ).first else {
             throw StuffError.stuffNotFound
         }
         return model
