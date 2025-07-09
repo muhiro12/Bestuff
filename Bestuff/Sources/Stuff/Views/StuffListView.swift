@@ -16,16 +16,30 @@ struct StuffListView: View {
     private var stuffs: [Stuff]
     @State private var searchText = ""
     @State private var isSettingsPresented = false
+    @State private var scrollToTopID = UUID()
 
     var body: some View {
-        List(selection: $selection) {
-            ForEach(filteredStuffs) { stuff in
-                NavigationLink(value: stuff) {
-                    StuffRowView()
-                        .environment(stuff)
+        ScrollViewReader { proxy in
+            List(selection: $selection) {
+                Color.clear
+                    .frame(height: 0)
+                    .id(scrollToTopID)
+                ForEach(filteredStuffs) { stuff in
+                    NavigationLink(value: stuff) {
+                        StuffRowView()
+                            .environment(stuff)
+                    }
                 }
+                .onDelete(perform: delete)
             }
-            .onDelete(perform: delete)
+            .overlay(alignment: .bottomTrailing) {
+                ToTopButton {
+                    withAnimation {
+                        proxy.scrollTo(scrollToTopID, anchor: .top)
+                    }
+                }
+                .padding()
+            }
         }
         .searchable(text: $searchText)
         .navigationTitle(Text("Best Stuff"))

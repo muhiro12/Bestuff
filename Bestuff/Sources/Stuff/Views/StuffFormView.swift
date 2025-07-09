@@ -46,7 +46,7 @@ struct StuffFormView: View {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") { save() }
                         .buttonStyle(.borderedProminent)
-                        .tint(.pink)
+                        .tint(.accentColor)
                         .disabled(title.isEmpty)
                 }
             }
