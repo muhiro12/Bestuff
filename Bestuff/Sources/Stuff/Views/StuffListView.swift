@@ -42,11 +42,15 @@ struct StuffListView: View {
                 .onDelete(perform: delete)
             }
         }
-        .searchable(text: $searchText)
         .navigationTitle(Text("Best Stuff"))
         .toolbar {
-            ToolbarItemGroup(placement: .primaryAction) {
-                AddStuffButton()
+            ToolbarItem(placement: .bottomBar) {
+                HStack {
+                    TextField("Filter", text: $searchText)
+                        .textFieldStyle(.roundedBorder)
+                    Spacer()
+                    AddStuffButton()
+                }
             }
             ToolbarItemGroup(placement: .secondaryAction) {
                 Menu {
