@@ -51,7 +51,9 @@ struct StuffFormView: View {
             .navigationTitle(Text(stuff == nil ? "Add Stuff" : "Edit Stuff"))
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel", systemImage: "xmark", action: dismiss)
+                    Button("Cancel", systemImage: "xmark") {
+                        dismiss()
+                    }
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save", systemImage: "tray.and.arrow.down", action: save)
