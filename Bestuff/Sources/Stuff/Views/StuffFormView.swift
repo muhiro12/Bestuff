@@ -7,6 +7,7 @@
 
 import SwiftData
 import SwiftUI
+import SwiftUtilities
 
 struct StuffFormView: View {
     var stuff: Stuff?
@@ -51,9 +52,7 @@ struct StuffFormView: View {
             .navigationTitle(Text(stuff == nil ? "Add Stuff" : "Edit Stuff"))
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel", systemImage: "xmark") {
-                        dismiss()
-                    }
+                    CloseButton()
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save", systemImage: "tray.and.arrow.down", action: save)

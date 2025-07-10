@@ -10,63 +10,23 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var selection: Stuff?
-    @State private var searchText = ""
 
     var body: some View {
-        TabView {
-            Tab {
-                NavigationSplitView {
-                    StuffListView(selection: $selection)
-                } detail: {
-                    if let stuff = selection {
-                        StuffView()
-                            .environment(stuff)
-                    } else {
-                        Text("Select Stuff")
-                            .foregroundStyle(.secondary)
-                    }
-                }
-                .navigationDestination(for: Stuff.self) { stuff in
-                    StuffView()
-                        .environment(stuff)
-                }
-            } label: {
-                Label("Stuffs", systemImage: "list.bullet")
-            }
-
-            Tab {
-                RecapTabView()
-            } label: {
-                Label("Recap", systemImage: "calendar")
-            }
-
-            Tab {
-                PlanTabView()
-            } label: {
-                Label("Plan", systemImage: "lightbulb")
-            }
-
-            Tab(role: .search) {
-                NavigationSplitView {
-                    StuffListView(selection: $selection)
-                } detail: {
-                    if let stuff = selection {
-                        StuffView()
-                            .environment(stuff)
-                    } else {
-                        Text("Select Stuff")
-                            .foregroundStyle(.secondary)
-                    }
-                }
-                .navigationDestination(for: Stuff.self) { stuff in
-                    StuffView()
-                        .environment(stuff)
-                }
-            } label: {
-                Label("Search", systemImage: "magnifyingglass")
+        NavigationSplitView {
+            StuffListView(selection: $selection)
+        } detail: {
+            if let stuff = selection {
+                StuffView()
+                    .environment(stuff)
+            } else {
+                Text("Select Stuff")
+                    .foregroundStyle(.secondary)
             }
         }
-        .searchable(text: $searchText)
+        .navigationDestination(for: Stuff.self) { stuff in
+            StuffView()
+                .environment(stuff)
+        }
     }
 }
 
