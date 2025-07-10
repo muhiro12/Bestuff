@@ -49,7 +49,7 @@ struct DebugView: View {
                 HStack {
                     Text("Calendar")
                     Spacer()
-                    Text(Calendar.current.identifier)
+                    Text(Calendar.current.identifier.debugDescription)
                         .foregroundStyle(.secondary)
                 }
                 HStack {
