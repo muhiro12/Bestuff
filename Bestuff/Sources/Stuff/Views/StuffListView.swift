@@ -15,6 +15,8 @@ struct StuffListView: View {
     @Query(sort: \Stuff.occurredAt, order: .reverse)
     private var stuffs: [Stuff]
     @State private var searchText = ""
+    @State private var isRecapPresented = false
+    @State private var isPlanPresented = false
     @State private var isSettingsPresented = false
 
     var body: some View {
@@ -46,15 +48,28 @@ struct StuffListView: View {
             ToolbarItemGroup(placement: .primaryAction) {
                 AddStuffButton()
             }
-
-            ToolbarSpacer(.fixed, placement: .primaryAction)
-
-            ToolbarItem(placement: .primaryAction) {
+            ToolbarItemGroup(placement: .secondaryAction) {
+                Button("Recap", systemImage: "calendar") {
+                    Logger(#file).info("Recap button tapped")
+                    isRecapPresented = true
+                }
+                .buttonStyle(.bordered)
+                Button("Plan", systemImage: "lightbulb") {
+                    Logger(#file).info("Plan button tapped")
+                    isPlanPresented = true
+                }
+                .buttonStyle(.bordered)
                 Button("Settings", systemImage: "gearshape") {
                     Logger(#file).info("Settings button tapped")
                     isSettingsPresented = true
                 }
             }
+        }
+        .sheet(isPresented: $isRecapPresented) {
+            RecapTabView()
+        }
+        .sheet(isPresented: $isPlanPresented) {
+            PlanTabView()
         }
         .sheet(isPresented: $isSettingsPresented) {
             SettingsView()
