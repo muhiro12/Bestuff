@@ -1,5 +1,5 @@
 //
-//  StuffDetailView.swift
+//  StuffView.swift
 //  Bestuff
 //
 //  Created by Hiromu Nakano on 2025/07/08.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct StuffDetailView: View {
+struct StuffView: View {
     @Environment(Stuff.self)
     private var stuff
     @State private var isEditing = false
@@ -71,7 +71,7 @@ struct StuffDetailView: View {
 
 #Preview(traits: .sampleData) {
     NavigationStack {
-        StuffDetailView()
+        StuffView()
             .environment(
                 Stuff(
                     title: "Sample",
