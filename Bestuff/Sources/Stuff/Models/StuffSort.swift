@@ -11,9 +11,9 @@ enum StuffSort: String, CaseIterable, Identifiable {
     var title: String {
         switch self {
         case .occurredDateDescending:
-            "Date \u2193"
+            "Date \u{2193}"
         case .occurredDateAscending:
-            "Date \u2191"
+            "Date \u{2191}"
         case .titleAscending:
             "Title A-Z"
         case .titleDescending:
