@@ -5,50 +5,61 @@
 //  Created by Hiromu Nakano on 2025/07/08.
 //
 
+import Foundation
 import SwiftData
 import SwiftUI
-import Foundation
 
 struct StuffListView: View {
-    @Binding var selection: Stuff?
     @Environment(\.modelContext)
     private var modelContext
+
     @Query(sort: \Stuff.occurredAt, order: .reverse)
     private var stuffs: [Stuff]
-    @State private var searchText = ""
+
+    @Binding private var selection: Stuff?
+    @Binding private var searchText: String
+
     @State private var sort: StuffSort = .occurredDateDescending
     @State private var isRecapPresented = false
     @State private var isPlanPresented = false
     @State private var isSettingsPresented = false
     @State private var editingStuff: Stuff?
 
+    init(selection: Binding<Stuff?>, searchText: Binding<String>) {
+        _selection = selection
+        _searchText = searchText
+    }
+
     var body: some View {
-        ScrollViewReader { proxy in
-            List(selection: $selection) {
-                ForEach(filteredStuffs) { stuff in
-                    NavigationLink(value: stuff) {
-                        StuffRowView()
-                            .environment(stuff)
-                    }
-                    .contextMenu {
+        List(selection: $selection) {
+            ForEach(filteredStuffs) { stuff in
+                NavigationLink(value: stuff) {
+                    StuffRowView()
+                        .environment(stuff)
+                }
+                .contextMenu(
+                    menuItems: {
                         Button("Edit", systemImage: "pencil") {
                             editingStuff = stuff
                         }
-                        Button(role: .destructive, action: { delete(stuff) }) {
+                        Button(
+                            role: .destructive,
+                            action: { delete(stuff) }
+                        ) {
                             Label("Delete", systemImage: "trash")
                         }
+                    },
+                    preview: {
+                        StuffView()
+                            .environment(stuff)
                     }
-                }
-                .onDelete(perform: delete)
+                )
             }
+            .onDelete(perform: delete)
         }
-        .searchable(text: $searchText)
         .navigationTitle(Text("Best Stuff"))
         .toolbar {
-            ToolbarItemGroup(placement: .primaryAction) {
-                AddStuffButton()
-            }
-            ToolbarItemGroup(placement: .secondaryAction) {
+            ToolbarItemGroup(placement: .bottomBar) {
                 Menu {
                     Picker("Sort", selection: $sort) {
                         ForEach(StuffSort.allCases) { option in
@@ -58,6 +69,9 @@ struct StuffListView: View {
                 } label: {
                     Label("Sort", systemImage: "arrow.up.arrow.down")
                 }
+                AddStuffButton()
+            }
+            ToolbarItemGroup(placement: .secondaryAction) {
                 Button("Recap", systemImage: "calendar") {
                     Logger(#file).info("Recap button tapped")
                     isRecapPresented = true
@@ -122,7 +136,7 @@ struct StuffListView: View {
 
 #Preview(traits: .sampleData) {
     NavigationSplitView {
-        StuffListView(selection: .constant(nil))
+        StuffListView(selection: .constant(nil), searchText: .constant(""))
     } detail: {
         Text("Detail")
     }

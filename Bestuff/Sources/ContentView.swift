@@ -10,10 +10,14 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var selection: Stuff?
+    @State private var searchText = ""
 
     var body: some View {
         NavigationSplitView {
-            StuffListView(selection: $selection)
+            StuffListView(
+                selection: $selection,
+                searchText: $searchText
+            )
         } detail: {
             if let stuff = selection {
                 StuffView()
@@ -23,6 +27,7 @@ struct ContentView: View {
                     .foregroundStyle(.secondary)
             }
         }
+        .searchable(text: $searchText)
         .navigationDestination(for: Stuff.self) { stuff in
             StuffView()
                 .environment(stuff)
