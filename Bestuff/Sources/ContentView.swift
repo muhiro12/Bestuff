@@ -10,8 +10,6 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var selection: Stuff?
-    @State private var isRecapPresented = false
-    @State private var isPlanPresented = false
 
     var body: some View {
         NavigationSplitView {
@@ -28,31 +26,6 @@ struct ContentView: View {
         .navigationDestination(for: Stuff.self) { stuff in
             StuffView()
                 .environment(stuff)
-        }
-        .toolbar {
-            ToolbarItem(placement: .primaryAction) {
-                Button("Recap", systemImage: "calendar") {
-                    Logger(#file).info("Recap button tapped")
-                    isRecapPresented = true
-                }
-                .buttonStyle(.bordered)
-                .glassEffect()
-            }
-
-            ToolbarItem(placement: .primaryAction) {
-                Button("Plan", systemImage: "lightbulb") {
-                    Logger(#file).info("Plan button tapped")
-                    isPlanPresented = true
-                }
-                .buttonStyle(.bordered)
-                .glassEffect()
-            }
-        }
-        .sheet(isPresented: $isRecapPresented) {
-            RecapTabView()
-        }
-        .sheet(isPresented: $isPlanPresented) {
-            PlanTabView()
         }
     }
 }
