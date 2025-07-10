@@ -53,6 +53,7 @@ struct StuffListView: View {
 
             ToolbarItem(placement: .primaryAction) {
                 Button {
+                    Logger(#file).info("Settings button tapped")
                     isSettingsPresented = true
                 } label: {
                     Label("Settings", systemImage: "gearshape")
@@ -79,7 +80,9 @@ struct StuffListView: View {
         withAnimation {
             for index in offsets {
                 let stuff = stuffs[index]
+                Logger(#file).info("Deleting stuff \(stuff.id)")
                 try? DeleteStuffIntent.perform(stuff)
+                Logger(#file).notice("Deleted stuff \(stuff.id)")
             }
         }
     }

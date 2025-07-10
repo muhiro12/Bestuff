@@ -13,6 +13,7 @@ struct AddStuffButton: View {
 
     var body: some View {
         Button {
+            Logger(#file).info("AddStuffButton tapped")
             isPresented = true
         } label: {
             Label("Add Stuff", systemImage: "plus")

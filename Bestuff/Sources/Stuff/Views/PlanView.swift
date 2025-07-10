@@ -50,6 +50,7 @@ struct PlanView: View {
     }
 
     private func generate() {
+        Logger(#file).info("Generating plan suggestions")
         isProcessing = true
         Task {
             let result = try? await PlanStuffIntent.perform(
@@ -57,6 +58,7 @@ struct PlanView: View {
             )
             suggestions = result?.actions ?? []
             isProcessing = false
+            Logger(#file).notice("Generated suggestions count \(suggestions.count)")
         }
     }
 }

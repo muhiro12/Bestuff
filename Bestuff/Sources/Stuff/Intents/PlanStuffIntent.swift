@@ -25,6 +25,7 @@ struct PlanStuffIntent: AppIntent, IntentPerformer {
 
     static func perform(_ input: Input) async throws -> Output {
         let (context, period) = input
+        Logger(#file).info("Generating plan suggestions for \(period.rawValue)")
         var descriptor = FetchDescriptor(
             sortBy: [SortDescriptor(\Stuff.score, order: .reverse)]
         )
@@ -44,13 +45,16 @@ struct PlanStuffIntent: AppIntent, IntentPerformer {
             to: prompt,
             generating: PlanSuggestion.self
         )
+        Logger(#file).notice("Generated plan suggestions")
         return response.content
     }
 
     func perform() async throws -> some ReturnsValue<[String]> {
+        Logger(#file).info("Running PlanStuffIntent")
         let result = try await Self.perform(
             (context: modelContainer.mainContext, period: period)
         )
+        Logger(#file).notice("PlanStuffIntent finished successfully")
         return .result(value: result.actions)
     }
 }
