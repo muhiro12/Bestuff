@@ -36,7 +36,7 @@ struct StuffDetailView: View {
             .padding()
             .background(.thinMaterial)
             .clipShape(
-                .init(cornerRadius: 16, style: .continuous)
+                Capsule(style: .continuous)
             )
             .glassEffect()
             .padding()
