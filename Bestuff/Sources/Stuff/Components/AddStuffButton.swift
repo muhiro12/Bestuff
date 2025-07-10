@@ -16,7 +16,7 @@ struct AddStuffButton: View {
             Logger(#file).info("AddStuffButton tapped")
             isPresented = true
         }
-        .glassEffect()
+        .liquidGlass()
         .sheet(isPresented: $isPresented) {
             StuffFormView()
         }

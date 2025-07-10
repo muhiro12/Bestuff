@@ -10,63 +10,51 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var selection: Stuff?
-    @State private var searchText = ""
+    @State private var isRecapPresented = false
+    @State private var isPlanPresented = false
 
     var body: some View {
-        TabView {
-            Tab {
-                NavigationSplitView {
-                    StuffListView(selection: $selection)
-                } detail: {
-                    if let stuff = selection {
-                        StuffView()
-                            .environment(stuff)
-                    } else {
-                        Text("Select Stuff")
-                            .foregroundStyle(.secondary)
-                    }
-                }
-                .navigationDestination(for: Stuff.self) { stuff in
-                    StuffView()
-                        .environment(stuff)
-                }
-            } label: {
-                Label("Stuffs", systemImage: "list.bullet")
-            }
-
-            Tab {
-                RecapTabView()
-            } label: {
-                Label("Recap", systemImage: "calendar")
-            }
-
-            Tab {
-                PlanTabView()
-            } label: {
-                Label("Plan", systemImage: "lightbulb")
-            }
-
-            Tab(role: .search) {
-                NavigationSplitView {
-                    StuffListView(selection: $selection)
-                } detail: {
-                    if let stuff = selection {
-                        StuffView()
-                            .environment(stuff)
-                    } else {
-                        Text("Select Stuff")
-                            .foregroundStyle(.secondary)
-                    }
-                }
-                .navigationDestination(for: Stuff.self) { stuff in
-                    StuffView()
-                        .environment(stuff)
-                }
-            } label: {
-                Label("Search", systemImage: "magnifyingglass")
+        NavigationSplitView {
+            StuffListView(selection: $selection)
+        } detail: {
+            if let stuff = selection {
+                StuffView()
+                    .environment(stuff)
+            } else {
+                Text("Select Stuff")
+                    .foregroundStyle(.secondary)
             }
         }
-        .searchable(text: $searchText)
+        .navigationDestination(for: Stuff.self) { stuff in
+            StuffView()
+                .environment(stuff)
+        }
+        .toolbar {
+
+            ToolbarItem(placement: .primaryAction) {
+                Button("Recap", systemImage: "calendar") {
+                    Logger(#file).info("Recap button tapped")
+                    isRecapPresented = true
+                }
+                .buttonStyle(.bordered)
+                .liquidGlass()
+            }
+
+            ToolbarItem(placement: .primaryAction) {
+                Button("Plan", systemImage: "lightbulb") {
+                    Logger(#file).info("Plan button tapped")
+                    isPlanPresented = true
+                }
+                .buttonStyle(.bordered)
+                .liquidGlass()
+            }
+        }
+        .sheet(isPresented: $isRecapPresented) {
+            RecapTabView()
+        }
+        .sheet(isPresented: $isPlanPresented) {
+            PlanTabView()
+        }
     }
 }
 

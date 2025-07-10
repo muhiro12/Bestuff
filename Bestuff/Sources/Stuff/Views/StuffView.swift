@@ -38,7 +38,7 @@ struct StuffView: View {
             .clipShape(
                 Capsule(style: .continuous)
             )
-            .glassEffect()
+            .liquidGlass()
             .padding()
         }
         .navigationTitle(Text(stuff.title))

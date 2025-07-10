@@ -9,7 +9,7 @@ struct PredictStuffButton: View {
             Logger(#file).info("PredictStuffButton tapped")
             isPresented = true
         }
-        .glassEffect()
+        .liquidGlass()
         .sheet(isPresented: $isPresented) {
             PredictStuffFormView()
         }
