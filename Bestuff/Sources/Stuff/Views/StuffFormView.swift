@@ -56,12 +56,12 @@ struct StuffFormView: View {
     private func save() {
         withAnimation {
             if let stuff {
-                Logger(#file).info("Updating stuff \(stuff.id)")
+                Logger(#file).info("Updating stuff \(String(describing: stuff.id))")
                 stuff.title = title
                 stuff.category = category
                 stuff.note = note.isEmpty ? nil : note
                 stuff.occurredAt = occurredAt
-                Logger(#file).notice("Updated stuff \(stuff.id)")
+                Logger(#file).notice("Updated stuff \(String(describing: stuff.id))")
             } else {
                 Logger(#file).info("Creating new stuff")
                 _ = try? CreateStuffIntent.perform(

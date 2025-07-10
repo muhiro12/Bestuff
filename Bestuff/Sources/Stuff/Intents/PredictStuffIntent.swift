@@ -29,7 +29,7 @@ struct PredictStuffIntent: AppIntent, IntentPerformer {
             occurredAt: .now
         )
         context.insert(model)
-        Logger(#file).notice("Predicted stuff with id \(model.id)")
+        Logger(#file).notice("Predicted stuff with id \(String(describing: model.id))")
         return model
     }
 

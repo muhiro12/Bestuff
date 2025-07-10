@@ -29,7 +29,7 @@ struct CreateStuffIntent: AppIntent, IntentPerformer {
         Logger(#file).info("Creating stuff titled '\(title)' in category '\(category)'")
         let model = Stuff(title: title, category: category, note: note, occurredAt: occurredAt)
         context.insert(model)
-        Logger(#file).notice("Created stuff with id \(model.id)")
+        Logger(#file).notice("Created stuff with id \(String(describing: model.id))")
         return model
     }
 

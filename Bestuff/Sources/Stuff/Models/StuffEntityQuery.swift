@@ -7,7 +7,7 @@ struct StuffEntityQuery: EntityStringQuery {
 
     func entities(for identifiers: [StuffEntity.ID]) throws -> [StuffEntity] {
         Logger(#file).info("Fetching entities for \(identifiers.count) identifiers")
-        try identifiers.compactMap { encodedID in
+        return try identifiers.compactMap { encodedID in
             guard let persistentID = try? PersistentIdentifier(base64Encoded: encodedID),
                   let model = try modelContainer.mainContext.fetch(
                     FetchDescriptor<Stuff>(predicate: #Predicate { $0.id == persistentID })
@@ -22,7 +22,7 @@ struct StuffEntityQuery: EntityStringQuery {
 
     func entities(matching string: String) throws -> [StuffEntity] {
         Logger(#file).info("Searching entities matching '\(string)'")
-        try modelContainer.mainContext.fetch(
+        return try modelContainer.mainContext.fetch(
             FetchDescriptor<Stuff>(predicate: #Predicate {
                 $0.title.localizedStandardContains(string) ||
                     $0.category.localizedStandardContains(string)

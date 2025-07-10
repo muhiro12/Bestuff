@@ -80,9 +80,9 @@ struct StuffListView: View {
         withAnimation {
             for index in offsets {
                 let stuff = stuffs[index]
-                Logger(#file).info("Deleting stuff \(stuff.id)")
+                Logger(#file).info("Deleting stuff \(String(describing: stuff.id))")
                 try? DeleteStuffIntent.perform(stuff)
-                Logger(#file).notice("Deleted stuff \(stuff.id)")
+                Logger(#file).notice("Deleted stuff \(String(describing: stuff.id))")
             }
         }
     }
