@@ -30,17 +30,6 @@ struct StuffListView: View {
                 }
                 .onDelete(perform: delete)
             }
-            .overlay(alignment: .bottomTrailing) {
-                ToTopButton {
-                    guard let firstID = filteredStuffs.first?.id else {
-                        return
-                    }
-                    withAnimation {
-                        proxy.scrollTo(firstID, anchor: .top)
-                    }
-                }
-                .padding()
-            }
         }
         .searchable(text: $searchText)
         .navigationTitle(Text("Best Stuff"))
