@@ -29,6 +29,30 @@ struct DebugView: View {
                         .foregroundStyle(.secondary)
                 }
                 HStack {
+                    Text("Language")
+                    Spacer()
+                    Text(Locale.current.language.languageCode?.identifier ?? Locale.current.identifier)
+                        .foregroundStyle(.secondary)
+                }
+                HStack {
+                    Text("Region")
+                    Spacer()
+                    Text(Locale.current.region?.identifier ?? "-")
+                        .foregroundStyle(.secondary)
+                }
+                HStack {
+                    Text("Time Zone")
+                    Spacer()
+                    Text(TimeZone.current.identifier)
+                        .foregroundStyle(.secondary)
+                }
+                HStack {
+                    Text("Calendar")
+                    Spacer()
+                    Text(Calendar.current.identifier)
+                        .foregroundStyle(.secondary)
+                }
+                HStack {
                     Text("Stored Items")
                     Spacer()
                     Text("\(stuffCount)")
