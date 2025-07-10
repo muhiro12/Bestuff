@@ -21,27 +21,51 @@ struct RecapView: View {
     @Query(sort: \Stuff.occurredAt, order: .reverse)
     private var stuffs: [Stuff]
     @State private var period: RecapPeriod = .monthly
+    @State private var selection: Date?
+    @State private var stuffSelection: Stuff?
 
     var body: some View {
-        List {
-            Picker("Period", selection: $period) {
-                ForEach(RecapPeriod.allCases) { period in
-                    Text(period.title).tag(period)
+        NavigationSplitView {
+            List(selection: $selection) {
+                Picker("Period", selection: $period) {
+                    ForEach(RecapPeriod.allCases) { period in
+                        Text(period.title).tag(period)
+                    }
                 }
-            }
-            .pickerStyle(.segmented)
-            .padding(.vertical)
+                .pickerStyle(.segmented)
+                .padding(.vertical)
 
-            ForEach(sortedKeys, id: \.self) { date in
-                Section(header: Text(title(for: date))) {
-                    ForEach(groupedStuffs[date] ?? []) { stuff in
-                        StuffRowView()
-                            .environment(stuff)
+                ForEach(sortedKeys, id: \.self) { date in
+                    NavigationLink(value: date) {
+                        Text(title(for: date))
                     }
                 }
             }
+            .navigationTitle(Text("Recap"))
+        } detail: {
+            if let date = selection {
+                RecapDetailView(
+                    date: date,
+                    period: period,
+                    stuffs: groupedStuffs[date] ?? []
+                )
+                .navigationTitle(Text(title(for: date)))
+            } else {
+                Text("Select Period")
+                    .foregroundStyle(.secondary)
+            }
         }
-        .navigationTitle(Text("Recap"))
+        .navigationDestination(for: Date.self) { date in
+            RecapDetailView(
+                date: date,
+                period: period,
+                stuffs: groupedStuffs[date] ?? []
+            )
+        }
+        .navigationDestination(for: Stuff.self) { stuff in
+            StuffDetailView()
+                .environment(stuff)
+        }
     }
 
     private var groupedStuffs: [Date: [Stuff]] {
@@ -75,7 +99,5 @@ struct RecapView: View {
 }
 
 #Preview(traits: .sampleData) {
-    NavigationStack {
-        RecapView()
-    }
+    RecapView()
 }
