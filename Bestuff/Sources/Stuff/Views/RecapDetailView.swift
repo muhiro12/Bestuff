@@ -11,9 +11,10 @@ struct RecapDetailView: View {
     let date: Date
     let period: RecapPeriod
     let stuffs: [Stuff]
+    @Binding var selection: Stuff?
 
     var body: some View {
-        List(stuffs) { stuff in
+        List(stuffs, selection: $selection) { stuff in
             NavigationLink(value: stuff) {
                 StuffRowView()
                     .environment(stuff)
@@ -38,6 +39,7 @@ struct RecapDetailView: View {
     RecapDetailView(
         date: .now,
         period: .monthly,
-        stuffs: []
+        stuffs: [],
+        selection: .constant(nil)
     )
 }
