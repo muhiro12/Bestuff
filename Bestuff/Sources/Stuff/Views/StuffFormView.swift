@@ -15,6 +15,8 @@ struct StuffFormView: View {
     @Environment(\.modelContext)
     private var modelContext
 
+    @State private var isPredictPresented = false
+
     @State private var title = ""
     @State private var category = ""
     @State private var note = ""
@@ -37,6 +39,14 @@ struct StuffFormView: View {
                     TextField("Note", text: $note)
                     DatePicker("Date", selection: $occurredAt, displayedComponents: .date)
                 }
+                Section("Options") {
+                    Button {
+                        Logger(#file).info("Predict from speech tapped")
+                        isPredictPresented = true
+                    } label: {
+                        Label("Predict from Speech", systemImage: "wand.and.stars")
+                    }
+                }
             }
             .navigationTitle(Text(stuff == nil ? "Add Stuff" : "Edit Stuff"))
             .toolbar {
@@ -45,10 +55,13 @@ struct StuffFormView: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save", systemImage: "tray.and.arrow.down", action: save)
-                    .buttonStyle(.borderedProminent)
-                    .tint(.accentColor)
-                    .disabled(title.isEmpty)
+                        .buttonStyle(.borderedProminent)
+                        .tint(.accentColor)
+                        .disabled(title.isEmpty)
                 }
+            }
+            .sheet(isPresented: $isPredictPresented) {
+                PredictStuffFormView()
             }
         }
     }
