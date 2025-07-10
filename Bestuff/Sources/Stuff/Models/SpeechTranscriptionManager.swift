@@ -24,6 +24,7 @@ final class SpeechTranscriptionManager {
     private var outputContinuation: AsyncStream<AVAudioPCMBuffer>.Continuation?
 
     private var recognizerTask: Task<Void, Never>?
+    private let fallbackLocale: Locale = .init(identifier: "en-US")
 
     func startRecording() {
         guard !isRecording else {
@@ -121,8 +122,20 @@ final class SpeechTranscriptionManager {
     }
 
     private func setUpTranscriber() async throws {
+        let currentLocale = Locale.current
+        let locale: Locale
+        if await supported(locale: currentLocale) {
+            locale = currentLocale
+        } else {
+            Logger(#file).info(
+                "Locale \(currentLocale.identifier(.bcp47)) not supported. " +
+                    "Falling back to \(fallbackLocale.identifier(.bcp47))"
+            )
+            locale = fallbackLocale
+        }
+
         transcriber = SpeechTranscriber(
-            locale: Locale.current,
+            locale: locale,
             transcriptionOptions: [],
             reportingOptions: [.volatileResults],
             attributeOptions: [.audioTimeRange]
@@ -134,7 +147,7 @@ final class SpeechTranscriptionManager {
 
         analyzer = SpeechAnalyzer(modules: [transcriber])
         analyzerFormat = await SpeechAnalyzer.bestAvailableAudioFormat(compatibleWith: [transcriber])
-        try await ensureModel(transcriber: transcriber, locale: Locale.current)
+        try await ensureModel(transcriber: transcriber, locale: locale)
 
         (inputSequence, inputBuilder) = AsyncStream.makeStream()
         guard let inputSequence else {
