@@ -15,8 +15,6 @@ struct StuffView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
-                Text(stuff.title)
-                    .font(.largeTitle.bold())
                 Text(stuff.category)
                     .font(.title3)
                     .foregroundStyle(.secondary)
@@ -36,7 +34,7 @@ struct StuffView: View {
             .padding()
             .background(.thinMaterial)
             .clipShape(
-                Capsule(style: .continuous)
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
             )
             .glassEffect()
             .padding()
