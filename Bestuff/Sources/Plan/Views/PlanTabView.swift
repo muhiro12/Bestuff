@@ -78,7 +78,7 @@ struct PlanTabView: View {
             }
             suggestions = results
             isProcessing = false
-            Logger(#file).notice("Generated suggestions count \(suggestions.values.flatMap { $0 }.count)")
+            Logger(#file).notice("Generated suggestions count \(suggestions.values.flatMap(\.self).count)")
         }
     }
 }
