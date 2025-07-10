@@ -41,11 +41,7 @@ struct ContentView: View {
             }
 
             Tab {
-                NavigationSplitView {
-                    EmptyView()
-                } detail: {
-                    PlanView()
-                }
+                PlanView()
             } label: {
                 Label("Plan", systemImage: "lightbulb")
             }
