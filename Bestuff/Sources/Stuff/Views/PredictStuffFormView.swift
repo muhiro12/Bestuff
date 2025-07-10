@@ -7,6 +7,7 @@
 
 import SwiftData
 import SwiftUI
+import SwiftUtilities
 
 struct PredictStuffFormView: View {
     @Environment(\.dismiss)
@@ -45,10 +46,7 @@ struct PredictStuffFormView: View {
             .navigationTitle(Text("Predict Stuff"))
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel", systemImage: "xmark") {
-                        Logger(#file).info("PredictStuffFormView cancelled")
-                        dismiss()
-                    }
+                    CloseButton()
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     if isProcessing {

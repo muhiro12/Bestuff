@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftUtilities
 
 enum SettingsTab: Hashable {
     case general
@@ -13,8 +14,6 @@ enum SettingsTab: Hashable {
 }
 
 struct SettingsView: View {
-    @Environment(\.dismiss)
-    private var dismiss
     @AppStorage("isDarkMode") private var isDarkMode = false
     @State private var selection: SettingsTab = .general
 
@@ -43,10 +42,7 @@ struct SettingsView: View {
                     .navigationTitle(Text("Settings"))
                     .toolbar {
                         ToolbarItem(placement: .cancellationAction) {
-                            Button("Close", systemImage: "xmark") {
-                                Logger(#file).info("Settings closed")
-                                dismiss()
-                            }
+                            CloseButton()
                         }
                     }
                 }
@@ -56,10 +52,7 @@ struct SettingsView: View {
                     DebugView()
                         .toolbar {
                             ToolbarItem(placement: .cancellationAction) {
-                                Button("Close", systemImage: "xmark") {
-                                    Logger(#file).info("Settings closed")
-                                    dismiss()
-                                }
+                                CloseButton()
                             }
                         }
                 }
