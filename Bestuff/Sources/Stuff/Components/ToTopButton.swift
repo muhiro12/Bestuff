@@ -4,9 +4,7 @@ struct ToTopButton: View {
     var action: () -> Void
 
     var body: some View {
-        Button(action: action) {
-            Label("To Top", systemImage: "chevron.up")
-        }
+        Button("To Top", systemImage: "chevron.up", action: action)
         .padding()
         .glassEffect()
     }
