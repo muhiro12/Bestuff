@@ -46,7 +46,6 @@ struct StuffListView: View {
         .toolbar {
             ToolbarItemGroup(placement: .primaryAction) {
                 AddStuffButton()
-                PredictStuffButton()
             }
 
             ToolbarSpacer(.fixed, placement: .primaryAction)
