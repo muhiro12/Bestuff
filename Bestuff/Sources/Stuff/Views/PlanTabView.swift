@@ -11,31 +11,27 @@ import SwiftUtilities
 
 struct PlanTabView: View {
     @Environment(\.modelContext) private var modelContext
-    @State private var suggestions: [String] = []
-    @State private var period: PlanPeriod = .nextMonth
+    @State private var suggestions: [PlanPeriod: [String]] = [:]
+    private let periods: [PlanPeriod] = [.today, .thisWeek, .nextTrip]
     @State private var isProcessing = false
     @State private var selection: String?
 
     var body: some View {
         NavigationSplitView {
             List(selection: $selection) {
-                Picker("Period", selection: $period) {
-                    ForEach(PlanPeriod.allCases) { period in
-                        Text(period.title).tag(period)
-                    }
-                }
-                .pickerStyle(.segmented)
-                .padding(.vertical)
-
                 if suggestions.isEmpty {
                     Text("No suggestions yet")
                         .foregroundStyle(.secondary)
                 } else {
-                    Section("Suggestions") {
-                        ForEach(suggestions, id: \.self) { suggestion in
-                            NavigationLink(value: suggestion) {
-                                Text(suggestion)
-                                    .lineLimit(1)
+                    ForEach(periods) { period in
+                        if let actions = suggestions[period] {
+                            Section(period.title) {
+                                ForEach(actions, id: \.self) { suggestion in
+                                    NavigationLink(value: suggestion) {
+                                        Text(suggestion)
+                                            .lineLimit(1)
+                                    }
+                                }
                             }
                         }
                     }
@@ -73,12 +69,16 @@ struct PlanTabView: View {
         Logger(#file).info("Generating plan suggestions")
         isProcessing = true
         Task {
-            let result = try? await PlanStuffIntent.perform(
-                (context: modelContext, period: period)
-            )
-            suggestions = result?.actions ?? []
+            var results: [PlanPeriod: [String]] = [:]
+            for period in periods {
+                let result = try? await PlanStuffIntent.perform(
+                    (context: modelContext, period: period)
+                )
+                results[period] = result?.actions ?? []
+            }
+            suggestions = results
             isProcessing = false
-            Logger(#file).notice("Generated suggestions count \(suggestions.count)")
+            Logger(#file).notice("Generated suggestions count \(suggestions.values.flatMap { $0 }.count)")
         }
     }
 }

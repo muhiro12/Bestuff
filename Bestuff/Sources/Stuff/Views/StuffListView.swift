@@ -7,6 +7,7 @@
 
 import SwiftData
 import SwiftUI
+import Foundation
 
 struct StuffListView: View {
     @Binding var selection: Stuff?
@@ -15,9 +16,11 @@ struct StuffListView: View {
     @Query(sort: \Stuff.occurredAt, order: .reverse)
     private var stuffs: [Stuff]
     @State private var searchText = ""
+    @State private var sort: StuffSort = .occurredDateDescending
     @State private var isRecapPresented = false
     @State private var isPlanPresented = false
     @State private var isSettingsPresented = false
+    @State private var editingStuff: Stuff?
 
     var body: some View {
         ScrollViewReader { proxy in
@@ -27,19 +30,16 @@ struct StuffListView: View {
                         StuffRowView()
                             .environment(stuff)
                     }
+                    .contextMenu {
+                        Button("Edit", systemImage: "pencil") {
+                            editingStuff = stuff
+                        }
+                        Button(role: .destructive, action: { delete(stuff) }) {
+                            Label("Delete", systemImage: "trash")
+                        }
+                    }
                 }
                 .onDelete(perform: delete)
-            }
-            .overlay(alignment: .bottomTrailing) {
-                ToTopButton {
-                    guard let firstID = filteredStuffs.first?.id else {
-                        return
-                    }
-                    withAnimation {
-                        proxy.scrollTo(firstID, anchor: .top)
-                    }
-                }
-                .padding()
             }
         }
         .searchable(text: $searchText)
@@ -49,6 +49,15 @@ struct StuffListView: View {
                 AddStuffButton()
             }
             ToolbarItemGroup(placement: .secondaryAction) {
+                Menu {
+                    Picker("Sort", selection: $sort) {
+                        ForEach(StuffSort.allCases) { option in
+                            Text(option.title).tag(option)
+                        }
+                    }
+                } label: {
+                    Label("Sort", systemImage: "arrow.up.arrow.down")
+                }
                 Button("Recap", systemImage: "calendar") {
                     Logger(#file).info("Recap button tapped")
                     isRecapPresented = true
@@ -74,16 +83,23 @@ struct StuffListView: View {
         .sheet(isPresented: $isSettingsPresented) {
             SettingsView()
         }
+        .sheet(item: $editingStuff) { stuff in
+            StuffFormView(stuff: stuff)
+        }
     }
 
     private var filteredStuffs: [Stuff] {
+        var result: [Stuff]
         if searchText.isEmpty {
-            stuffs
+            result = stuffs
         } else {
-            stuffs.filter { stuff in
-                stuff.title.localizedCaseInsensitiveContains(searchText) ||
-                    stuff.category.localizedCaseInsensitiveContains(searchText)
+            result = stuffs.filter { model in
+                model.title.localizedCaseInsensitiveContains(searchText) ||
+                    model.category.localizedCaseInsensitiveContains(searchText)
             }
+        }
+        return result.sorted { first, second in
+            sort.areInIncreasingOrder(first, second)
         }
     }
 
@@ -96,6 +112,11 @@ struct StuffListView: View {
                 Logger(#file).notice("Deleted stuff \(String(describing: stuff.id))")
             }
         }
+    }
+
+    private func delete(_ stuff: Stuff) {
+        guard let index = stuffs.firstIndex(where: { $0.id == stuff.id }) else { return }
+        delete(at: IndexSet(integer: index))
     }
 }
 
