@@ -5,11 +5,9 @@ struct PredictStuffButton: View {
     @State private var isPresented = false
 
     var body: some View {
-        Button {
+        Button("Predict Stuff", systemImage: "wand.and.stars") {
             Logger(#file).info("PredictStuffButton tapped")
             isPresented = true
-        } label: {
-            Label("Predict Stuff", systemImage: "wand.and.stars")
         }
         .glassEffect()
         .sheet(isPresented: $isPresented) {

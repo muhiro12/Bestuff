@@ -45,22 +45,18 @@ struct PredictStuffFormView: View {
             .navigationTitle(Text("Predict Stuff"))
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button {
+                    Button("Cancel", systemImage: "xmark") {
                         Logger(#file).info("PredictStuffFormView cancelled")
                         dismiss()
-                    } label: {
-                        Label("Cancel", systemImage: "xmark")
                     }
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     if isProcessing {
                         ProgressView()
                     } else {
-                        Button {
+                        Button("Predict", systemImage: "wand.and.stars") {
                             Logger(#file).info("Predict button tapped")
                             predict()
-                        } label: {
-                            Label("Predict", systemImage: "wand.and.stars")
                         }
                         .buttonStyle(.borderedProminent)
                         .tint(.accentColor)
@@ -81,8 +77,8 @@ struct PredictStuffFormView: View {
             get: { errorMessage != nil },
             set: { if !$0 { errorMessage = nil } }
         ), actions: {
-            Button(role: .cancel) { errorMessage = nil } label: {
-                Label("OK", systemImage: "checkmark")
+            Button("OK", systemImage: "checkmark", role: .cancel) {
+                errorMessage = nil
             }
         }, message: {
             if let errorMessage {

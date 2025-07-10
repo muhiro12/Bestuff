@@ -41,14 +41,10 @@ struct StuffFormView: View {
             .navigationTitle(Text(stuff == nil ? "Add Stuff" : "Edit Stuff"))
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button(action: dismiss) {
-                        Label("Cancel", systemImage: "xmark")
-                    }
+                    Button("Cancel", systemImage: "xmark", action: dismiss)
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button(action: save) {
-                        Label("Save", systemImage: "tray.and.arrow.down")
-                    }
+                    Button("Save", systemImage: "tray.and.arrow.down", action: save)
                     .buttonStyle(.borderedProminent)
                     .tint(.accentColor)
                     .disabled(title.isEmpty)

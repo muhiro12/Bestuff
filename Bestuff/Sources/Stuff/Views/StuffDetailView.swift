@@ -54,9 +54,7 @@ struct StuffDetailView: View {
         .navigationTitle(Text(stuff.title))
         .toolbar {
             ShareLink(item: description)
-            Button { isEditing = true } label: {
-                Label("Edit", systemImage: "pencil")
-            }
+            Button("Edit", systemImage: "pencil") { isEditing = true }
         }
         .sheet(isPresented: $isEditing) {
             StuffFormView(stuff: stuff)

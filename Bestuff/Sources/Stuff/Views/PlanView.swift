@@ -41,9 +41,7 @@ struct PlanView: View {
                 if isProcessing {
                     ProgressView()
                 } else {
-                    Button(action: generate) {
-                        Label("Generate", systemImage: "sparkles")
-                    }
+                    Button("Generate", systemImage: "sparkles", action: generate)
                     .buttonStyle(.borderedProminent)
                     .tint(.accentColor)
                 }

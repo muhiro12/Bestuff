@@ -12,11 +12,9 @@ struct AddStuffButton: View {
     @State private var isPresented = false
 
     var body: some View {
-        Button {
+        Button("Add Stuff", systemImage: "plus") {
             Logger(#file).info("AddStuffButton tapped")
             isPresented = true
-        } label: {
-            Label("Add Stuff", systemImage: "plus")
         }
         .glassEffect()
         .sheet(isPresented: $isPresented) {
