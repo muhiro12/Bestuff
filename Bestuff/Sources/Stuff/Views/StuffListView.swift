@@ -51,11 +51,9 @@ struct StuffListView: View {
             ToolbarSpacer(.fixed, placement: .primaryAction)
 
             ToolbarItem(placement: .primaryAction) {
-                Button {
+                Button("Settings", systemImage: "gearshape") {
                     Logger(#file).info("Settings button tapped")
                     isSettingsPresented = true
-                } label: {
-                    Label("Settings", systemImage: "gearshape")
                 }
             }
         }

@@ -36,15 +36,11 @@ struct DebugView: View {
         }
       }
       Section("Actions") {
-        Button {
+        Button("Create Sample Data", systemImage: "doc.badge.plus") {
           isCreateAlertPresented = true
-        } label: {
-          Text("Create Sample Data")
         }
-        Button(role: .destructive) {
+        Button("Clear All Data", systemImage: "trash", role: .destructive) {
           isClearAlertPresented = true
-        } label: {
-          Text("Clear All Data")
         }
       }
     }
@@ -52,8 +48,8 @@ struct DebugView: View {
       "Create sample data?",
       isPresented: $isCreateAlertPresented
     ) {
-      Button("Cancel", role: .cancel) {}
-      Button("Create") { createSampleData() }
+      Button("Cancel", systemImage: "xmark", role: .cancel) {}
+      Button("Create", systemImage: "checkmark") { createSampleData() }
     } message: {
       Text("This will add example stuff to the list.")
     }
@@ -61,8 +57,8 @@ struct DebugView: View {
       "Clear all data?",
       isPresented: $isClearAlertPresented
     ) {
-      Button("Cancel", role: .cancel) {}
-      Button("Clear", role: .destructive) { clearAllData() }
+      Button("Cancel", systemImage: "xmark", role: .cancel) {}
+      Button("Clear", systemImage: "trash", role: .destructive) { clearAllData() }
     } message: {
       Text("This will permanently delete all stuff.")
     }

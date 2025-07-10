@@ -35,11 +35,7 @@ struct ContentView: View {
             }
 
             Tab {
-                NavigationSplitView {
-                    EmptyView()
-                } detail: {
-                    RecapView()
-                }
+                RecapView()
             } label: {
                 Label("Recap", systemImage: "calendar")
             }
