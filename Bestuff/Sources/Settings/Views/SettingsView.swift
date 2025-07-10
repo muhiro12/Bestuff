@@ -13,6 +13,8 @@ enum SettingsTab: Hashable {
 }
 
 struct SettingsView: View {
+    @Environment(\.dismiss)
+    private var dismiss
     @AppStorage("isDarkMode") private var isDarkMode = false
     @State private var selection: SettingsTab = .general
 
@@ -39,11 +41,27 @@ struct SettingsView: View {
                         }
                     }
                     .navigationTitle(Text("Settings"))
+                    .toolbar {
+                        ToolbarItem(placement: .cancellationAction) {
+                            Button("Close", systemImage: "xmark") {
+                                Logger(#file).info("Settings closed")
+                                dismiss()
+                            }
+                        }
+                    }
                 }
             }
             Tab("Debug", systemImage: "ladybug", value: SettingsTab.debug) {
                 NavigationStack {
                     DebugView()
+                        .toolbar {
+                            ToolbarItem(placement: .cancellationAction) {
+                                Button("Close", systemImage: "xmark") {
+                                    Logger(#file).info("Settings closed")
+                                    dismiss()
+                                }
+                            }
+                        }
                 }
             }
         }
