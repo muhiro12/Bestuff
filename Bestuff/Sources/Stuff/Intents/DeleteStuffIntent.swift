@@ -17,13 +17,16 @@ struct DeleteStuffIntent: AppIntent, IntentPerformer {
 
     static func perform(_ input: Input) throws -> Output {
         let model = input
+        Logger(#file).info("Deleting stuff with id \(model.id)")
         model.delete()
+        Logger(#file).notice("Deleted stuff with id \(model.id)")
     }
 
     func perform() throws -> some IntentResult {
         let entity = stuff
         let model = try entity.model(in: modelContainer.mainContext)
         try Self.perform(model)
+        Logger(#file).notice("DeleteStuffIntent finished successfully")
         return .result()
     }
 }

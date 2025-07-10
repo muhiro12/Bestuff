@@ -29,8 +29,10 @@ struct PredictStuffFormView: View {
                         Spacer()
                         Button {
                             if transcriber.isRecording {
+                                Logger(#file).info("Stopping recording")
                                 transcriber.stopRecording()
                             } else {
+                                Logger(#file).info("Starting recording")
                                 transcriber.startRecording()
                             }
                         } label: {
@@ -44,6 +46,7 @@ struct PredictStuffFormView: View {
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {
+                        Logger(#file).info("PredictStuffFormView cancelled")
                         dismiss()
                     }
                 }
@@ -52,6 +55,7 @@ struct PredictStuffFormView: View {
                         ProgressView()
                     } else {
                         Button("Predict") {
+                            Logger(#file).info("Predict button tapped")
                             predict()
                         }
                         .buttonStyle(.borderedProminent)
@@ -61,9 +65,11 @@ struct PredictStuffFormView: View {
                 }
             }
             .onChange(of: transcriber.transcript) { _, newValue in
+                Logger(#file).info("Transcription updated")
                 speech = newValue
             }
             .onChange(of: transcriber.transcriptionError?.localizedDescription) { _, newErrorMessage in
+                Logger(#file).error("Transcription error: \(String(describing: newErrorMessage))")
                 errorMessage = newErrorMessage
             }
         }
@@ -80,10 +86,12 @@ struct PredictStuffFormView: View {
     }
 
     private func predict() {
+        Logger(#file).info("Starting prediction")
         isProcessing = true
         Task {
             _ = try? await PredictStuffIntent.perform((context: modelContext, speech: speech))
             isProcessing = false
+            Logger(#file).notice("Prediction completed")
             dismiss()
         }
     }

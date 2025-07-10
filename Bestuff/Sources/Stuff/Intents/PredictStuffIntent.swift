@@ -19,6 +19,7 @@ struct PredictStuffIntent: AppIntent, IntentPerformer {
 
     static func perform(_ input: Input) async throws -> Output {
         let (context, speech) = input
+        Logger(#file).info("Predicting stuff from speech")
         let prediction = try await generatePrediction(from: speech)
         let model = Stuff(
             title: prediction.title,
@@ -28,14 +29,18 @@ struct PredictStuffIntent: AppIntent, IntentPerformer {
             occurredAt: .now
         )
         context.insert(model)
+        Logger(#file).notice("Predicted stuff with id \(model.id)")
         return model
     }
 
     func perform() async throws -> some ReturnsValue<StuffEntity> {
+        Logger(#file).info("Running PredictStuffIntent")
         let model = try await Self.perform((context: modelContainer.mainContext, speech: speech))
         guard let entity = StuffEntity(model) else {
+            Logger(#file).error("Failed to convert Stuff to StuffEntity")
             throw StuffError.stuffNotFound
         }
+        Logger(#file).notice("PredictStuffIntent finished successfully")
         return .result(value: entity)
     }
 
@@ -46,10 +51,12 @@ struct PredictStuffIntent: AppIntent, IntentPerformer {
             Speech: \(text)
             """
         let session = LanguageModelSession()
+        Logger(#file).info("Sending prediction prompt to language model")
         let response = try await session.respond(
             to: prompt,
             generating: StuffEntity.self
         )
+        Logger(#file).notice("Received prediction response")
         return response.content
     }
 }

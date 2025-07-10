@@ -6,6 +6,7 @@ struct PredictStuffButton: View {
 
     var body: some View {
         Button {
+            Logger(#file).info("PredictStuffButton tapped")
             isPresented = true
         } label: {
             Label("Predict Stuff", systemImage: "wand.and.stars")

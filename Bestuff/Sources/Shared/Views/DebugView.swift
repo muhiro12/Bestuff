@@ -70,6 +70,7 @@ struct DebugView: View {
   }
 
   private func createSampleData() {
+    Logger(#file).info("Creating sample data")
     withAnimation {
       for stuff in SampleData.stuffs {
         _ = try? CreateStuffIntent.perform(
@@ -83,9 +84,11 @@ struct DebugView: View {
         )
       }
     }
+    Logger(#file).notice("Sample data created")
   }
 
   private func clearAllData() {
+    Logger(#file).info("Clearing all data")
     withAnimation {
       let descriptor: FetchDescriptor<Stuff> = .init()
       let allStuffs = (try? modelContext.fetch(descriptor)) ?? []
@@ -93,6 +96,7 @@ struct DebugView: View {
         try? DeleteStuffIntent.perform(stuff)
       }
     }
+    Logger(#file).notice("All data cleared")
   }
 
   private var stuffCount: Int {
