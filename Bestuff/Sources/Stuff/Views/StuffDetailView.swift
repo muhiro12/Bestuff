@@ -34,27 +34,25 @@ struct StuffDetailView: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding()
-            .background(
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .fill(.ultraThinMaterial)
+            .background(.thinMaterial)
+            .clipShape(
+                .init(cornerRadius: 16, style: .continuous)
             )
+            .glassEffect()
             .padding()
         }
-        .background(
-            LinearGradient(
-                colors: [
-                    .blue.opacity(0.3),
-                    .purple.opacity(0.3)
-                ],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-            .ignoresSafeArea()
-        )
         .navigationTitle(Text(stuff.title))
         .toolbar {
-            ShareLink(item: description)
-            Button("Edit", systemImage: "pencil") { isEditing = true }
+            ToolbarItemGroup(placement: .primaryAction) {
+                ShareLink(item: description)
+            }
+
+            ToolbarSpacer(.fixed, placement: .primaryAction)
+
+            ToolbarItem(placement: .primaryAction) {
+                Button("Edit", systemImage: "pencil") { isEditing = true }
+                    .buttonStyle(.borderedProminent)
+            }
         }
         .sheet(isPresented: $isEditing) {
             StuffFormView(stuff: stuff)
