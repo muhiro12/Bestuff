@@ -43,11 +43,15 @@ struct RecapView: View {
             }
             .navigationTitle(Text("Recap"))
         } detail: {
-            if let date = selection {
+            if let stuff = stuffSelection {
+                StuffDetailView()
+                    .environment(stuff)
+            } else if let date = selection {
                 RecapDetailView(
                     date: date,
                     period: period,
-                    stuffs: groupedStuffs[date] ?? []
+                    stuffs: groupedStuffs[date] ?? [],
+                    selection: $stuffSelection
                 )
                 .navigationTitle(Text(title(for: date)))
             } else {
@@ -59,7 +63,8 @@ struct RecapView: View {
             RecapDetailView(
                 date: date,
                 period: period,
-                stuffs: groupedStuffs[date] ?? []
+                stuffs: groupedStuffs[date] ?? [],
+                selection: $stuffSelection
             )
         }
         .navigationDestination(for: Stuff.self) { stuff in
