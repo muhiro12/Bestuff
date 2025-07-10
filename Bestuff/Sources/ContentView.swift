@@ -35,7 +35,9 @@ struct ContentView: View {
             }
 
             Tab {
-                NavigationStack {
+                NavigationSplitView {
+                    EmptyView()
+                } detail: {
                     RecapView()
                 }
             } label: {
@@ -43,7 +45,9 @@ struct ContentView: View {
             }
 
             Tab {
-                NavigationStack {
+                NavigationSplitView {
+                    EmptyView()
+                } detail: {
                     PlanView()
                 }
             } label: {
@@ -51,8 +55,20 @@ struct ContentView: View {
             }
 
             Tab(role: .search) {
-                NavigationStack {
+                NavigationSplitView {
                     StuffListView(selection: $selection)
+                } detail: {
+                    if let stuff = selection {
+                        StuffDetailView()
+                            .environment(stuff)
+                    } else {
+                        Text("Select Stuff")
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                .navigationDestination(for: Stuff.self) { stuff in
+                    StuffDetailView()
+                        .environment(stuff)
                 }
             } label: {
                 Label("Search", systemImage: "magnifyingglass")
