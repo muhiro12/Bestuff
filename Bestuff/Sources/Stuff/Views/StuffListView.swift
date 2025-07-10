@@ -30,14 +30,23 @@ struct StuffListView: View {
                         StuffRowView()
                             .environment(stuff)
                     }
-                    .contextMenu {
-                        Button("Edit", systemImage: "pencil") {
-                            editingStuff = stuff
+                    .contextMenu(
+                        menuItems: {
+                            Button("Edit", systemImage: "pencil") {
+                                editingStuff = stuff
+                            }
+                            Button(
+                                role: .destructive,
+                                action: { delete(stuff) }
+                            ) {
+                                Label("Delete", systemImage: "trash")
+                            }
+                        },
+                        preview: {
+                            StuffView()
+                                .environment(stuff)
                         }
-                        Button(role: .destructive, action: { delete(stuff) }) {
-                            Label("Delete", systemImage: "trash")
-                        }
-                    }
+                    )
                 }
                 .onDelete(perform: delete)
             }
