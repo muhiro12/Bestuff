@@ -7,6 +7,7 @@
 
 import SwiftData
 import SwiftUI
+import Foundation
 
 struct StuffListView: View {
     @Binding var selection: Stuff?
@@ -15,6 +16,7 @@ struct StuffListView: View {
     @Query(sort: \Stuff.occurredAt, order: .reverse)
     private var stuffs: [Stuff]
     @State private var searchText = ""
+    @State private var sort: StuffSort = .occurredDateDescending
     @State private var isRecapPresented = false
     @State private var isPlanPresented = false
     @State private var isSettingsPresented = false
@@ -38,6 +40,15 @@ struct StuffListView: View {
                 AddStuffButton()
             }
             ToolbarItemGroup(placement: .secondaryAction) {
+                Menu {
+                    Picker("Sort", selection: $sort) {
+                        ForEach(StuffSort.allCases) { option in
+                            Text(option.title).tag(option)
+                        }
+                    }
+                } label: {
+                    Label("Sort", systemImage: "arrow.up.arrow.down")
+                }
                 Button("Recap", systemImage: "calendar") {
                     Logger(#file).info("Recap button tapped")
                     isRecapPresented = true
@@ -66,13 +77,17 @@ struct StuffListView: View {
     }
 
     private var filteredStuffs: [Stuff] {
+        var result: [Stuff]
         if searchText.isEmpty {
-            stuffs
+            result = stuffs
         } else {
-            stuffs.filter { stuff in
-                stuff.title.localizedCaseInsensitiveContains(searchText) ||
-                    stuff.category.localizedCaseInsensitiveContains(searchText)
+            result = stuffs.filter { model in
+                model.title.localizedCaseInsensitiveContains(searchText) ||
+                    model.category.localizedCaseInsensitiveContains(searchText)
             }
+        }
+        return result.sorted { first, second in
+            sort.areInIncreasingOrder(first, second)
         }
     }
 
