@@ -30,14 +30,13 @@ struct ContentView: View {
                 .environment(stuff)
         }
         .toolbar {
-
             ToolbarItem(placement: .primaryAction) {
                 Button("Recap", systemImage: "calendar") {
                     Logger(#file).info("Recap button tapped")
                     isRecapPresented = true
                 }
                 .buttonStyle(.bordered)
-                .liquidGlass()
+                .glassEffect()
             }
 
             ToolbarItem(placement: .primaryAction) {
@@ -46,7 +45,7 @@ struct ContentView: View {
                     isPlanPresented = true
                 }
                 .buttonStyle(.bordered)
-                .liquidGlass()
+                .glassEffect()
             }
         }
         .sheet(isPresented: $isRecapPresented) {
