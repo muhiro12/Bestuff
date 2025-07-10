@@ -1,5 +1,6 @@
 import SwiftData
 import SwiftUI
+import SwiftUtilities
 
 enum RecapPeriod: String, CaseIterable, Identifiable {
     case monthly
@@ -42,6 +43,11 @@ struct RecapTabView: View {
                 }
             }
             .navigationTitle(Text("Recap"))
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    CloseButton()
+                }
+            }
         } content: {
             if let date = selection {
                 RecapView(

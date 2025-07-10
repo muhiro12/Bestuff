@@ -7,6 +7,7 @@
 
 import SwiftData
 import SwiftUI
+import SwiftUtilities
 
 struct PlanTabView: View {
     @Environment(\.modelContext) private var modelContext
@@ -42,6 +43,9 @@ struct PlanTabView: View {
             }
             .navigationTitle(Text("Plan"))
             .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    CloseButton()
+                }
                 ToolbarItem(placement: .confirmationAction) {
                     if isProcessing {
                         ProgressView()
