@@ -18,6 +18,7 @@ struct StuffListView: View {
     @State private var isRecapPresented = false
     @State private var isPlanPresented = false
     @State private var isSettingsPresented = false
+    @State private var editingStuff: Stuff?
 
     var body: some View {
         ScrollViewReader { proxy in
@@ -26,6 +27,14 @@ struct StuffListView: View {
                     NavigationLink(value: stuff) {
                         StuffRowView()
                             .environment(stuff)
+                    }
+                    .contextMenu {
+                        Button("Edit", systemImage: "pencil") {
+                            editingStuff = stuff
+                        }
+                        Button(role: .destructive, action: { delete(stuff) }) {
+                            Label("Delete", systemImage: "trash")
+                        }
                     }
                 }
                 .onDelete(perform: delete)
@@ -63,6 +72,9 @@ struct StuffListView: View {
         .sheet(isPresented: $isSettingsPresented) {
             SettingsView()
         }
+        .sheet(item: $editingStuff) { stuff in
+            StuffFormView(stuff: stuff)
+        }
     }
 
     private var filteredStuffs: [Stuff] {
@@ -85,6 +97,11 @@ struct StuffListView: View {
                 Logger(#file).notice("Deleted stuff \(String(describing: stuff.id))")
             }
         }
+    }
+
+    private func delete(_ stuff: Stuff) {
+        guard let index = stuffs.firstIndex(where: { $0.id == stuff.id }) else { return }
+        delete(at: IndexSet(integer: index))
     }
 }
 
