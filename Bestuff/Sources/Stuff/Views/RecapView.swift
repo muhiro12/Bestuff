@@ -42,20 +42,24 @@ struct RecapView: View {
                 }
             }
             .navigationTitle(Text("Recap"))
-        } detail: {
-            if let stuff = stuffSelection {
-                StuffDetailView()
-                    .environment(stuff)
-            } else if let date = selection {
+        } content: {
+            if let date = selection {
                 RecapDetailView(
                     date: date,
                     period: period,
                     stuffs: groupedStuffs[date] ?? [],
                     selection: $stuffSelection
                 )
-                .navigationTitle(Text(title(for: date)))
             } else {
                 Text("Select Period")
+                    .foregroundStyle(.secondary)
+            }
+        } detail: {
+            if let stuff = stuffSelection {
+                StuffDetailView()
+                    .environment(stuff)
+            } else {
+                Text("Select Stuff")
                     .foregroundStyle(.secondary)
             }
         }
