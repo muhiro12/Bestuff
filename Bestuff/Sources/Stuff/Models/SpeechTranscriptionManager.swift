@@ -30,6 +30,7 @@ final class SpeechTranscriptionManager {
             return
         }
         isRecording = true
+        Logger(#file).info("Started recording")
         transcriptionError = nil
         recognizerTask = Task { [weak self] in
             guard let self else {
@@ -48,6 +49,7 @@ final class SpeechTranscriptionManager {
             return
         }
         isRecording = false
+        Logger(#file).info("Stopped recording")
         Task {
             await finalizeRecording()
         }
@@ -58,7 +60,7 @@ final class SpeechTranscriptionManager {
         do {
             try await analyzer?.finalizeAndFinishThroughEndOfInput()
         } catch {
-            print("failed to finalize transcription")
+            Logger(#file).error("Failed to finalize transcription: \(error.localizedDescription)")
         }
         audioEngine.stop()
         audioEngine.inputNode.removeTap(onBus: 0)
@@ -66,7 +68,7 @@ final class SpeechTranscriptionManager {
 
     private func record() async throws {
         guard await isAuthorized() else {
-            print("user denied mic permission")
+            Logger(#file).error("User denied microphone permission")
             return
         }
 
@@ -146,7 +148,7 @@ final class SpeechTranscriptionManager {
                     }
                 }
             } catch {
-                print("speech recognition failed")
+                Logger(#file).error("Speech recognition failed: \(error.localizedDescription)")
             }
         }
 
