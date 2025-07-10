@@ -1,107 +1,26 @@
-import SwiftData
+//
+//  RecapView.swift
+//  Bestuff
+//
+//  Created by Codex on 2025/07/22.
+//
+
 import SwiftUI
 
-enum RecapPeriod: String, CaseIterable, Identifiable {
-    case monthly
-    case yearly
-
-    var id: Self { self }
-
-    var title: String {
-        switch self {
-        case .monthly:
-            "Monthly"
-        case .yearly:
-            "Yearly"
-        }
-    }
-}
-
 struct RecapView: View {
-    @Query(sort: \Stuff.occurredAt, order: .reverse)
-    private var stuffs: [Stuff]
-    @State private var period: RecapPeriod = .monthly
-    @State private var selection: Date?
-    @State private var stuffSelection: Stuff?
+    let date: Date
+    let period: RecapPeriod
+    let stuffs: [Stuff]
+    @Binding var selection: Stuff?
 
     var body: some View {
-        NavigationSplitView {
-            List(selection: $selection) {
-                Picker("Period", selection: $period) {
-                    ForEach(RecapPeriod.allCases) { period in
-                        Text(period.title).tag(period)
-                    }
-                }
-                .pickerStyle(.segmented)
-                .padding(.vertical)
-
-                ForEach(sortedKeys, id: \.self) { date in
-                    NavigationLink(value: date) {
-                        Text(title(for: date))
-                    }
-                }
-            }
-            .navigationTitle(Text("Recap"))
-        } content: {
-            if let date = selection {
-                RecapDetailView(
-                    date: date,
-                    period: period,
-                    stuffs: groupedStuffs[date] ?? [],
-                    selection: $stuffSelection
-                )
-            } else {
-                Text("Select Period")
-                    .foregroundStyle(.secondary)
-            }
-        } detail: {
-            if let stuff = stuffSelection {
-                StuffDetailView()
+        List(stuffs, selection: $selection) { stuff in
+            NavigationLink(value: stuff) {
+                StuffRowView()
                     .environment(stuff)
-            } else {
-                Text("Select Stuff")
-                    .foregroundStyle(.secondary)
             }
         }
-        .navigationDestination(for: Date.self) { date in
-            RecapDetailView(
-                date: date,
-                period: period,
-                stuffs: groupedStuffs[date] ?? [],
-                selection: $stuffSelection
-            )
-        }
-        .navigationDestination(for: Stuff.self) { stuff in
-            StuffDetailView()
-                .environment(stuff)
-        }
-        .onDisappear {
-            selection = nil
-            stuffSelection = nil
-        }
-        .onChange(of: selection) { _, newValue in
-            if newValue == nil {
-                stuffSelection = nil
-            }
-        }
-    }
-
-    private var groupedStuffs: [Date: [Stuff]] {
-        Dictionary(grouping: stuffs) { model in
-            let calendar = Calendar.current
-            let components: DateComponents
-            switch period {
-            case .monthly:
-                components = calendar.dateComponents([.year, .month], from: model.occurredAt)
-            case .yearly:
-                components = calendar.dateComponents([.year], from: model.occurredAt)
-            }
-            return calendar.date(from: components) ?? model.occurredAt
-        }
-    }
-
-    private var sortedKeys: [Date] {
-        groupedStuffs.keys.sorted(by: >)
+        .navigationTitle(Text(title(for: date)))
     }
 
     private func title(for date: Date) -> String {
@@ -117,5 +36,10 @@ struct RecapView: View {
 }
 
 #Preview(traits: .sampleData) {
-    RecapView()
+    RecapView(
+        date: .now,
+        period: .monthly,
+        stuffs: [],
+        selection: .constant(nil)
+    )
 }
