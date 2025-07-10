@@ -71,6 +71,15 @@ struct RecapView: View {
             StuffDetailView()
                 .environment(stuff)
         }
+        .onDisappear {
+            selection = nil
+            stuffSelection = nil
+        }
+        .onChange(of: selection) { _, newValue in
+            if newValue == nil {
+                stuffSelection = nil
+            }
+        }
     }
 
     private var groupedStuffs: [Date: [Stuff]] {
