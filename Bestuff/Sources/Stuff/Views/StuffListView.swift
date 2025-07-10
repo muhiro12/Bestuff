@@ -16,14 +16,10 @@ struct StuffListView: View {
     private var stuffs: [Stuff]
     @State private var searchText = ""
     @State private var isSettingsPresented = false
-    @State private var scrollToTopID = UUID()
 
     var body: some View {
         ScrollViewReader { proxy in
             List(selection: $selection) {
-                Color.clear
-                    .frame(height: 0)
-                    .id(scrollToTopID)
                 ForEach(filteredStuffs) { stuff in
                     NavigationLink(value: stuff) {
                         StuffRowView()
@@ -34,8 +30,11 @@ struct StuffListView: View {
             }
             .overlay(alignment: .bottomTrailing) {
                 ToTopButton {
+                    guard let firstID = filteredStuffs.first?.id else {
+                        return
+                    }
                     withAnimation {
-                        proxy.scrollTo(scrollToTopID, anchor: .top)
+                        proxy.scrollTo(firstID, anchor: .top)
                     }
                 }
                 .padding()
