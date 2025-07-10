@@ -42,8 +42,8 @@ struct PlanView: View {
                     ProgressView()
                 } else {
                     Button("Generate", systemImage: "sparkles", action: generate)
-                    .buttonStyle(.borderedProminent)
-                    .tint(.accentColor)
+                        .buttonStyle(.borderedProminent)
+                        .tint(.accentColor)
                 }
             }
         }

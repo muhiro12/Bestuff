@@ -5,8 +5,8 @@ struct ToTopButton: View {
 
     var body: some View {
         Button("To Top", systemImage: "chevron.up", action: action)
-        .padding()
-        .glassEffect()
+            .padding()
+            .glassEffect()
     }
 }
 
