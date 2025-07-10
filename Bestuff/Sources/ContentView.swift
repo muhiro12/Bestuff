@@ -19,7 +19,7 @@ struct ContentView: View {
                     StuffListView(selection: $selection)
                 } detail: {
                     if let stuff = selection {
-                        StuffDetailView()
+                        StuffView()
                             .environment(stuff)
                     } else {
                         Text("Select Stuff")
@@ -27,7 +27,7 @@ struct ContentView: View {
                     }
                 }
                 .navigationDestination(for: Stuff.self) { stuff in
-                    StuffDetailView()
+                    StuffView()
                         .environment(stuff)
                 }
             } label: {
@@ -35,13 +35,13 @@ struct ContentView: View {
             }
 
             Tab {
-                RecapView()
+                RecapTabView()
             } label: {
                 Label("Recap", systemImage: "calendar")
             }
 
             Tab {
-                PlanView()
+                PlanTabView()
             } label: {
                 Label("Plan", systemImage: "lightbulb")
             }
@@ -51,7 +51,7 @@ struct ContentView: View {
                     StuffListView(selection: $selection)
                 } detail: {
                     if let stuff = selection {
-                        StuffDetailView()
+                        StuffView()
                             .environment(stuff)
                     } else {
                         Text("Select Stuff")
@@ -59,7 +59,7 @@ struct ContentView: View {
                     }
                 }
                 .navigationDestination(for: Stuff.self) { stuff in
-                    StuffDetailView()
+                    StuffView()
                         .environment(stuff)
                 }
             } label: {

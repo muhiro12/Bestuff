@@ -1,5 +1,5 @@
 //
-//  StuffDetailView.swift
+//  StuffView.swift
 //  Bestuff
 //
 //  Created by Hiromu Nakano on 2025/07/08.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct StuffDetailView: View {
+struct StuffView: View {
     @Environment(Stuff.self)
     private var stuff
     @State private var isEditing = false
@@ -34,27 +34,25 @@ struct StuffDetailView: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding()
-            .background(
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .fill(.ultraThinMaterial)
+            .background(.thinMaterial)
+            .clipShape(
+                Capsule(style: .continuous)
             )
+            .glassEffect()
             .padding()
         }
-        .background(
-            LinearGradient(
-                colors: [
-                    .blue.opacity(0.3),
-                    .purple.opacity(0.3)
-                ],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-            .ignoresSafeArea()
-        )
         .navigationTitle(Text(stuff.title))
         .toolbar {
-            ShareLink(item: description)
-            Button("Edit", systemImage: "pencil") { isEditing = true }
+            ToolbarItemGroup(placement: .primaryAction) {
+                ShareLink(item: description)
+            }
+
+            ToolbarSpacer(.fixed, placement: .primaryAction)
+
+            ToolbarItem(placement: .primaryAction) {
+                Button("Edit", systemImage: "pencil") { isEditing = true }
+                    .buttonStyle(.borderedProminent)
+            }
         }
         .sheet(isPresented: $isEditing) {
             StuffFormView(stuff: stuff)
@@ -73,7 +71,7 @@ struct StuffDetailView: View {
 
 #Preview(traits: .sampleData) {
     NavigationStack {
-        StuffDetailView()
+        StuffView()
             .environment(
                 Stuff(
                     title: "Sample",
