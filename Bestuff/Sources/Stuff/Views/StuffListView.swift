@@ -31,33 +31,31 @@ struct StuffListView: View {
     }
 
     var body: some View {
-        ScrollViewReader { _ in
-            List(selection: $selection) {
-                ForEach(filteredStuffs) { stuff in
-                    NavigationLink(value: stuff) {
-                        StuffRowView()
+        List(selection: $selection) {
+            ForEach(filteredStuffs) { stuff in
+                NavigationLink(value: stuff) {
+                    StuffRowView()
+                        .environment(stuff)
+                }
+                .contextMenu(
+                    menuItems: {
+                        Button("Edit", systemImage: "pencil") {
+                            editingStuff = stuff
+                        }
+                        Button(
+                            role: .destructive,
+                            action: { delete(stuff) }
+                        ) {
+                            Label("Delete", systemImage: "trash")
+                        }
+                    },
+                    preview: {
+                        StuffView()
                             .environment(stuff)
                     }
-                    .contextMenu(
-                        menuItems: {
-                            Button("Edit", systemImage: "pencil") {
-                                editingStuff = stuff
-                            }
-                            Button(
-                                role: .destructive,
-                                action: { delete(stuff) }
-                            ) {
-                                Label("Delete", systemImage: "trash")
-                            }
-                        },
-                        preview: {
-                            StuffView()
-                                .environment(stuff)
-                        }
-                    )
-                }
-                .onDelete(perform: delete)
+                )
             }
+            .onDelete(perform: delete)
         }
         .navigationTitle(Text("Best Stuff"))
         .toolbar {
