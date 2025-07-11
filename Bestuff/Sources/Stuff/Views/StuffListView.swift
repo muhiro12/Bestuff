@@ -48,11 +48,8 @@ struct StuffListView: View {
                     .tag(stuff)
                     .contextMenu(
                         menuItems: {
-                            StuffFormButton(
-                                stuff: stuff,
-                                title: "Edit",
-                                systemImage: "pencil"
-                            )
+                            EditStuffButton()
+                                .environment(stuff)
                             Button(
                                 role: .destructive,
                                 action: { delete(stuff) }

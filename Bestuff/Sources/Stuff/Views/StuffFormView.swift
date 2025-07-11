@@ -10,7 +10,8 @@ import SwiftUI
 import SwiftUtilities
 
 struct StuffFormView: View {
-    var stuff: Stuff?
+    @Environment(Stuff.self)
+    private var stuff: Stuff?
     @Environment(\.dismiss)
     private var dismiss
     @Environment(\.modelContext)
@@ -22,14 +23,6 @@ struct StuffFormView: View {
     @State private var category = ""
     @State private var note = ""
     @State private var occurredAt = Date.now
-
-    init(stuff: Stuff? = nil) {
-        self.stuff = stuff
-        _title = State(initialValue: stuff?.title ?? "")
-        _category = State(initialValue: stuff?.category ?? "")
-        _note = State(initialValue: stuff?.note ?? "")
-        _occurredAt = State(initialValue: stuff?.occurredAt ?? .now)
-    }
 
     var body: some View {
         Form {
@@ -67,6 +60,12 @@ struct StuffFormView: View {
         .sheet(isPresented: $isPredictPresented) {
             PredictStuffFormView()
         }
+        .task {
+            title = stuff?.title ?? .empty
+            category = stuff?.category ?? .empty
+            note = stuff?.note ?? .empty
+            occurredAt = stuff?.occurredAt ?? .now
+        }
     }
 
     private func save() {
@@ -102,12 +101,13 @@ struct StuffFormView: View {
 }
 
 #Preview(traits: .sampleData) {
-    StuffFormView(
-        stuff: Stuff.create(
-            title: "Sample",
-            category: "General",
-            occurredAt: .now,
-            createdAt: .now
+    StuffFormView()
+        .environment(
+            Stuff.create(
+                title: "Sample",
+                category: "General",
+                occurredAt: .now,
+                createdAt: .now
+            )
         )
-    )
 }

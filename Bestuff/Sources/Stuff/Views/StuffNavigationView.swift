@@ -84,12 +84,8 @@ struct StuffNavigationView: View {
                             )
                         }
                         ToolbarItem(placement: .primaryAction) {
-                            StuffFormButton(
-                                stuff: stuff,
-                                title: "Edit",
-                                systemImage: "pencil"
-                            )
-                            .buttonStyle(.borderedProminent)
+                            EditStuffButton()
+                                .environment(stuff)
                         }
                     }
             } else {
