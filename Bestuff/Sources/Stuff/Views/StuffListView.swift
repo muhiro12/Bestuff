@@ -15,7 +15,9 @@ struct StuffListView: View {
     private var modelContext
 
     @Query(sort: \Stuff.occurredAt, order: .reverse)
-    private var stuffs: [Stuff]
+    private var queriedStuffs: [Stuff]
+
+    private let overrideStuffs: [Stuff]?
 
     @Binding private var selection: Stuff?
     @Binding private var searchText: String
@@ -27,9 +29,14 @@ struct StuffListView: View {
     @State private var isDebugPresented = false
     @State private var editingStuff: Stuff?
 
-    init(selection: Binding<Stuff?>, searchText: Binding<String>) {
+    init(stuffs: [Stuff]? = nil, selection: Binding<Stuff?>, searchText: Binding<String>) {
+        overrideStuffs = stuffs
         _selection = selection
         _searchText = searchText
+    }
+
+    private var stuffs: [Stuff] {
+        overrideStuffs ?? queriedStuffs
     }
 
     var body: some View {

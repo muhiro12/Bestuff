@@ -16,6 +16,7 @@ struct RecapNavigationView: View {
     @State private var selection: Date?
     @State private var stuffSelection: Stuff?
     @State private var period: RecapPeriod = .monthly
+    @State private var searchText = ""
 
     var body: some View {
         NavigationSplitView {
@@ -25,12 +26,12 @@ struct RecapNavigationView: View {
             )
         } content: {
             if let date = selection {
-                RecapStuffListView(
-                    date: date,
-                    period: period,
+                StuffListView(
                     stuffs: groupedStuffs[date] ?? [],
-                    selection: $stuffSelection
+                    selection: $stuffSelection,
+                    searchText: $searchText
                 )
+                .navigationTitle(Text(title(for: date)))
             } else {
                 Text("Select Period")
                     .foregroundStyle(.secondary)
@@ -67,6 +68,17 @@ struct RecapNavigationView: View {
             }
             return calendar.date(from: components) ?? model.occurredAt
         }
+    }
+
+    private func title(for date: Date) -> String {
+        let formatter = DateFormatter()
+        switch period {
+        case .monthly:
+            formatter.dateFormat = "LLLL yyyy"
+        case .yearly:
+            formatter.dateFormat = "yyyy"
+        }
+        return formatter.string(from: date)
     }
 }
 
