@@ -36,7 +36,7 @@ struct StuffListView: View {
         List(selection: $selection) {
             ForEach(filteredStuffs) { stuff in
                 NavigationLink(value: stuff) {
-                    StuffRowView()
+                    StuffRow()
                         .environment(stuff)
                 }
                 .contextMenu(

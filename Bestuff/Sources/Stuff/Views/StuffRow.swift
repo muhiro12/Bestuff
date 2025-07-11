@@ -1,5 +1,5 @@
 //
-//  StuffRowView.swift
+//  StuffRow.swift
 //  Bestuff
 //
 //  Created by Hiromu Nakano on 2025/07/08.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct StuffRowView: View {
+struct StuffRow: View {
     @Environment(Stuff.self)
     private var stuff
 
@@ -27,7 +27,7 @@ struct StuffRowView: View {
 }
 
 #Preview(traits: .sampleData) {
-    StuffRowView()
+    StuffRow()
         .environment(
             Stuff(
                 title: "Sample",
