@@ -21,11 +21,10 @@ struct PredictStuffFormView: View {
     @State private var transcriber = SpeechTranscriptionManager()
 
     var body: some View {
-        NavigationStack {
-            Form {
-                Section("Speech") {
-                    TextEditor(text: $speech)
-                        .frame(minHeight: 120, alignment: .topLeading)
+        Form {
+            Section("Speech") {
+                TextEditor(text: $speech)
+                    .frame(minHeight: 120, alignment: .topLeading)
                     HStack {
                         Spacer()
                         Button {
@@ -42,34 +41,33 @@ struct PredictStuffFormView: View {
                         }
                     }
                 }
+        }
+        .navigationTitle(Text("Predict Stuff"))
+        .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+                CloseButton()
             }
-            .navigationTitle(Text("Predict Stuff"))
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    CloseButton()
-                }
-                ToolbarItem(placement: .confirmationAction) {
-                    if isProcessing {
-                        ProgressView()
-                    } else {
-                        Button("Predict", systemImage: "wand.and.stars") {
-                            Logger(#file).info("Predict button tapped")
-                            predict()
-                        }
-                        .buttonStyle(.borderedProminent)
-                        .tint(.accentColor)
-                        .disabled(speech.isEmpty)
+            ToolbarItem(placement: .confirmationAction) {
+                if isProcessing {
+                    ProgressView()
+                } else {
+                    Button("Predict", systemImage: "wand.and.stars") {
+                        Logger(#file).info("Predict button tapped")
+                        predict()
                     }
+                    .buttonStyle(.borderedProminent)
+                    .tint(.accentColor)
+                    .disabled(speech.isEmpty)
                 }
             }
-            .onChange(of: transcriber.transcript) { _, newValue in
-                Logger(#file).info("Transcription updated")
-                speech = newValue
-            }
-            .onChange(of: transcriber.transcriptionError?.localizedDescription) { _, newErrorMessage in
-                Logger(#file).error("Transcription error: \(String(describing: newErrorMessage))")
-                errorMessage = newErrorMessage
-            }
+        }
+        .onChange(of: transcriber.transcript) { _, newValue in
+            Logger(#file).info("Transcription updated")
+            speech = newValue
+        }
+        .onChange(of: transcriber.transcriptionError?.localizedDescription) { _, newErrorMessage in
+            Logger(#file).error("Transcription error: \(String(describing: newErrorMessage))")
+            errorMessage = newErrorMessage
         }
         .alert("Speech Recognition Error", isPresented: Binding(
             get: { errorMessage != nil },

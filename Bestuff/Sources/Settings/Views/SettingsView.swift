@@ -10,13 +10,12 @@ import SwiftUtilities
 
 struct SettingsView: View {
     var body: some View {
-        NavigationStack {
-            List {
-                Section("General") {
-                    Label("Version 1.0.0", systemImage: "number")
-                }
-                Section("Support") {
-                    Link(
+        List {
+            Section("General") {
+                Label("Version 1.0.0", systemImage: "number")
+            }
+            Section("Support") {
+                Link(
                         destination: URL(string: "mailto:support@example.com")!
                     ) {
                         Label("Contact Support", systemImage: "envelope")
@@ -27,12 +26,11 @@ struct SettingsView: View {
                         Label("Visit Website", systemImage: "safari")
                     }
                 }
-            }
-            .navigationTitle(Text("Settings"))
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    CloseButton()
-                }
+        }
+        .navigationTitle(Text("Settings"))
+        .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+                CloseButton()
             }
         }
     }

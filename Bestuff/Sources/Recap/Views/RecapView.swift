@@ -15,10 +15,9 @@ struct RecapView: View {
 
     var body: some View {
         List(stuffs, selection: $selection) { stuff in
-            NavigationLink(value: stuff) {
-                StuffRow()
-                    .environment(stuff)
-            }
+            StuffRow()
+                .environment(stuff)
+                .tag(stuff)
         }
         .navigationTitle(Text(title(for: date)))
     }

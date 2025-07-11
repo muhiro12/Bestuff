@@ -28,10 +28,6 @@ struct ContentView: View {
             }
         }
         .searchable(text: $searchText)
-        .navigationDestination(for: Stuff.self) { stuff in
-            StuffView()
-                .environment(stuff)
-        }
     }
 }
 

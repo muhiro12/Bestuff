@@ -35,27 +35,26 @@ struct StuffListView: View {
     var body: some View {
         List(selection: $selection) {
             ForEach(filteredStuffs) { stuff in
-                NavigationLink(value: stuff) {
-                    StuffRow()
-                        .environment(stuff)
-                }
-                .contextMenu(
-                    menuItems: {
-                        Button("Edit", systemImage: "pencil") {
-                            editingStuff = stuff
+                StuffRow()
+                    .environment(stuff)
+                    .tag(stuff)
+                    .contextMenu(
+                        menuItems: {
+                            Button("Edit", systemImage: "pencil") {
+                                editingStuff = stuff
+                            }
+                            Button(
+                                role: .destructive,
+                                action: { delete(stuff) }
+                            ) {
+                                Label("Delete", systemImage: "trash")
+                            }
+                        },
+                        preview: {
+                            StuffView()
+                                .environment(stuff)
                         }
-                        Button(
-                            role: .destructive,
-                            action: { delete(stuff) }
-                        ) {
-                            Label("Delete", systemImage: "trash")
-                        }
-                    },
-                    preview: {
-                        StuffView()
-                            .environment(stuff)
-                    }
-                )
+                    )
             }
             .onDelete(perform: delete)
         }
@@ -115,14 +114,12 @@ struct StuffListView: View {
             SettingsView()
         }
         .sheet(isPresented: $isDebugPresented) {
-            NavigationStack {
-                DebugView()
-                    .toolbar {
-                        ToolbarItem(placement: .cancellationAction) {
-                            CloseButton()
-                        }
+            DebugView()
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        CloseButton()
                     }
-            }
+                }
         }
         .sheet(item: $editingStuff) { stuff in
             StuffFormView(stuff: stuff)
