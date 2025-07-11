@@ -8,6 +8,7 @@
 import Foundation
 import SwiftData
 import SwiftUI
+import SwiftUtilities
 
 struct StuffListView: View {
     @Environment(\.modelContext)
@@ -88,12 +89,12 @@ struct StuffListView: View {
                         Logger(#file).info("Settings button tapped")
                         isSettingsPresented = true
                     }
-#if DEBUG
+                    #if DEBUG
                     Button("Debug", systemImage: "ladybug") {
                         Logger(#file).info("Debug button tapped")
                         isDebugPresented = true
                     }
-#endif
+                    #endif
                 } label: {
                     Label("Settings", systemImage: "gearshape")
                 }
