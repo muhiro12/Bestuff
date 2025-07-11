@@ -18,7 +18,7 @@ enum RecapPeriod: String, CaseIterable, Identifiable {
     }
 }
 
-struct RecapTabView: View {
+struct RecapOverviewView: View {
     @Query(sort: \Stuff.occurredAt, order: .reverse)
     private var stuffs: [Stuff]
     @State private var period: RecapPeriod = .monthly
@@ -123,5 +123,5 @@ struct RecapTabView: View {
 }
 
 #Preview(traits: .sampleData) {
-    RecapTabView()
+    RecapOverviewView()
 }

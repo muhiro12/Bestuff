@@ -96,10 +96,10 @@ struct StuffListView: View {
             }
         }
         .sheet(isPresented: $isRecapPresented) {
-            RecapTabView()
+            RecapOverviewView()
         }
         .sheet(isPresented: $isPlanPresented) {
-            PlanTabView()
+            PlanSuggestionsView()
         }
         .sheet(isPresented: $isSettingsPresented) {
             SettingsView()
