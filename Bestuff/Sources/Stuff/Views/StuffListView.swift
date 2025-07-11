@@ -24,8 +24,6 @@ struct StuffListView: View {
     @State private var sort = StuffSort.occurredDateDescending
     @State private var isRecapPresented = false
     @State private var isPlanPresented = false
-    @State private var isSettingsPresented = false
-    @State private var isDebugPresented = false
 
     init(
         stuffs: [Stuff]? = nil,
@@ -97,17 +95,11 @@ struct StuffListView: View {
                 .buttonStyle(.bordered)
             }
             ToolbarItem(placement: .secondaryAction) {
-                Button("Settings", systemImage: "gearshape") {
-                    Logger(#file).info("Settings button tapped")
-                    isSettingsPresented = true
-                }
+                SettingsButton()
             }
             #if DEBUG
             ToolbarItem(placement: .secondaryAction) {
-                Button("Debug", systemImage: "ladybug") {
-                    Logger(#file).info("Debug button tapped")
-                    isDebugPresented = true
-                }
+                DebugButton()
             }
             #endif
         }
@@ -116,12 +108,6 @@ struct StuffListView: View {
         }
         .sheet(isPresented: $isPlanPresented) {
             PlanNavigationView()
-        }
-        .sheet(isPresented: $isSettingsPresented) {
-            SettingsNavigationView()
-        }
-        .sheet(isPresented: $isDebugPresented) {
-            DebugNavigationView()
         }
     }
 
