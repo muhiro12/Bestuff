@@ -62,6 +62,15 @@ if isDebugMode { logger.debug("Entering debug state") }
 tasks.filter { $0.isCompleted }
 ```
 
+### View naming conventions
+
+Name view structs according to the primary full-screen container:
+
+- Use `FooNavigationView` when the root is a `NavigationStack` or `NavigationSplitView`.
+- Use `FooListView` when the entire screen is a `List` or a scrollable list equivalent.
+- Use `FooFormView` when a `Form` is the main content.
+- Use `FooTabBar` when the screen is organized with a tab bar.
+
 ## Markdown Guidelines
 
 ### Follow markdownlint rules for Markdown files

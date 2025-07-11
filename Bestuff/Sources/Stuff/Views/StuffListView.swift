@@ -105,16 +105,16 @@ struct StuffListView: View {
             #endif
         }
         .sheet(isPresented: $isRecapPresented) {
-            RecapOverviewView()
+            RecapOverviewNavigationView()
         }
         .sheet(isPresented: $isPlanPresented) {
-            PlanSuggestionsView()
+            PlanSuggestionsNavigationView()
         }
         .sheet(isPresented: $isSettingsPresented) {
-            SettingsView()
+            SettingsListView()
         }
         .sheet(isPresented: $isDebugPresented) {
-            DebugView()
+            DebugListView()
                 .toolbar {
                     ToolbarItem(placement: .cancellationAction) {
                         CloseButton()

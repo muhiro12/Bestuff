@@ -18,7 +18,7 @@ enum RecapPeriod: String, CaseIterable, Identifiable {
     }
 }
 
-struct RecapOverviewView: View {
+struct RecapOverviewNavigationView: View {
     @Query(sort: \Stuff.occurredAt, order: .reverse)
     private var stuffs: [Stuff]
     @State private var period: RecapPeriod = .monthly
@@ -49,7 +49,7 @@ struct RecapOverviewView: View {
             }
         } content: {
             if let date = selection {
-                RecapView(
+                RecapListView(
                     date: date,
                     period: period,
                     stuffs: groupedStuffs[date] ?? [],
@@ -110,5 +110,5 @@ struct RecapOverviewView: View {
 }
 
 #Preview(traits: .sampleData) {
-    RecapOverviewView()
+    RecapOverviewNavigationView()
 }

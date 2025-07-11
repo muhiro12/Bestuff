@@ -1,5 +1,5 @@
 //
-//  DebugView.swift
+//  DebugListView.swift
 //  Bestuff
 //
 //  Created by Codex on 2025/07/09.
@@ -8,7 +8,7 @@
 import SwiftData
 import SwiftUI
 
-struct DebugView: View {
+struct DebugListView: View {
     @Environment(\.modelContext) private var modelContext
     @State private var isCreateAlertPresented = false
     @State private var isClearAlertPresented = false
@@ -142,5 +142,5 @@ struct SampleData {
 }
 
 #Preview(traits: .sampleData) {
-    NavigationStack { DebugView() }
+    NavigationStack { DebugListView() }
 }
