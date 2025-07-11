@@ -12,22 +12,22 @@ struct RecapNavigationView: View {
     @Query(sort: \Stuff.occurredAt, order: .reverse)
     private var stuffs: [Stuff]
 
-    @State private var selection: Date?
-    @State private var stuffSelection: Stuff?
-    @State private var period: RecapPeriod = .monthly
+    @State private var content: Date?
+    @State private var detail: Stuff?
+    @State private var period = RecapPeriod.monthly
     @State private var searchText = ""
 
     var body: some View {
         NavigationSplitView {
             RecapListView(
-                selection: $selection,
+                selection: $content,
                 period: $period
             )
         } content: {
-            if let date = selection {
+            if let date = content {
                 StuffListView(
                     stuffs: groupedStuffs[date] ?? [],
-                    selection: $stuffSelection,
+                    selection: $detail,
                     searchText: $searchText
                 )
                 .navigationTitle(title(for: date))
@@ -36,21 +36,12 @@ struct RecapNavigationView: View {
                     .foregroundStyle(.secondary)
             }
         } detail: {
-            if let stuff = stuffSelection {
+            if let stuff = detail {
                 StuffView()
                     .environment(stuff)
             } else {
                 Text("Select Stuff")
                     .foregroundStyle(.secondary)
-            }
-        }
-        .onDisappear {
-            selection = nil
-            stuffSelection = nil
-        }
-        .onChange(of: selection) { _, newValue in
-            if newValue == nil {
-                stuffSelection = nil
             }
         }
     }
