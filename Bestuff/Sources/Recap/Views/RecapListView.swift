@@ -37,11 +37,6 @@ struct RecapListView: View {
             }
         }
         .navigationTitle(Text("Recap"))
-        .toolbar {
-            ToolbarItem(placement: .cancellationAction) {
-                CloseButton()
-            }
-        }
     }
 
     private var groupedStuffs: [Date: [Stuff]] {
