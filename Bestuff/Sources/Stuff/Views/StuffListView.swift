@@ -59,7 +59,10 @@ struct StuffListView: View {
         }
         .navigationTitle(Text("Best Stuff"))
         .toolbar {
-            ToolbarItemGroup(placement: .bottomBar) {
+            ToolbarItem(placement: .primaryAction) {
+                AddStuffButton()
+            }
+            ToolbarItem(placement: .primaryAction) {
                 Menu {
                     Picker("Sort", selection: $sort) {
                         ForEach(StuffSort.allCases) { option in
@@ -69,19 +72,23 @@ struct StuffListView: View {
                 } label: {
                     Label("Sort", systemImage: "arrow.up.arrow.down")
                 }
-                AddStuffButton()
             }
-            ToolbarItemGroup(placement: .secondaryAction) {
+
+            ToolbarItem(placement: .secondaryAction) {
                 Button("Recap", systemImage: "calendar") {
                     Logger(#file).info("Recap button tapped")
                     isRecapPresented = true
                 }
                 .buttonStyle(.bordered)
+            }
+            ToolbarItem(placement: .secondaryAction) {
                 Button("Plan", systemImage: "lightbulb") {
                     Logger(#file).info("Plan button tapped")
                     isPlanPresented = true
                 }
                 .buttonStyle(.bordered)
+            }
+            ToolbarItem(placement: .secondaryAction) {
                 Button("Settings", systemImage: "gearshape") {
                     Logger(#file).info("Settings button tapped")
                     isSettingsPresented = true

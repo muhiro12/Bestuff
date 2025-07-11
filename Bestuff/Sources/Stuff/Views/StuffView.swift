@@ -41,12 +41,9 @@ struct StuffView: View {
         }
         .navigationTitle(Text(stuff.title))
         .toolbar {
-            ToolbarItemGroup(placement: .primaryAction) {
+            ToolbarItem(placement: .primaryAction) {
                 ShareLink(item: description)
             }
-
-            ToolbarSpacer(.fixed, placement: .primaryAction)
-
             ToolbarItem(placement: .primaryAction) {
                 Button("Edit", systemImage: "pencil") { isEditing = true }
                     .buttonStyle(.borderedProminent)
