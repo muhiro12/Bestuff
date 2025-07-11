@@ -10,7 +10,9 @@ struct SettingsButton: View {
         }
         .glassEffect()
         .sheet(isPresented: $isPresented) {
-            SettingsNavigationView()
+            NavigationStack {
+                SettingsListView()
+            }
         }
     }
 }

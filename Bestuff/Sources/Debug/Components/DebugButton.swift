@@ -10,7 +10,9 @@ struct DebugButton: View {
         }
         .glassEffect()
         .sheet(isPresented: $isPresented) {
-            DebugNavigationView()
+            NavigationStack {
+                DebugListView()
+            }
         }
     }
 }
