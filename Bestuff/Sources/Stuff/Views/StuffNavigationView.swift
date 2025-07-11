@@ -16,7 +16,6 @@ struct StuffNavigationView: View {
     @State private var isPlanPresented = false
     @State private var isSettingsPresented = false
     @State private var isDebugPresented = false
-    @State private var isEditing = false
 
     var body: some View {
         NavigationSplitView {
@@ -85,13 +84,12 @@ struct StuffNavigationView: View {
                             )
                         }
                         ToolbarItem(placement: .primaryAction) {
-                            Button("Edit", systemImage: "pencil") {
-                                isEditing = true
-                            }
+                            StuffFormButton(
+                                stuff: stuff,
+                                title: "Edit",
+                                systemImage: "pencil"
+                            )
                             .buttonStyle(.borderedProminent)
-                            .sheet(isPresented: $isEditing) {
-                                StuffFormView(stuff: stuff)
-                            }
                         }
                     }
             } else {
