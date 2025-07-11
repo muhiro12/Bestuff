@@ -23,18 +23,12 @@ struct RecapNavigationView: View {
                 selection: $selection,
                 period: $period
             )
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    CloseButton()
-                }
-            }
         } content: {
             if let date = selection {
                 StuffListView(
                     stuffs: groupedStuffs[date] ?? [],
                     selection: $stuffSelection,
-                    searchText: $searchText,
-                    sort: .constant(.occurredDateDescending)
+                    searchText: $searchText
                 )
                 .navigationTitle(Text(title(for: date)))
             } else {

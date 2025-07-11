@@ -11,11 +11,6 @@ struct SettingsNavigationView: View {
     var body: some View {
         NavigationStack {
             SettingsListView()
-                .toolbar {
-                    ToolbarItem(placement: .cancellationAction) {
-                        CloseButton()
-                    }
-                }
         }
     }
 }

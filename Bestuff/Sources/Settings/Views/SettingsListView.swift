@@ -26,7 +26,12 @@ struct SettingsListView: View {
                 }
             }
         }
-        .navigationTitle(Text("Settings"))
+        .navigationTitle("Settings")
+        .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+                CloseButton()
+            }
+        }
     }
 }
 

@@ -44,7 +44,7 @@ struct StuffFormView: View {
                 }
             }
         }
-        .navigationTitle(Text(stuff == nil ? "Add Stuff" : "Edit Stuff"))
+        .navigationTitle(stuff == nil ? "Add Stuff" : "Edit Stuff")
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 CloseButton()

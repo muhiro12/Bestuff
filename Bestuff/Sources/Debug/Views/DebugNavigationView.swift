@@ -11,11 +11,6 @@ struct DebugNavigationView: View {
     var body: some View {
         NavigationStack {
             DebugListView()
-                .toolbar {
-                    ToolbarItem(placement: .cancellationAction) {
-                        CloseButton()
-                    }
-                }
         }
     }
 }

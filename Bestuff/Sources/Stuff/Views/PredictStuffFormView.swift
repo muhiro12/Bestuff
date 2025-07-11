@@ -41,7 +41,7 @@ struct PredictStuffFormView: View {
                 }
             }
         }
-        .navigationTitle(Text("Predict Stuff"))
+        .navigationTitle("Predict Stuff")
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 CloseButton()

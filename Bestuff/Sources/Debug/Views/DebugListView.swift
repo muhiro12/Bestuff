@@ -68,6 +68,12 @@ struct DebugListView: View {
                 }
             }
         }
+        .navigationTitle("Debug")
+        .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+                CloseButton()
+            }
+        }
         .alert(
             "Create sample data?",
             isPresented: $isCreateAlertPresented
@@ -86,7 +92,6 @@ struct DebugListView: View {
         } message: {
             Text("This will permanently delete all stuff.")
         }
-        .navigationTitle(Text("Debug"))
     }
 
     private func createSampleData() {
