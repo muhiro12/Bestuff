@@ -29,7 +29,7 @@ struct StuffRow: View {
 #Preview(traits: .sampleData) {
     StuffRow()
         .environment(
-            Stuff(
+            Stuff.create(
                 title: "Sample",
                 category: "General",
                 occurredAt: .now,

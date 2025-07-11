@@ -21,7 +21,7 @@ struct PredictStuffIntent: AppIntent, IntentPerformer {
         let (context, speech) = input
         Logger(#file).info("Predicting stuff from speech")
         let prediction = try await generatePrediction(from: speech)
-        let model = Stuff(
+        let model = Stuff.create(
             title: prediction.title,
             category: prediction.category,
             note: prediction.note,

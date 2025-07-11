@@ -68,7 +68,7 @@ struct StuffView: View {
     NavigationStack {
         StuffView()
             .environment(
-                Stuff(
+                Stuff.create(
                     title: "Sample",
                     category: "General",
                     note: "Notes",
