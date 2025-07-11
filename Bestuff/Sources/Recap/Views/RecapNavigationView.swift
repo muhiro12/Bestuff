@@ -29,7 +29,8 @@ struct RecapNavigationView: View {
                 StuffListView(
                     stuffs: groupedStuffs[date] ?? [],
                     selection: $stuffSelection,
-                    searchText: $searchText
+                    searchText: $searchText,
+                    sort: .constant(.occurredDateDescending)
                 )
                 .navigationTitle(Text(title(for: date)))
             } else {
@@ -52,6 +53,11 @@ struct RecapNavigationView: View {
         .onChange(of: selection) { _, newValue in
             if newValue == nil {
                 stuffSelection = nil
+            }
+        }
+        .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+                CloseButton()
             }
         }
     }

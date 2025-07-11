@@ -5,23 +5,18 @@
 //  Created by Hiromu Nakano on 2025/07/11.
 //
 
-import SwiftData
 import SwiftUI
 import SwiftUtilities
 
 struct PlanListView: View {
-    @Environment(\.modelContext)
-    private var modelContext
-
     @Binding private var selection: String?
-
-    @State private var suggestions: [PlanPeriod: [String]] = [:]
-    @State private var isProcessing = false
+    let suggestions: [PlanPeriod: [String]]
 
     private let periods: [PlanPeriod] = [.today, .thisWeek, .nextTrip]
 
-    init(selection: Binding<String?>) {
+    init(selection: Binding<String?>, suggestions: [PlanPeriod: [String]]) {
         _selection = selection
+        self.suggestions = suggestions
     }
 
     var body: some View {
@@ -44,42 +39,14 @@ struct PlanListView: View {
             }
         }
         .navigationTitle(Text("Plan"))
-        .toolbar {
-            ToolbarItem(placement: .cancellationAction) {
-                CloseButton()
-            }
-            ToolbarItem(placement: .confirmationAction) {
-                if isProcessing {
-                    ProgressView()
-                } else {
-                    Button("Generate", systemImage: "sparkles", action: generate)
-                        .buttonStyle(.borderedProminent)
-                        .tint(.accentColor)
-                }
-            }
-        }
-    }
-
-    private func generate() {
-        Logger(#file).info("Generating plan suggestions")
-        isProcessing = true
-        Task {
-            var results: [PlanPeriod: [String]] = [:]
-            for period in periods {
-                let result = try? await PlanStuffIntent.perform(
-                    (context: modelContext, period: period)
-                )
-                results[period] = result?.actions ?? []
-            }
-            suggestions = results
-            isProcessing = false
-            Logger(#file).notice("Generated suggestions count \(suggestions.values.flatMap(\.self).count)")
-        }
     }
 }
 
 #Preview(traits: .sampleData) {
     NavigationStack {
-        PlanListView(selection: .constant(nil))
+        PlanListView(
+            selection: .constant(nil),
+            suggestions: [:]
+        )
     }
 }
