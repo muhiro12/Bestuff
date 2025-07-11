@@ -58,10 +58,20 @@ nonisolated final class Stuff {
         score: Int? = nil,
         occurredAt: Date? = nil
     ) {
-        if let title { self.title = title }
-        if let category { self.category = category }
-        if let note { self.note = note }
-        if let score { self.score = score }
-        if let occurredAt { self.occurredAt = occurredAt }
+        if let title {
+            self.title = title
+        }
+        if let category {
+            self.category = category
+        }
+        if let note {
+            self.note = note
+        }
+        if let score {
+            self.score = score
+        }
+        if let occurredAt {
+            self.occurredAt = occurredAt
+        }
     }
 }

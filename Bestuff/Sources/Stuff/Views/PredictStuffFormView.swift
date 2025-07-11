@@ -70,7 +70,11 @@ struct PredictStuffFormView: View {
         }
         .alert("Speech Recognition Error", isPresented: Binding(
             get: { errorMessage != nil },
-            set: { if !$0 { errorMessage = nil } }
+            set: {
+                if !$0 {
+                    errorMessage = nil
+                }
+            }
         ), actions: {
             Button("OK", systemImage: "checkmark", role: .cancel) {
                 errorMessage = nil
