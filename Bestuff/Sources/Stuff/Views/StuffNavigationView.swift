@@ -1,14 +1,13 @@
 //
-//  ContentNavigationView.swift
+//  StuffNavigationView.swift
 //  Bestuff
 //
-//  Created by Hiromu Nakano on 2025/07/08.
+//  Created by Hiromu Nakano on 2025/07/11.
 //
 
-import SwiftData
 import SwiftUI
 
-struct ContentNavigationView: View {
+struct StuffNavigationView: View {
     @State private var selection: Stuff?
     @State private var searchText = ""
 
@@ -32,5 +31,5 @@ struct ContentNavigationView: View {
 }
 
 #Preview(traits: .sampleData) {
-    ContentNavigationView()
+    StuffNavigationView()
 }

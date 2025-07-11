@@ -25,7 +25,7 @@ struct BestuffApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentNavigationView()
+            ContentView()
         }
         .modelContainer(sharedModelContainer)
         .commands {

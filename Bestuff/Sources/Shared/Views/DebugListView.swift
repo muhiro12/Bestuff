@@ -142,5 +142,7 @@ struct SampleData {
 }
 
 #Preview(traits: .sampleData) {
-    NavigationStack { DebugListView() }
+    NavigationStack {
+        DebugListView()
+    }
 }

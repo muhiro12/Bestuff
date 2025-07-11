@@ -1,55 +1,31 @@
+//
+//  RecapNavigationView.swift
+//  Bestuff
+//
+//  Created by Hiromu Nakano on 2025/07/11.
+//
+
 import SwiftData
 import SwiftUI
 import SwiftUtilities
 
-enum RecapPeriod: String, CaseIterable, Identifiable {
-    case monthly
-    case yearly
-
-    var id: Self { self }
-
-    var title: String {
-        switch self {
-        case .monthly:
-            "Monthly"
-        case .yearly:
-            "Yearly"
-        }
-    }
-}
-
-struct RecapOverviewNavigationView: View {
+struct RecapNavigationView: View {
     @Query(sort: \Stuff.occurredAt, order: .reverse)
     private var stuffs: [Stuff]
-    @State private var period: RecapPeriod = .monthly
+
     @State private var selection: Date?
     @State private var stuffSelection: Stuff?
+    @State private var period: RecapPeriod = .monthly
 
     var body: some View {
         NavigationSplitView {
-            List(selection: $selection) {
-                Picker("Period", selection: $period) {
-                    ForEach(RecapPeriod.allCases) { period in
-                        Text(period.title).tag(period)
-                    }
-                }
-                .pickerStyle(.segmented)
-                .padding(.vertical)
-
-                ForEach(sortedKeys, id: \.self) { date in
-                    Text(title(for: date))
-                        .tag(date)
-                }
-            }
-            .navigationTitle(Text("Recap"))
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    CloseButton()
-                }
-            }
+            RecapListView(
+                selection: $selection,
+                period: $period
+            )
         } content: {
             if let date = selection {
-                RecapListView(
+                RecapStuffListView(
                     date: date,
                     period: period,
                     stuffs: groupedStuffs[date] ?? [],
@@ -92,23 +68,8 @@ struct RecapOverviewNavigationView: View {
             return calendar.date(from: components) ?? model.occurredAt
         }
     }
-
-    private var sortedKeys: [Date] {
-        groupedStuffs.keys.sorted(by: >)
-    }
-
-    private func title(for date: Date) -> String {
-        let formatter = DateFormatter()
-        switch period {
-        case .monthly:
-            formatter.dateFormat = "LLLL yyyy"
-        case .yearly:
-            formatter.dateFormat = "yyyy"
-        }
-        return formatter.string(from: date)
-    }
 }
 
 #Preview(traits: .sampleData) {
-    RecapOverviewNavigationView()
+    RecapNavigationView()
 }

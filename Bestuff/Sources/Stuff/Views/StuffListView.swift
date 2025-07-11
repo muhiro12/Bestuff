@@ -105,10 +105,10 @@ struct StuffListView: View {
             #endif
         }
         .sheet(isPresented: $isRecapPresented) {
-            RecapOverviewNavigationView()
+            RecapNavigationView()
         }
         .sheet(isPresented: $isPlanPresented) {
-            PlanSuggestionsNavigationView()
+            PlanNavigationView()
         }
         .sheet(isPresented: $isSettingsPresented) {
             SettingsListView()
@@ -159,9 +159,10 @@ struct StuffListView: View {
 }
 
 #Preview(traits: .sampleData) {
-    NavigationSplitView {
-        StuffListView(selection: .constant(nil), searchText: .constant(""))
-    } detail: {
-        Text("Detail")
+    NavigationStack {
+        StuffListView(
+            selection: .constant(nil),
+            searchText: .constant("")
+        )
     }
 }
