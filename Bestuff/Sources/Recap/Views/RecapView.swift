@@ -16,7 +16,7 @@ struct RecapView: View {
     var body: some View {
         List(stuffs, selection: $selection) { stuff in
             NavigationLink(value: stuff) {
-                StuffRowView()
+                StuffRow()
                     .environment(stuff)
             }
         }
