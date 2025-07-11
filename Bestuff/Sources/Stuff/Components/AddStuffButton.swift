@@ -17,7 +17,9 @@ struct AddStuffButton: View {
         }
         .glassEffect()
         .sheet(isPresented: $isPresented) {
-            StuffFormView()
+            NavigationStack {
+                StuffFormView()
+            }
         }
     }
 }

@@ -21,22 +21,6 @@ struct StuffNavigationView: View {
             if let stuff = selection {
                 StuffView()
                     .environment(stuff)
-                    .toolbar {
-                        ToolbarItem(placement: .primaryAction) {
-                            ShareLink(
-                                item: [
-                                    stuff.title,
-                                    stuff.category,
-                                    "Score: \(stuff.score)",
-                                    stuff.note
-                                ].compactMap(\.self).joined(separator: "\n")
-                            )
-                        }
-                        ToolbarItem(placement: .primaryAction) {
-                            EditStuffButton()
-                                .environment(stuff)
-                        }
-                    }
             } else {
                 Text("Select Stuff")
                     .foregroundStyle(.secondary)
