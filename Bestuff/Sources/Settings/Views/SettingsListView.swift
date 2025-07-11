@@ -8,8 +8,17 @@
 import SwiftUI
 
 struct SettingsListView: View {
+    @AppStorage(BoolAppStorageKey.isSubscribeOn)
+    private var isSubscribeOn
     var body: some View {
         List {
+            if !isSubscribeOn {
+                NavigationLink {
+                    StoreListView()
+                } label: {
+                    Text("Subscription")
+                }
+            }
             Section("General") {
                 Label("Version 1.0.0", systemImage: "number")
             }

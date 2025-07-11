@@ -5,6 +5,7 @@
 //  Created by Hiromu Nakano on 2025/07/08.
 //
 
+import StoreKitWrapper
 import SwiftData
 import SwiftUI
 
@@ -23,9 +24,20 @@ struct BestuffApp: App {
         }
     }()
 
+    private var sharedStore: Store = .init()
+
+    init() {
+        sharedStore.open(
+            groupID: "group.com.example.bestuff",
+            productIDs: ["com.example.bestuff.subscription"],
+            purchasedSubscriptionsDidSet: nil
+        )
+    }
+
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environment(sharedStore)
         }
         .modelContainer(sharedModelContainer)
         .commands {
