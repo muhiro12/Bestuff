@@ -10,7 +10,6 @@ import SwiftUI
 
 @main
 struct BestuffApp: App {
-    @AppStorage("isDarkMode") private var isDarkMode = false
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Stuff.self
@@ -27,16 +26,10 @@ struct BestuffApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .preferredColorScheme(isDarkMode ? .dark : .light)
         }
         .modelContainer(sharedModelContainer)
         .commands {
             TextEditingCommands()
         }
-        AssistiveAccess {
-            AssistiveAccessContentView()
-                .preferredColorScheme(isDarkMode ? .dark : .light)
-        }
-        .modelContainer(sharedModelContainer)
     }
 }

@@ -14,7 +14,6 @@ enum SettingsTab: Hashable {
 }
 
 struct SettingsView: View {
-    @AppStorage("isDarkMode") private var isDarkMode = false
     @State private var selection: SettingsTab = .general
 
     var body: some View {
@@ -24,7 +23,6 @@ struct SettingsView: View {
                     List {
                         Section("General") {
                             Label("Version 1.0.0", systemImage: "number")
-                            Toggle("Dark Mode", isOn: $isDarkMode)
                         }
                         Section("Support") {
                             Link(
