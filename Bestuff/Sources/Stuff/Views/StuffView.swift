@@ -38,7 +38,7 @@ struct StuffView: View {
             .glassEffect()
             .padding()
         }
-        .navigationTitle(Text(stuff.title))
+        .navigationTitle(stuff.title)
     }
 }
 

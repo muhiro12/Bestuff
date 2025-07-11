@@ -30,7 +30,7 @@ struct RecapNavigationView: View {
                     selection: $stuffSelection,
                     searchText: $searchText
                 )
-                .navigationTitle(Text(title(for: date)))
+                .navigationTitle(title(for: date))
             } else {
                 Text("Select Period")
                     .foregroundStyle(.secondary)
