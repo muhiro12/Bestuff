@@ -20,8 +20,10 @@ struct EditStuffButton: View {
         }
         .glassEffect()
         .sheet(isPresented: $isPresented) {
-            StuffFormView()
-                .environment(stuff)
+            NavigationStack {
+                StuffFormView()
+            }
+            .environment(stuff)
         }
     }
 }

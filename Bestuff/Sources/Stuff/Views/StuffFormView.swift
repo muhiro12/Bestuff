@@ -16,8 +16,6 @@ struct StuffFormView: View {
     @Environment(\.modelContext)
     private var modelContext
 
-    @State private var isPredictPresented = false
-
     @State private var title = ""
     @State private var category = ""
     @State private var note = ""
@@ -36,12 +34,7 @@ struct StuffFormView: View {
                 )
             }
             Section("Options") {
-                Button {
-                    Logger(#file).info("Predict from speech tapped")
-                    isPredictPresented = true
-                } label: {
-                    Label("Predict from Speech", systemImage: "wand.and.stars")
-                }
+                PredictStuffButton()
             }
         }
         .navigationTitle(stuff == nil ? "Add Stuff" : "Edit Stuff")
@@ -55,9 +48,6 @@ struct StuffFormView: View {
                     .tint(.accentColor)
                     .disabled(title.isEmpty)
             }
-        }
-        .sheet(isPresented: $isPredictPresented) {
-            PredictStuffFormView()
         }
         .task {
             title = stuff?.title ?? .empty

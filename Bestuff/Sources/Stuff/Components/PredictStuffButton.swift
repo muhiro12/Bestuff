@@ -11,7 +11,9 @@ struct PredictStuffButton: View {
         }
         .glassEffect()
         .sheet(isPresented: $isPresented) {
-            PredictStuffFormView()
+            NavigationStack {
+                PredictStuffFormView()
+            }
         }
     }
 }
