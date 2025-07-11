@@ -35,35 +35,26 @@ struct StuffListView: View {
     var body: some View {
         List(selection: $selection) {
             ForEach(filteredStuffs) { stuff in
-                NavigationLink(
-                    tag: stuff,
-                    selection: $selection,
-                    destination: {
-                        StuffView()
-                            .environment(stuff)
-                    },
-                    label: {
-                        StuffRow()
-                            .environment(stuff)
-                    }
-                )
-                .contextMenu(
-                    menuItems: {
-                        Button("Edit", systemImage: "pencil") {
-                            editingStuff = stuff
+                StuffRow()
+                    .environment(stuff)
+                    .tag(stuff)
+                    .contextMenu(
+                        menuItems: {
+                            Button("Edit", systemImage: "pencil") {
+                                editingStuff = stuff
+                            }
+                            Button(
+                                role: .destructive,
+                                action: { delete(stuff) }
+                            ) {
+                                Label("Delete", systemImage: "trash")
+                            }
+                        },
+                        preview: {
+                            StuffView()
+                                .environment(stuff)
                         }
-                        Button(
-                            role: .destructive,
-                            action: { delete(stuff) }
-                        ) {
-                            Label("Delete", systemImage: "trash")
-                        }
-                    },
-                    preview: {
-                        StuffView()
-                            .environment(stuff)
-                    }
-                )
+                    )
             }
             .onDelete(perform: delete)
         }

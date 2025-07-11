@@ -27,17 +27,9 @@ struct PlanSuggestionsView: View {
                         if let actions = suggestions[period] {
                             Section(period.title) {
                                 ForEach(actions, id: \.self) { suggestion in
-                                    NavigationLink(
-                                        tag: suggestion,
-                                        selection: $selection,
-                                        destination: {
-                                            PlanView(suggestion: suggestion)
-                                        },
-                                        label: {
-                                            Text(suggestion)
-                                                .lineLimit(1)
-                                        }
-                                    )
+                                    Text(suggestion)
+                                        .lineLimit(1)
+                                        .tag(suggestion)
                                 }
                             }
                         }
