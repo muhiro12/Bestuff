@@ -8,6 +8,7 @@
 import Foundation
 import SwiftData
 import SwiftUI
+import SwiftUtilities
 
 struct StuffListView: View {
     @Environment(\.modelContext)
@@ -23,6 +24,7 @@ struct StuffListView: View {
     @State private var isRecapPresented = false
     @State private var isPlanPresented = false
     @State private var isSettingsPresented = false
+    @State private var isDebugPresented = false
     @State private var editingStuff: Stuff?
 
     init(selection: Binding<Stuff?>, searchText: Binding<String>) {
@@ -94,6 +96,14 @@ struct StuffListView: View {
                     isSettingsPresented = true
                 }
             }
+            #if DEBUG
+            ToolbarItem(placement: .secondaryAction) {
+                Button("Debug", systemImage: "ladybug") {
+                    Logger(#file).info("Debug button tapped")
+                    isDebugPresented = true
+                }
+            }
+            #endif
         }
         .sheet(isPresented: $isRecapPresented) {
             RecapOverviewView()
@@ -103,6 +113,16 @@ struct StuffListView: View {
         }
         .sheet(isPresented: $isSettingsPresented) {
             SettingsView()
+        }
+        .sheet(isPresented: $isDebugPresented) {
+            NavigationStack {
+                DebugView()
+                    .toolbar {
+                        ToolbarItem(placement: .cancellationAction) {
+                            CloseButton()
+                        }
+                    }
+            }
         }
         .sheet(item: $editingStuff) { stuff in
             StuffFormView(stuff: stuff)
