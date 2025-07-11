@@ -39,6 +39,22 @@ struct StuffView: View {
             .padding()
         }
         .navigationTitle(stuff.title)
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                ShareLink(
+                    item: [
+                        stuff.title,
+                        stuff.category,
+                        "Score: \(stuff.score)",
+                        stuff.note
+                    ].compactMap(\.self).joined(separator: "\n")
+                )
+            }
+            ToolbarItem(placement: .primaryAction) {
+                EditStuffButton()
+                    .environment(stuff)
+            }
+        }
     }
 }
 
