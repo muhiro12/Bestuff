@@ -31,10 +31,10 @@ extension StuffEntity: AppEntity {
 
 extension StuffEntity: ModelBridgeable {
     private static let dateFormatter: DateFormatter = {
-        let f = DateFormatter()
-        f.dateFormat = "yyyyMMdd"
-        f.locale = Locale(identifier: "en_US_POSIX")
-        return f
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyyMMdd"
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        return formatter
     }()
 
     init?(_ model: Stuff) {
