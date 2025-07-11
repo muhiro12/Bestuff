@@ -1,5 +1,5 @@
 //
-//  PlanTabView.swift
+//  PlanSuggestionsView.swift
 //  Bestuff
 //
 //  Created by Codex on 2025/07/12.
@@ -9,7 +9,7 @@ import SwiftData
 import SwiftUI
 import SwiftUtilities
 
-struct PlanTabView: View {
+struct PlanSuggestionsView: View {
     @Environment(\.modelContext) private var modelContext
     @State private var suggestions: [PlanPeriod: [String]] = [:]
     private let periods: [PlanPeriod] = [.today, .thisWeek, .nextTrip]
@@ -84,5 +84,5 @@ struct PlanTabView: View {
 }
 
 #Preview(traits: .sampleData) {
-    PlanTabView()
+    PlanSuggestionsView()
 }
