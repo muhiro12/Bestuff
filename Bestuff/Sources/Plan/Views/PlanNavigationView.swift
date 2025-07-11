@@ -21,26 +21,26 @@ struct PlanNavigationView: View {
                 selection: $selection,
                 suggestions: suggestions
             )
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    CloseButton()
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    if isProcessing {
+                        ProgressView()
+                    } else {
+                        Button("Generate", systemImage: "sparkles", action: generate)
+                            .buttonStyle(.borderedProminent)
+                            .tint(.accentColor)
+                    }
+                }
+            }
         } detail: {
             if let suggestion = selection {
                 PlanView(suggestion: suggestion)
             } else {
                 Text("Select Suggestion")
                     .foregroundStyle(.secondary)
-            }
-        }
-        .toolbar {
-            ToolbarItem(placement: .cancellationAction) {
-                CloseButton()
-            }
-            ToolbarItem(placement: .confirmationAction) {
-                if isProcessing {
-                    ProgressView()
-                } else {
-                    Button("Generate", systemImage: "sparkles", action: generate)
-                        .buttonStyle(.borderedProminent)
-                        .tint(.accentColor)
-                }
             }
         }
     }

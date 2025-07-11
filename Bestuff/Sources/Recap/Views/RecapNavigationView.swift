@@ -24,6 +24,11 @@ struct RecapNavigationView: View {
                 selection: $selection,
                 period: $period
             )
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    CloseButton()
+                }
+            }
         } content: {
             if let date = selection {
                 StuffListView(
@@ -53,11 +58,6 @@ struct RecapNavigationView: View {
         .onChange(of: selection) { _, newValue in
             if newValue == nil {
                 stuffSelection = nil
-            }
-        }
-        .toolbar {
-            ToolbarItem(placement: .cancellationAction) {
-                CloseButton()
             }
         }
     }

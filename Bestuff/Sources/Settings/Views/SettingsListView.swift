@@ -16,23 +16,18 @@ struct SettingsListView: View {
             }
             Section("Support") {
                 Link(
-                        destination: URL(string: "mailto:support@example.com")!
-                    ) {
-                        Label("Contact Support", systemImage: "envelope")
-                    }
-                    Link(
-                        destination: URL(string: "https://example.com")!
-                    ) {
-                        Label("Visit Website", systemImage: "safari")
-                    }
+                    destination: URL(string: "mailto:support@example.com")!
+                ) {
+                    Label("Contact Support", systemImage: "envelope")
                 }
-        }
-        .navigationTitle(Text("Settings"))
-        .toolbar {
-            ToolbarItem(placement: .cancellationAction) {
-                CloseButton()
+                Link(
+                    destination: URL(string: "https://example.com")!
+                ) {
+                    Label("Visit Website", systemImage: "safari")
+                }
             }
         }
+        .navigationTitle(Text("Settings"))
     }
 }
 

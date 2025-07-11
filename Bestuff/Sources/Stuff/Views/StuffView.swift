@@ -10,7 +10,6 @@ import SwiftUI
 struct StuffView: View {
     @Environment(Stuff.self)
     private var stuff
-    @State private var isEditing = false
 
     var body: some View {
         ScrollView {
@@ -40,27 +39,6 @@ struct StuffView: View {
             .padding()
         }
         .navigationTitle(Text(stuff.title))
-        .toolbar {
-            ToolbarItem(placement: .primaryAction) {
-                ShareLink(item: description)
-            }
-            ToolbarItem(placement: .primaryAction) {
-                Button("Edit", systemImage: "pencil") { isEditing = true }
-                    .buttonStyle(.borderedProminent)
-            }
-        }
-        .sheet(isPresented: $isEditing) {
-            StuffFormView(stuff: stuff)
-        }
-    }
-
-    private var description: String {
-        [
-            stuff.title,
-            stuff.category,
-            "Score: \(stuff.score)",
-            stuff.note
-        ].compactMap(\.self).joined(separator: "\n")
     }
 }
 
