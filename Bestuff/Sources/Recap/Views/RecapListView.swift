@@ -1,5 +1,5 @@
 //
-//  RecapView.swift
+//  RecapListView.swift
 //  Bestuff
 //
 //  Created by Codex on 2025/07/22.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct RecapView: View {
+struct RecapListView: View {
     let date: Date
     let period: RecapPeriod
     let stuffs: [Stuff]
@@ -35,7 +35,7 @@ struct RecapView: View {
 }
 
 #Preview(traits: .sampleData) {
-    RecapView(
+    RecapListView(
         date: .now,
         period: .monthly,
         stuffs: [],

@@ -1,5 +1,5 @@
 //
-//  SettingsView.swift
+//  SettingsListView.swift
 //  Bestuff
 //
 //  Created by Codex on 2025/07/09.
@@ -8,7 +8,7 @@
 import SwiftUI
 import SwiftUtilities
 
-struct SettingsView: View {
+struct SettingsListView: View {
     var body: some View {
         List {
             Section("General") {
@@ -37,5 +37,5 @@ struct SettingsView: View {
 }
 
 #Preview(traits: .sampleData) {
-    SettingsView()
+    SettingsListView()
 }
