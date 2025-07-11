@@ -15,7 +15,7 @@ struct ModelContainerPreviewModifier: PreviewModifier {
         let context: ModelContext = .init(container)
         for stuff in SampleData.stuffs {
             context.insert(
-                Stuff(
+                Stuff.create(
                     title: stuff.title,
                     category: stuff.category,
                     note: stuff.note,

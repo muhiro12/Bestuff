@@ -1,6 +1,5 @@
 import AppIntents
 import SwiftData
-import SwiftUtilities
 
 struct DeleteStuffIntent: AppIntent, IntentPerformer {
     typealias Input = Stuff

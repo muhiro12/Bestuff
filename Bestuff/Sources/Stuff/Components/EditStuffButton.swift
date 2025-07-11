@@ -1,23 +1,27 @@
 //
-//  AddStuffButton.swift
+//  EditStuffButton.swift
 //  Bestuff
 //
-//  Created by Hiromu Nakano on 2025/07/08.
+//  Created by Hiromu Nakano on 2025/07/11.
 //
 
 import SwiftUI
 
-struct AddStuffButton: View {
+struct EditStuffButton: View {
+    @Environment(Stuff.self)
+    private var stuff
+
     @State private var isPresented = false
 
     var body: some View {
-        Button("Add Stuff", systemImage: "plus") {
-            Logger(#file).info("StuffFormButton tapped for new")
+        Button("Edit Stuff", systemImage: "pencil") {
+            Logger(#file).info("StuffFormButton tapped for edit")
             isPresented = true
         }
         .glassEffect()
         .sheet(isPresented: $isPresented) {
             StuffFormView()
+                .environment(stuff)
         }
     }
 }

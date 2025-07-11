@@ -1,6 +1,5 @@
 import AppIntents
 import SwiftData
-import SwiftUtilities
 
 struct StuffEntityQuery: EntityStringQuery {
     @Dependency private var modelContainer: ModelContainer
@@ -10,7 +9,9 @@ struct StuffEntityQuery: EntityStringQuery {
         return try identifiers.compactMap { encodedID in
             guard let persistentID = try? PersistentIdentifier(base64Encoded: encodedID),
                   let model = try modelContainer.mainContext.fetch(
-                    FetchDescriptor<Stuff>(predicate: #Predicate { $0.id == persistentID })
+                    FetchDescriptor<Stuff>(predicate: #Predicate {
+                        $0.id == persistentID
+                    })
                   ).first else {
                 Logger(#file).error("Failed to decode identifier \(encodedID)")
                 return nil

@@ -1,6 +1,5 @@
 import AppIntents
 import SwiftData
-import SwiftUtilities
 
 struct CreateStuffIntent: AppIntent, IntentPerformer {
     typealias Input = (context: ModelContext, title: String, category: String, note: String?, occurredAt: Date)
@@ -27,7 +26,12 @@ struct CreateStuffIntent: AppIntent, IntentPerformer {
     static func perform(_ input: Input) throws -> Output {
         let (context, title, category, note, occurredAt) = input
         Logger(#file).info("Creating stuff titled '\(title)' in category '\(category)'")
-        let model = Stuff(title: title, category: category, note: note, occurredAt: occurredAt)
+        let model = Stuff.create(
+            title: title,
+            category: category,
+            note: note,
+            occurredAt: occurredAt
+        )
         context.insert(model)
         Logger(#file).notice("Created stuff with id \(String(describing: model.id))")
         return model

@@ -1,5 +1,5 @@
 //
-//  DebugView.swift
+//  DebugListView.swift
 //  Bestuff
 //
 //  Created by Codex on 2025/07/09.
@@ -8,7 +8,7 @@
 import SwiftData
 import SwiftUI
 
-struct DebugView: View {
+struct DebugListView: View {
     @Environment(\.modelContext) private var modelContext
     @State private var isCreateAlertPresented = false
     @State private var isClearAlertPresented = false
@@ -68,6 +68,12 @@ struct DebugView: View {
                 }
             }
         }
+        .navigationTitle("Debug")
+        .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+                CloseButton()
+            }
+        }
         .alert(
             "Create sample data?",
             isPresented: $isCreateAlertPresented
@@ -86,7 +92,6 @@ struct DebugView: View {
         } message: {
             Text("This will permanently delete all stuff.")
         }
-        .navigationTitle(Text("Debug"))
     }
 
     private func createSampleData() {
@@ -142,5 +147,7 @@ struct SampleData {
 }
 
 #Preview(traits: .sampleData) {
-    NavigationStack { DebugView() }
+    NavigationStack {
+        DebugListView()
+    }
 }

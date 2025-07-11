@@ -1,7 +1,6 @@
 import AppIntents
 import FoundationModels
 import SwiftData
-import SwiftUtilities
 
 @Generable
 nonisolated struct StuffEntity {
@@ -57,12 +56,13 @@ extension StuffEntity: ModelBridgeable {
         guard let persistentID = try? PersistentIdentifier(base64Encoded: id),
               let occurredDate = Self.dateFormatter.date(from: occurredAt),
               let model = try context.fetch(
-                FetchDescriptor<Stuff>(predicate: #Predicate { $0.id == persistentID })
+                FetchDescriptor<Stuff>(predicate: #Predicate {
+                    $0.id == persistentID
+                })
               ).first else {
             throw StuffError.stuffNotFound
         }
-        let updatedModel = model
-        updatedModel.occurredAt = occurredDate
-        return updatedModel
+        model.update(occurredAt: occurredDate)
+        return model
     }
 }

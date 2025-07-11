@@ -7,7 +7,6 @@
 
 import SwiftData
 import SwiftUI
-import SwiftUtilities
 
 struct PredictStuffFormView: View {
     @Environment(\.dismiss)
@@ -21,59 +20,61 @@ struct PredictStuffFormView: View {
     @State private var transcriber = SpeechTranscriptionManager()
 
     var body: some View {
-        NavigationStack {
-            Form {
-                Section("Speech") {
-                    TextEditor(text: $speech)
-                        .frame(minHeight: 120, alignment: .topLeading)
-                    HStack {
-                        Spacer()
-                        Button {
-                            if transcriber.isRecording {
-                                Logger(#file).info("Stopping recording")
-                                transcriber.stopRecording()
-                            } else {
-                                Logger(#file).info("Starting recording")
-                                transcriber.startRecording()
-                            }
-                        } label: {
-                            Image(systemName: transcriber.isRecording ? "stop.circle.fill" : "mic.circle.fill")
-                                .imageScale(.large)
+        Form {
+            Section("Speech") {
+                TextEditor(text: $speech)
+                    .frame(minHeight: 120, alignment: .topLeading)
+                HStack {
+                    Spacer()
+                    Button {
+                        if transcriber.isRecording {
+                            Logger(#file).info("Stopping recording")
+                            transcriber.stopRecording()
+                        } else {
+                            Logger(#file).info("Starting recording")
+                            transcriber.startRecording()
                         }
+                    } label: {
+                        Image(systemName: transcriber.isRecording ? "stop.circle.fill" : "mic.circle.fill")
+                            .imageScale(.large)
                     }
                 }
             }
-            .navigationTitle(Text("Predict Stuff"))
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    CloseButton()
-                }
-                ToolbarItem(placement: .confirmationAction) {
-                    if isProcessing {
-                        ProgressView()
-                    } else {
-                        Button("Predict", systemImage: "wand.and.stars") {
-                            Logger(#file).info("Predict button tapped")
-                            predict()
-                        }
-                        .buttonStyle(.borderedProminent)
-                        .tint(.accentColor)
-                        .disabled(speech.isEmpty)
+        }
+        .navigationTitle("Predict Stuff")
+        .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+                CloseButton()
+            }
+            ToolbarItem(placement: .confirmationAction) {
+                if isProcessing {
+                    ProgressView()
+                } else {
+                    Button("Predict", systemImage: "wand.and.stars") {
+                        Logger(#file).info("Predict button tapped")
+                        predict()
                     }
+                    .buttonStyle(.borderedProminent)
+                    .tint(.accentColor)
+                    .disabled(speech.isEmpty)
                 }
             }
-            .onChange(of: transcriber.transcript) { _, newValue in
-                Logger(#file).info("Transcription updated")
-                speech = newValue
-            }
-            .onChange(of: transcriber.transcriptionError?.localizedDescription) { _, newErrorMessage in
-                Logger(#file).error("Transcription error: \(String(describing: newErrorMessage))")
-                errorMessage = newErrorMessage
-            }
+        }
+        .onChange(of: transcriber.transcript) { _, newValue in
+            Logger(#file).info("Transcription updated")
+            speech = newValue
+        }
+        .onChange(of: transcriber.transcriptionError?.localizedDescription) { _, newErrorMessage in
+            Logger(#file).error("Transcription error: \(String(describing: newErrorMessage))")
+            errorMessage = newErrorMessage
         }
         .alert("Speech Recognition Error", isPresented: Binding(
             get: { errorMessage != nil },
-            set: { if !$0 { errorMessage = nil } }
+            set: {
+                if !$0 {
+                    errorMessage = nil
+                }
+            }
         ), actions: {
             Button("OK", systemImage: "checkmark", role: .cancel) {
                 errorMessage = nil

@@ -14,52 +14,64 @@ struct StuffListView: View {
     private var modelContext
 
     @Query(sort: \Stuff.occurredAt, order: .reverse)
-    private var stuffs: [Stuff]
+    private var queriedStuffs: [Stuff]
+
+    private let overrideStuffs: [Stuff]?
 
     @Binding private var selection: Stuff?
     @Binding private var searchText: String
 
-    @State private var sort: StuffSort = .occurredDateDescending
+    @State private var sort = StuffSort.occurredDateDescending
     @State private var isRecapPresented = false
     @State private var isPlanPresented = false
     @State private var isSettingsPresented = false
-    @State private var editingStuff: Stuff?
+    @State private var isDebugPresented = false
 
-    init(selection: Binding<Stuff?>, searchText: Binding<String>) {
+    init(
+        stuffs: [Stuff]? = nil,
+        selection: Binding<Stuff?>,
+        searchText: Binding<String>
+    ) {
+        overrideStuffs = stuffs
         _selection = selection
         _searchText = searchText
+    }
+
+    private var stuffs: [Stuff] {
+        overrideStuffs ?? queriedStuffs
     }
 
     var body: some View {
         List(selection: $selection) {
             ForEach(filteredStuffs) { stuff in
-                NavigationLink(value: stuff) {
-                    StuffRowView()
-                        .environment(stuff)
-                }
-                .contextMenu(
-                    menuItems: {
-                        Button("Edit", systemImage: "pencil") {
-                            editingStuff = stuff
+                StuffRow()
+                    .environment(stuff)
+                    .tag(stuff)
+                    .contextMenu(
+                        menuItems: {
+                            EditStuffButton()
+                                .environment(stuff)
+                            Button(
+                                role: .destructive,
+                                action: { delete(stuff) }
+                            ) {
+                                Label("Delete", systemImage: "trash")
+                            }
+                        },
+                        preview: {
+                            StuffView()
+                                .environment(stuff)
                         }
-                        Button(
-                            role: .destructive,
-                            action: { delete(stuff) }
-                        ) {
-                            Label("Delete", systemImage: "trash")
-                        }
-                    },
-                    preview: {
-                        StuffView()
-                            .environment(stuff)
-                    }
-                )
+                    )
             }
             .onDelete(perform: delete)
         }
-        .navigationTitle(Text("Best Stuff"))
+        .navigationTitle("Best Stuff")
         .toolbar {
-            ToolbarItemGroup(placement: .bottomBar) {
+            ToolbarItem(placement: .primaryAction) {
+                AddStuffButton()
+            }
+            ToolbarItem(placement: .primaryAction) {
                 Menu {
                     Picker("Sort", selection: $sort) {
                         ForEach(StuffSort.allCases) { option in
@@ -69,36 +81,47 @@ struct StuffListView: View {
                 } label: {
                     Label("Sort", systemImage: "arrow.up.arrow.down")
                 }
-                AddStuffButton()
             }
-            ToolbarItemGroup(placement: .secondaryAction) {
+            ToolbarItem(placement: .secondaryAction) {
                 Button("Recap", systemImage: "calendar") {
                     Logger(#file).info("Recap button tapped")
                     isRecapPresented = true
                 }
                 .buttonStyle(.bordered)
+            }
+            ToolbarItem(placement: .secondaryAction) {
                 Button("Plan", systemImage: "lightbulb") {
                     Logger(#file).info("Plan button tapped")
                     isPlanPresented = true
                 }
                 .buttonStyle(.bordered)
+            }
+            ToolbarItem(placement: .secondaryAction) {
                 Button("Settings", systemImage: "gearshape") {
                     Logger(#file).info("Settings button tapped")
                     isSettingsPresented = true
                 }
             }
+            #if DEBUG
+            ToolbarItem(placement: .secondaryAction) {
+                Button("Debug", systemImage: "ladybug") {
+                    Logger(#file).info("Debug button tapped")
+                    isDebugPresented = true
+                }
+            }
+            #endif
         }
         .sheet(isPresented: $isRecapPresented) {
-            RecapTabView()
+            RecapNavigationView()
         }
         .sheet(isPresented: $isPlanPresented) {
-            PlanTabView()
+            PlanNavigationView()
         }
         .sheet(isPresented: $isSettingsPresented) {
-            SettingsView()
+            SettingsNavigationView()
         }
-        .sheet(item: $editingStuff) { stuff in
-            StuffFormView(stuff: stuff)
+        .sheet(isPresented: $isDebugPresented) {
+            DebugNavigationView()
         }
     }
 
@@ -129,15 +152,20 @@ struct StuffListView: View {
     }
 
     private func delete(_ stuff: Stuff) {
-        guard let index = stuffs.firstIndex(where: { $0.id == stuff.id }) else { return }
+        guard let index = stuffs.firstIndex(where: {
+            $0.id == stuff.id
+        }) else {
+            return
+        }
         delete(at: IndexSet(integer: index))
     }
 }
 
 #Preview(traits: .sampleData) {
-    NavigationSplitView {
-        StuffListView(selection: .constant(nil), searchText: .constant(""))
-    } detail: {
-        Text("Detail")
+    NavigationStack {
+        StuffListView(
+            selection: .constant(nil),
+            searchText: .constant("")
+        )
     }
 }

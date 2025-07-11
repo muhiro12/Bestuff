@@ -1,0 +1,36 @@
+@testable import Bestuff
+import Foundation
+import SwiftData
+import Testing
+
+@MainActor
+struct UpdateStuffIntentTests {
+    let context: ModelContext
+
+    init() {
+        context = testContext
+    }
+
+    @Test func perform() throws {
+        let model = try CreateStuffIntent.perform(
+            (
+                context: context,
+                title: "Title",
+                category: "General",
+                note: nil,
+                occurredAt: .now
+            )
+        )
+        _ = try UpdateStuffIntent.perform(
+            (
+                model: model,
+                title: "Updated",
+                category: "General",
+                note: "Note",
+                occurredAt: .now
+            )
+        )
+        #expect(model.title == "Updated")
+        #expect(model.note == "Note")
+    }
+}
