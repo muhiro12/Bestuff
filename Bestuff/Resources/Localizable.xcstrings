@@ -1,0 +1,211 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "%lld" : {
+
+    },
+    "1.0.0" : {
+
+    },
+    "Actions" : {
+
+    },
+    "Add Stuff" : {
+
+    },
+    "App Version" : {
+
+    },
+    "Best Stuff" : {
+
+    },
+    "Calendar" : {
+
+    },
+    "Cancel" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "キャンセル"
+          }
+        }
+      }
+    },
+    "Category" : {
+
+    },
+    "Clear" : {
+
+    },
+    "Clear All Data" : {
+
+    },
+    "Clear all data?" : {
+
+    },
+    "Contact Support" : {
+
+    },
+    "Create" : {
+
+    },
+    "Create Sample Data" : {
+
+    },
+    "Create sample data?" : {
+
+    },
+    "Create Stuff" : {
+
+    },
+    "Created %@" : {
+
+    },
+    "Date" : {
+
+    },
+    "Debug" : {
+
+    },
+    "Delete" : {
+
+    },
+    "Delete Stuff" : {
+
+    },
+    "Edit Stuff" : {
+
+    },
+    "General" : {
+
+    },
+    "Generate" : {
+
+    },
+    "Information" : {
+
+    },
+    "Language" : {
+
+    },
+    "Next Month" : {
+
+    },
+    "Next Trip" : {
+
+    },
+    "Next Year" : {
+
+    },
+    "No suggestions yet" : {
+
+    },
+    "Note" : {
+
+    },
+    "Occurred %@" : {
+
+    },
+    "OK" : {
+      "shouldTranslate" : false
+    },
+    "Options" : {
+
+    },
+    "OS Version" : {
+
+    },
+    "Period" : {
+
+    },
+    "Plan" : {
+
+    },
+    "Plan Period" : {
+
+    },
+    "Plan Stuff" : {
+
+    },
+    "Predict" : {
+
+    },
+    "Predict Stuff" : {
+
+    },
+    "Recap" : {
+
+    },
+    "Region" : {
+
+    },
+    "Save" : {
+
+    },
+    "Score: %lld" : {
+
+    },
+    "Select Period" : {
+
+    },
+    "Select Stuff" : {
+
+    },
+    "Select Suggestion" : {
+
+    },
+    "Settings" : {
+
+    },
+    "Sort" : {
+
+    },
+    "Speech" : {
+
+    },
+    "Speech Recognition Error" : {
+
+    },
+    "Stored Items" : {
+
+    },
+    "Stuff" : {
+
+    },
+    "Suggestion" : {
+
+    },
+    "Support" : {
+
+    },
+    "This Week" : {
+
+    },
+    "This will add example stuff to the list." : {
+
+    },
+    "This will permanently delete all stuff." : {
+
+    },
+    "Time Zone" : {
+
+    },
+    "Title" : {
+
+    },
+    "Today" : {
+
+    },
+    "Update Stuff" : {
+
+    },
+    "Version 1.0.0" : {
+
+    },
+    "Visit Website" : {
+
+    }
+  },
+  "version" : "1.1"
+}
