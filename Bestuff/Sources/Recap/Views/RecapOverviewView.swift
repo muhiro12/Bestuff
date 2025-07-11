@@ -38,6 +38,8 @@ struct RecapOverviewView: View {
 
                 ForEach(sortedKeys, id: \.self) { date in
                     NavigationLink(
+                        tag: date,
+                        selection: $selection,
                         destination: {
                             RecapView(
                                 date: date,
@@ -46,11 +48,10 @@ struct RecapOverviewView: View {
                                 selection: $stuffSelection
                             )
                         },
-                        tag: date,
-                        selection: $selection
-                    ) {
-                        Text(title(for: date))
-                    }
+                        label: {
+                            Text(title(for: date))
+                        }
+                    )
                 }
             }
             .navigationTitle(Text("Recap"))

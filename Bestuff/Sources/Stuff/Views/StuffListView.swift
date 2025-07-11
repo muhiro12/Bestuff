@@ -36,16 +36,17 @@ struct StuffListView: View {
         List(selection: $selection) {
             ForEach(filteredStuffs) { stuff in
                 NavigationLink(
+                    tag: stuff,
+                    selection: $selection,
                     destination: {
                         StuffView()
                             .environment(stuff)
                     },
-                    tag: stuff,
-                    selection: $selection
-                ) {
-                    StuffRow()
-                        .environment(stuff)
-                }
+                    label: {
+                        StuffRow()
+                            .environment(stuff)
+                    }
+                )
                 .contextMenu(
                     menuItems: {
                         Button("Edit", systemImage: "pencil") {

@@ -28,15 +28,16 @@ struct PlanSuggestionsView: View {
                             Section(period.title) {
                                 ForEach(actions, id: \.self) { suggestion in
                                     NavigationLink(
+                                        tag: suggestion,
+                                        selection: $selection,
                                         destination: {
                                             PlanView(suggestion: suggestion)
                                         },
-                                        tag: suggestion,
-                                        selection: $selection
-                                    ) {
-                                        Text(suggestion)
-                                            .lineLimit(1)
-                                    }
+                                        label: {
+                                            Text(suggestion)
+                                                .lineLimit(1)
+                                        }
+                                    )
                                 }
                             }
                         }

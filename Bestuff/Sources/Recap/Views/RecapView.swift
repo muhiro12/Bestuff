@@ -16,16 +16,17 @@ struct RecapView: View {
     var body: some View {
         List(stuffs, selection: $selection) { stuff in
             NavigationLink(
+                tag: stuff,
+                selection: $selection,
                 destination: {
                     StuffView()
                         .environment(stuff)
                 },
-                tag: stuff,
-                selection: $selection
-            ) {
-                StuffRow()
-                    .environment(stuff)
-            }
+                label: {
+                    StuffRow()
+                        .environment(stuff)
+                }
+            )
         }
         .navigationTitle(Text(title(for: date)))
     }
