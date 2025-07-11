@@ -152,7 +152,11 @@ struct StuffListView: View {
     }
 
     private func delete(_ stuff: Stuff) {
-        guard let index = stuffs.firstIndex(where: { $0.id == stuff.id }) else { return }
+        guard let index = stuffs.firstIndex(where: {
+            $0.id == stuff.id
+        }) else {
+            return
+        }
         delete(at: IndexSet(integer: index))
     }
 }
