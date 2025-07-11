@@ -1,7 +1,6 @@
 import AppIntents
 import FoundationModels
 import SwiftData
-import SwiftUtilities
 
 @Generable
 nonisolated struct StuffEntity {

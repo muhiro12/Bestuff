@@ -2,7 +2,6 @@ import AppIntents
 import Foundation
 import FoundationModels
 import SwiftData
-import SwiftUtilities
 
 struct PredictStuffIntent: AppIntent, IntentPerformer {
     typealias Input = (context: ModelContext, speech: String)

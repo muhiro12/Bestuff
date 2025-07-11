@@ -1,6 +1,5 @@
 import AppIntents
 import SwiftData
-import SwiftUtilities
 
 struct UpdateStuffIntent: AppIntent, IntentPerformer {
     typealias Input = (model: Stuff, title: String, category: String, note: String?, occurredAt: Date)

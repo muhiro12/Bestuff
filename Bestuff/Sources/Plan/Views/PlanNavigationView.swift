@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import SwiftUtilities
 
 struct PlanNavigationView: View {
     @Environment(\.modelContext)

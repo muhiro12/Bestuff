@@ -7,7 +7,6 @@
 
 import SwiftData
 import SwiftUI
-import SwiftUtilities
 
 struct RecapNavigationView: View {
     @Query(sort: \Stuff.occurredAt, order: .reverse)

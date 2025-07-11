@@ -1,6 +1,5 @@
 import AppIntents
 import SwiftData
-import SwiftUtilities
 
 struct CreateStuffIntent: AppIntent, IntentPerformer {
     typealias Input = (context: ModelContext, title: String, category: String, note: String?, occurredAt: Date)

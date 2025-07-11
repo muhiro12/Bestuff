@@ -7,7 +7,6 @@
 
 import SwiftData
 import SwiftUI
-import SwiftUtilities
 
 struct PredictStuffFormView: View {
     @Environment(\.dismiss)
@@ -25,22 +24,22 @@ struct PredictStuffFormView: View {
             Section("Speech") {
                 TextEditor(text: $speech)
                     .frame(minHeight: 120, alignment: .topLeading)
-                    HStack {
-                        Spacer()
-                        Button {
-                            if transcriber.isRecording {
-                                Logger(#file).info("Stopping recording")
-                                transcriber.stopRecording()
-                            } else {
-                                Logger(#file).info("Starting recording")
-                                transcriber.startRecording()
-                            }
-                        } label: {
-                            Image(systemName: transcriber.isRecording ? "stop.circle.fill" : "mic.circle.fill")
-                                .imageScale(.large)
+                HStack {
+                    Spacer()
+                    Button {
+                        if transcriber.isRecording {
+                            Logger(#file).info("Stopping recording")
+                            transcriber.stopRecording()
+                        } else {
+                            Logger(#file).info("Starting recording")
+                            transcriber.startRecording()
                         }
+                    } label: {
+                        Image(systemName: transcriber.isRecording ? "stop.circle.fill" : "mic.circle.fill")
+                            .imageScale(.large)
                     }
                 }
+            }
         }
         .navigationTitle(Text("Predict Stuff"))
         .toolbar {

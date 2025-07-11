@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import SwiftUtilities
 
 struct PlanListView: View {
     @Binding private var selection: String?

@@ -7,7 +7,6 @@
 
 import SwiftData
 import SwiftUI
-import SwiftUtilities
 
 struct StuffFormView: View {
     @Environment(Stuff.self)

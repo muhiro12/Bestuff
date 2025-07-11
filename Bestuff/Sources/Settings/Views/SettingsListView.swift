@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import SwiftUtilities
 
 struct SettingsListView: View {
     var body: some View {

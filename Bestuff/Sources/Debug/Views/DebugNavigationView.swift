@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import SwiftUtilities
 
 struct DebugNavigationView: View {
     var body: some View {

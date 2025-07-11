@@ -8,7 +8,6 @@
 import AppIntents
 import FoundationModels
 import SwiftData
-import SwiftUtilities
 
 struct PlanStuffIntent: AppIntent, IntentPerformer {
     typealias Input = (context: ModelContext, period: PlanPeriod)
