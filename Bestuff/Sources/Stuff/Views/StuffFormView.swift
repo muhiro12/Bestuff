@@ -71,10 +71,15 @@ struct StuffFormView: View {
         withAnimation {
             if let stuff {
                 Logger(#file).info("Updating stuff \(String(describing: stuff.id))")
-                stuff.title = title
-                stuff.category = category
-                stuff.note = note.isEmpty ? nil : note
-                stuff.occurredAt = occurredAt
+                _ = try? UpdateStuffIntent.perform(
+                    (
+                        model: stuff,
+                        title: title,
+                        category: category,
+                        note: note.isEmpty ? nil : note,
+                        occurredAt: occurredAt
+                    )
+                )
                 Logger(#file).notice("Updated stuff \(String(describing: stuff.id))")
             } else {
                 Logger(#file).info("Creating new stuff")
@@ -96,7 +101,7 @@ struct StuffFormView: View {
 
 #Preview(traits: .sampleData) {
     StuffFormView(
-        stuff: Stuff(
+        stuff: Stuff.create(
             title: "Sample",
             category: "General",
             occurredAt: .now,

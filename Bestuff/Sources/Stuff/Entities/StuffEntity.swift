@@ -61,8 +61,7 @@ extension StuffEntity: ModelBridgeable {
               ).first else {
             throw StuffError.stuffNotFound
         }
-        let updatedModel = model
-        updatedModel.occurredAt = occurredDate
-        return updatedModel
+        model.update(occurredAt: occurredDate)
+        return model
     }
 }
