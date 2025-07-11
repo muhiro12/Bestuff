@@ -23,7 +23,6 @@ struct StuffListView: View {
     @Binding private var searchText: String
 
     @Binding private var sort: StuffSort
-    @State private var editingStuff: Stuff?
 
     init(
         stuffs: [Stuff]? = nil,
@@ -49,9 +48,8 @@ struct StuffListView: View {
                     .tag(stuff)
                     .contextMenu(
                         menuItems: {
-                            Button("Edit", systemImage: "pencil") {
-                                editingStuff = stuff
-                            }
+                            EditStuffButton()
+                                .environment(stuff)
                             Button(
                                 role: .destructive,
                                 action: { delete(stuff) }
@@ -68,9 +66,6 @@ struct StuffListView: View {
             .onDelete(perform: delete)
         }
         .navigationTitle(Text("Best Stuff"))
-        .sheet(item: $editingStuff) { stuff in
-            StuffFormView(stuff: stuff)
-        }
     }
 
     private var filteredStuffs: [Stuff] {
