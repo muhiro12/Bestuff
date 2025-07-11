@@ -35,7 +35,14 @@ struct StuffListView: View {
     var body: some View {
         List(selection: $selection) {
             ForEach(filteredStuffs) { stuff in
-                NavigationLink(value: stuff) {
+                NavigationLink(
+                    destination: {
+                        StuffView()
+                            .environment(stuff)
+                    },
+                    tag: stuff,
+                    selection: $selection
+                ) {
                     StuffRow()
                         .environment(stuff)
                 }
@@ -115,14 +122,12 @@ struct StuffListView: View {
             SettingsView()
         }
         .sheet(isPresented: $isDebugPresented) {
-            NavigationStack {
-                DebugView()
-                    .toolbar {
-                        ToolbarItem(placement: .cancellationAction) {
-                            CloseButton()
-                        }
+            DebugView()
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        CloseButton()
                     }
-            }
+                }
         }
         .sheet(item: $editingStuff) { stuff in
             StuffFormView(stuff: stuff)

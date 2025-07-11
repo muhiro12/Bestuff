@@ -37,7 +37,18 @@ struct RecapOverviewView: View {
                 .padding(.vertical)
 
                 ForEach(sortedKeys, id: \.self) { date in
-                    NavigationLink(value: date) {
+                    NavigationLink(
+                        destination: {
+                            RecapView(
+                                date: date,
+                                period: period,
+                                stuffs: groupedStuffs[date] ?? [],
+                                selection: $stuffSelection
+                            )
+                        },
+                        tag: date,
+                        selection: $selection
+                    ) {
                         Text(title(for: date))
                     }
                 }
@@ -68,18 +79,6 @@ struct RecapOverviewView: View {
                 Text("Select Stuff")
                     .foregroundStyle(.secondary)
             }
-        }
-        .navigationDestination(for: Date.self) { date in
-            RecapView(
-                date: date,
-                period: period,
-                stuffs: groupedStuffs[date] ?? [],
-                selection: $stuffSelection
-            )
-        }
-        .navigationDestination(for: Stuff.self) { stuff in
-            StuffView()
-                .environment(stuff)
         }
         .onDisappear {
             selection = nil

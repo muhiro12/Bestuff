@@ -15,7 +15,14 @@ struct RecapView: View {
 
     var body: some View {
         List(stuffs, selection: $selection) { stuff in
-            NavigationLink(value: stuff) {
+            NavigationLink(
+                destination: {
+                    StuffView()
+                        .environment(stuff)
+                },
+                tag: stuff,
+                selection: $selection
+            ) {
                 StuffRow()
                     .environment(stuff)
             }

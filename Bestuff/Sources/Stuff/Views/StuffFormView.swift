@@ -32,38 +32,40 @@ struct StuffFormView: View {
     }
 
     var body: some View {
-        NavigationStack {
-            Form {
-                Section("Information") {
-                    TextField("Title", text: $title)
-                    TextField("Category", text: $category)
-                    TextField("Note", text: $note)
-                    DatePicker("Date", selection: $occurredAt, displayedComponents: .date)
-                }
-                Section("Options") {
-                    Button {
-                        Logger(#file).info("Predict from speech tapped")
-                        isPredictPresented = true
-                    } label: {
-                        Label("Predict from Speech", systemImage: "wand.and.stars")
-                    }
+        Form {
+            Section("Information") {
+                TextField("Title", text: $title)
+                TextField("Category", text: $category)
+                TextField("Note", text: $note)
+                DatePicker(
+                    "Date",
+                    selection: $occurredAt,
+                    displayedComponents: .date
+                )
+            }
+            Section("Options") {
+                Button {
+                    Logger(#file).info("Predict from speech tapped")
+                    isPredictPresented = true
+                } label: {
+                    Label("Predict from Speech", systemImage: "wand.and.stars")
                 }
             }
-            .navigationTitle(Text(stuff == nil ? "Add Stuff" : "Edit Stuff"))
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    CloseButton()
-                }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Save", systemImage: "tray.and.arrow.down", action: save)
-                        .buttonStyle(.borderedProminent)
-                        .tint(.accentColor)
-                        .disabled(title.isEmpty)
-                }
+        }
+        .navigationTitle(Text(stuff == nil ? "Add Stuff" : "Edit Stuff"))
+        .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+                CloseButton()
             }
-            .sheet(isPresented: $isPredictPresented) {
-                PredictStuffFormView()
+            ToolbarItem(placement: .confirmationAction) {
+                Button("Save", systemImage: "tray.and.arrow.down", action: save)
+                    .buttonStyle(.borderedProminent)
+                    .tint(.accentColor)
+                    .disabled(title.isEmpty)
             }
+        }
+        .sheet(isPresented: $isPredictPresented) {
+            PredictStuffFormView()
         }
     }
 
