@@ -22,7 +22,9 @@ nonisolated final class Tag {
     static func fetch(byName name: String, in context: ModelContext) throws -> Tag? {
         try context.fetch(
             FetchDescriptor<Tag>(
-                predicate: #Predicate { $0.name.lowercased() == name.lowercased() }
+                predicate: #Predicate {
+                    $0.name.localizedStandardContains(name)
+                }
             )
         ).first
     }
