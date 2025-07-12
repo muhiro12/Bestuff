@@ -13,7 +13,8 @@ import SwiftUI
 struct BestuffApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Stuff.self
+            Stuff.self,
+            Tag.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 

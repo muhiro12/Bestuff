@@ -9,6 +9,7 @@ speech using App Intents and a language model.
 - Record stuff with a title, category, note and score
 - Predict new entries from spoken text
 - Browse and search the saved items
+- Group items with custom tags
 - Includes unit tests for core intents
 
 ## Building
