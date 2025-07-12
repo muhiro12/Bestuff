@@ -27,16 +27,18 @@ struct TagListView: View {
             ToolbarItem(placement: .primaryAction) {
                 AddTagButton()
             }
+            ToolbarItem(placement: .cancellationAction) {
+                CloseButton()
+            }
         }
     }
 
     private var filteredTags: [Tag] {
         if searchText.isEmpty {
             return queriedTags
-        } else {
-            return queriedTags.filter {
-                $0.name.localizedCaseInsensitiveContains(searchText)
-            }
+        }
+        return queriedTags.filter {
+            $0.name.localizedCaseInsensitiveContains(searchText)
         }
     }
 }

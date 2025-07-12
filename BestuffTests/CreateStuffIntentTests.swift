@@ -11,7 +11,7 @@ struct CreateStuffIntentTests {
     }
 
     @Test func perform() throws {
-        _ = try CreateStuffIntent.perform(
+        let model = try CreateStuffIntent.perform(
             (
                 context: context,
                 title: "Title",
@@ -20,8 +20,10 @@ struct CreateStuffIntentTests {
                 occurredAt: .now
             )
         )
+        let tag = try CreateTagIntent.perform((context: context, name: "Tag"))
+        model.update(tags: [tag])
         let stuffs = try context.fetch(FetchDescriptor<Stuff>())
         #expect(stuffs.count == 1)
-        #expect(stuffs.first?.title == "Title")
+        #expect(stuffs.first?.tags?.count == 1)
     }
 }

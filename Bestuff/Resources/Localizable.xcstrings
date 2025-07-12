@@ -27,6 +27,9 @@
         }
       }
     },
+    "Add Tag" : {
+
+    },
     "App Version" : {
       "localizations" : {
         "ja" : {
@@ -157,6 +160,9 @@
         }
       }
     },
+    "Create Tag" : {
+
+    },
     "Created %@" : {
       "localizations" : {
         "ja" : {
@@ -207,6 +213,9 @@
         }
       }
     },
+    "Done" : {
+
+    },
     "Edit Stuff" : {
       "localizations" : {
         "ja" : {
@@ -216,6 +225,9 @@
           }
         }
       }
+    },
+    "Edit Tag" : {
+
     },
     "General" : {
       "localizations" : {
@@ -263,6 +275,9 @@
         }
       }
     },
+    "Name" : {
+
+    },
     "Next Month" : {
       "localizations" : {
         "ja" : {
@@ -302,6 +317,9 @@
           }
         }
       }
+    },
+    "None" : {
+
     },
     "Note" : {
       "localizations" : {
@@ -649,6 +667,9 @@
           }
         }
       }
+    },
+    "Update Tag" : {
+
     },
     "Version 1.0.0" : {
       "localizations" : {
