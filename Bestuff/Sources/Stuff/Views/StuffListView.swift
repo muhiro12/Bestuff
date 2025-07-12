@@ -24,6 +24,7 @@ struct StuffListView: View {
     @State private var sort = StuffSort.occurredDateDescending
     @State private var isRecapPresented = false
     @State private var isPlanPresented = false
+    @State private var isTagPresented = false
 
     init(
         stuffs: [Stuff]? = nil,
@@ -95,6 +96,13 @@ struct StuffListView: View {
                 .buttonStyle(.bordered)
             }
             ToolbarItem(placement: .secondaryAction) {
+                Button("Tags", systemImage: "tag") {
+                    Logger(#file).info("Tags button tapped")
+                    isTagPresented = true
+                }
+                .buttonStyle(.bordered)
+            }
+            ToolbarItem(placement: .secondaryAction) {
                 SettingsButton()
             }
             #if DEBUG
@@ -108,6 +116,9 @@ struct StuffListView: View {
         }
         .sheet(isPresented: $isPlanPresented) {
             PlanNavigationView()
+        }
+        .sheet(isPresented: $isTagPresented) {
+            TagNavigationView()
         }
     }
 
