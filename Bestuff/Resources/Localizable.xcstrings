@@ -237,6 +237,12 @@
         }
       }
     },
+    "Get All Tags" : {
+
+    },
+    "Get Tag By ID" : {
+
+    },
     "Information" : {
       "localizations" : {
         "ja" : {
@@ -470,6 +476,9 @@
         }
       }
     },
+    "Select Tag" : {
+
+    },
     "Settings" : {
       "localizations" : {
         "ja" : {
@@ -552,6 +561,15 @@
           }
         }
       }
+    },
+    "Tag" : {
+
+    },
+    "Tag ID" : {
+
+    },
+    "Tags" : {
+
     },
     "This Week" : {
       "localizations" : {
