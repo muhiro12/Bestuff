@@ -2,10 +2,14 @@ import SwiftUI
 
 struct TagNavigationView: View {
     @State private var selection: Tag?
+    @State private var searchText = ""
 
     var body: some View {
         NavigationSplitView {
-            TagListView(selection: $selection)
+            TagListView(
+                selection: $selection,
+                searchText: $searchText
+            )
         } detail: {
             if let tag = selection {
                 StuffListView(
@@ -19,6 +23,7 @@ struct TagNavigationView: View {
                     .foregroundStyle(.secondary)
             }
         }
+        .searchable(text: $searchText)
     }
 }
 
