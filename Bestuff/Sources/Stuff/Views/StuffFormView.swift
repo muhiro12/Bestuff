@@ -20,6 +20,8 @@ struct StuffFormView: View {
     @State private var category = ""
     @State private var note = ""
     @State private var occurredAt = Date.now
+    @State private var selectedTags: Set<Tag> = []
+    @State private var isTagPickerPresented = false
 
     var body: some View {
         Form {
@@ -32,6 +34,26 @@ struct StuffFormView: View {
                     selection: $occurredAt,
                     displayedComponents: .date
                 )
+            }
+            Section("Tags") {
+                Button {
+                    Logger(#file).info("Tag picker button tapped")
+                    isTagPickerPresented = true
+                } label: {
+                    HStack {
+                        Text("Tags")
+                        Spacer()
+                        if selectedTags.isEmpty {
+                            Text("None")
+                                .foregroundStyle(.secondary)
+                        } else {
+                            Text(selectedTags.sorted { $0.name < $1.name }.map(\.name).joined(separator: ", "))
+                                .foregroundStyle(.secondary)
+                        }
+                        Image(systemName: "chevron.right")
+                            .foregroundStyle(.tertiary)
+                    }
+                }
             }
             Section("Options") {
                 PredictStuffButton()
@@ -54,6 +76,12 @@ struct StuffFormView: View {
             category = stuff?.category ?? .empty
             note = stuff?.note ?? .empty
             occurredAt = stuff?.occurredAt ?? .now
+            selectedTags = Set(stuff?.tags ?? [])
+        }
+        .sheet(isPresented: $isTagPickerPresented) {
+            NavigationStack {
+                TagPickerListView(selection: $selectedTags)
+            }
         }
     }
 
@@ -70,10 +98,11 @@ struct StuffFormView: View {
                         occurredAt: occurredAt
                     )
                 )
+                stuff.update(tags: Array(selectedTags))
                 Logger(#file).notice("Updated stuff \(String(describing: stuff.id))")
             } else {
                 Logger(#file).info("Creating new stuff")
-                _ = try? CreateStuffIntent.perform(
+                if let model = try? CreateStuffIntent.perform(
                     (
                         context: modelContext,
                         title: title,
@@ -81,8 +110,10 @@ struct StuffFormView: View {
                         note: note.isEmpty ? nil : note,
                         occurredAt: occurredAt
                     )
-                )
-                Logger(#file).notice("Created new stuff")
+                ) {
+                    model.update(tags: Array(selectedTags))
+                    Logger(#file).notice("Created new stuff")
+                }
             }
             dismiss()
         }

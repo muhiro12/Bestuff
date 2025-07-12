@@ -160,6 +160,9 @@
         }
       }
     },
+    "Create Tag" : {
+
+    },
     "Created %@" : {
       "localizations" : {
         "ja" : {
@@ -209,6 +212,9 @@
           }
         }
       }
+    },
+    "Done" : {
+
     },
     "Edit Stuff" : {
       "localizations" : {
@@ -311,6 +317,9 @@
           }
         }
       }
+    },
+    "None" : {
+
     },
     "Note" : {
       "localizations" : {
@@ -658,6 +667,9 @@
           }
         }
       }
+    },
+    "Update Tag" : {
+
     },
     "Version 1.0.0" : {
       "localizations" : {
