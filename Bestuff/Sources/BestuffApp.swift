@@ -25,6 +25,7 @@ struct BestuffApp: App {
     }()
 
     private var sharedStore: Store = .init()
+    private var sharedConfigurationService: ConfigurationService = .init()
 
     init() {
         sharedStore.open(
@@ -38,6 +39,7 @@ struct BestuffApp: App {
         WindowGroup {
             ContentView()
                 .environment(sharedStore)
+                .environment(sharedConfigurationService)
         }
         .modelContainer(sharedModelContainer)
         .commands {
