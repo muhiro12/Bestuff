@@ -29,7 +29,10 @@ struct UpdateStuffIntentTests {
                 occurredAt: .now
             )
         )
+        let tag = try CreateTagIntent.perform((context: context, name: "Tag"))
+        model.update(tags: [tag])
         #expect(model.title == "Updated")
         #expect(model.note == "Note")
+        #expect(model.tags?.count == 1)
     }
 }
