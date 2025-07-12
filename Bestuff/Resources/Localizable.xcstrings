@@ -326,6 +326,9 @@
     "OK" : {
       "shouldTranslate" : false
     },
+    "Open App Store" : {
+
+    },
     "Options" : {
       "localizations" : {
         "ja" : {
@@ -385,6 +388,9 @@
           }
         }
       }
+    },
+    "Please update Bestuff to the latest version to continue using it." : {
+
     },
     "Predict" : {
       "localizations" : {
@@ -630,6 +636,9 @@
           }
         }
       }
+    },
+    "Update Required" : {
+
     },
     "Update Stuff" : {
       "localizations" : {
