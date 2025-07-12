@@ -15,7 +15,7 @@ struct ContentView: View {
 
     @State private var isUpdateAlertPresented = false
     var body: some View {
-        HomeNavigationView()
+        StuffNavigationView()
             .alert(Text("Update Required"), isPresented: $isUpdateAlertPresented) {
                 Button {
                     UIApplication.shared.open(
