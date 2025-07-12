@@ -13,7 +13,8 @@ import SwiftUI
 struct BestuffApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Stuff.self
+            Stuff.self,
+            Tag.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
@@ -25,6 +26,7 @@ struct BestuffApp: App {
     }()
 
     private var sharedStore: Store = .init()
+    private var sharedConfigurationService: ConfigurationService = .init()
 
     init() {
         sharedStore.open(
@@ -38,6 +40,7 @@ struct BestuffApp: App {
         WindowGroup {
             ContentView()
                 .environment(sharedStore)
+                .environment(sharedConfigurationService)
         }
         .modelContainer(sharedModelContainer)
         .commands {

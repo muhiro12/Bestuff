@@ -14,6 +14,8 @@ nonisolated final class Stuff {
     private(set) var category: String
     private(set) var note: String?
     private(set) var score: Int
+    @Relationship(inverse: \Tag.stuffs)
+    private(set) var tags: [Tag]?
     private(set) var occurredAt: Date
     private(set) var createdAt: Date
 
@@ -23,7 +25,8 @@ nonisolated final class Stuff {
         note: String? = nil,
         score: Int = 0,
         occurredAt: Date = .now,
-        createdAt: Date = .now
+        createdAt: Date = .now,
+        tags: [Tag] = []
     ) {
         self.title = title
         self.category = category
@@ -31,6 +34,7 @@ nonisolated final class Stuff {
         self.score = score
         self.occurredAt = occurredAt
         self.createdAt = createdAt
+        self.tags = tags
     }
 
     static func create(
@@ -39,7 +43,8 @@ nonisolated final class Stuff {
         note: String? = nil,
         score: Int = 0,
         occurredAt: Date = .now,
-        createdAt: Date = .now
+        createdAt: Date = .now,
+        tags: [Tag] = []
     ) -> Stuff {
         .init(
             title: title,
@@ -47,7 +52,8 @@ nonisolated final class Stuff {
             note: note,
             score: score,
             occurredAt: occurredAt,
-            createdAt: createdAt
+            createdAt: createdAt,
+            tags: tags
         )
     }
 
@@ -56,7 +62,8 @@ nonisolated final class Stuff {
         category: String? = nil,
         note: String? = nil,
         score: Int? = nil,
-        occurredAt: Date? = nil
+        occurredAt: Date? = nil,
+        tags: [Tag]? = nil
     ) {
         if let title {
             self.title = title
@@ -72,6 +79,9 @@ nonisolated final class Stuff {
         }
         if let occurredAt {
             self.occurredAt = occurredAt
+        }
+        if let tags {
+            self.tags = tags
         }
     }
 }

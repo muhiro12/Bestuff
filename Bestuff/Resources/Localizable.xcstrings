@@ -237,6 +237,12 @@
         }
       }
     },
+    "Get All Tags" : {
+
+    },
+    "Get Tag By ID" : {
+
+    },
     "Information" : {
       "localizations" : {
         "ja" : {
@@ -320,6 +326,9 @@
     "OK" : {
       "shouldTranslate" : false
     },
+    "Open App Store" : {
+
+    },
     "Options" : {
       "localizations" : {
         "ja" : {
@@ -379,6 +388,9 @@
           }
         }
       }
+    },
+    "Please update Bestuff to the latest version to continue using it." : {
+
     },
     "Predict" : {
       "localizations" : {
@@ -470,6 +482,9 @@
         }
       }
     },
+    "Select Tag" : {
+
+    },
     "Settings" : {
       "localizations" : {
         "ja" : {
@@ -553,6 +568,15 @@
         }
       }
     },
+    "Tag" : {
+
+    },
+    "Tag ID" : {
+
+    },
+    "Tags" : {
+
+    },
     "This Week" : {
       "localizations" : {
         "ja" : {
@@ -612,6 +636,9 @@
           }
         }
       }
+    },
+    "Update Required" : {
+
     },
     "Update Stuff" : {
       "localizations" : {

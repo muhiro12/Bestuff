@@ -32,7 +32,7 @@ struct ModelContainerPreviewModifier: PreviewModifier {
 }
 
 extension PreviewTrait where T == Preview.ViewTraits {
-    @MainActor static var sampleData: Self {
+    static var sampleData: Self {
         .modifier(ModelContainerPreviewModifier())
     }
 }

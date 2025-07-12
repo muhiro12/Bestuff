@@ -55,7 +55,6 @@ final class SpeechTranscriptionManager {
         }
     }
 
-    @MainActor
     private func finalizeRecording() async {
         do {
             try await analyzer?.finalizeAndFinishThroughEndOfInput()
