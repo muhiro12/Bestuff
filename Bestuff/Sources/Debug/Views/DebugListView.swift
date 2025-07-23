@@ -137,11 +137,26 @@ struct SampleData {
     }
 
     static let stuffs: [StuffData] = [
-        .init(title: "Coffee Beans", note: "Order from the local roastery."),
-        .init(title: "Running Shoes", note: "Replace the worn-out pair."),
-        .init(title: "Conference Tickets", note: "WWDC 2025"),
-        .init(title: "Vacation Booking", note: "Reserve hotel and flights."),
-        .init(title: "Birthday Gift", note: "Surprise for Alice.")
+        .init(
+            title: String(localized: "Coffee Beans"),
+            note: String(localized: "Order from the local roastery.")
+        ),
+        .init(
+            title: String(localized: "Running Shoes"),
+            note: String(localized: "Replace the worn-out pair.")
+        ),
+        .init(
+            title: String(localized: "Conference Tickets"),
+            note: String(localized: "WWDC 2025")
+        ),
+        .init(
+            title: String(localized: "Vacation Booking"),
+            note: String(localized: "Reserve hotel and flights.")
+        ),
+        .init(
+            title: String(localized: "Birthday Gift"),
+            note: String(localized: "Surprise for Alice.")
+        )
     ]
 }
 

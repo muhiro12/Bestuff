@@ -28,7 +28,7 @@ struct StuffRow: View {
     StuffRow()
         .environment(
             Stuff.create(
-                title: "Sample",
+                title: String(localized: "Sample"),
                 occurredAt: .now,
                 createdAt: .now
             )

@@ -50,6 +50,16 @@
         }
       }
     },
+    "Birthday Gift" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "誕生日プレゼント"
+          }
+        }
+      }
+    },
     "Calendar" : {
       "localizations" : {
         "ja" : {
@@ -107,6 +117,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "すべてのデータを削除しますか？"
+          }
+        }
+      }
+    },
+    "Coffee Beans" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "コーヒー豆"
+          }
+        }
+      }
+    },
+    "Conference Tickets" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "カンファレンスチケット"
           }
         }
       }
@@ -230,6 +260,17 @@
     "Edit Tag" : {
 
     },
+    "Fitness" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "フィットネス"
+          }
+        }
+      }
+    },
     "General" : {
       "localizations" : {
         "ja" : {
@@ -255,6 +296,17 @@
     },
     "Get Tag By ID" : {
 
+    },
+    "Groceries" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "食料品"
+          }
+        }
+      }
     },
     "Information" : {
       "localizations" : {
@@ -335,6 +387,17 @@
         }
       }
     },
+    "Notes" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "メモ"
+          }
+        }
+      }
+    },
     "Occurred %@" : {
       "localizations" : {
         "ja" : {
@@ -361,6 +424,16 @@
         }
       }
     },
+    "Order from the local roastery." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "地元の焙煎所から注文する。"
+          }
+        }
+      }
+    },
     "OS Version" : {
       "localizations" : {
         "ja" : {
@@ -377,6 +450,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "期間"
+          }
+        }
+      }
+    },
+    "Personal" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "個人"
           }
         }
       }
@@ -450,6 +534,58 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "地域"
+          }
+        }
+      }
+    },
+    "Replace the worn-out pair." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "古くなったものを買い替える。"
+          }
+        }
+      }
+    },
+    "Reserve hotel and flights." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ホテルと航空券を予約する。"
+          }
+        }
+      }
+    },
+    "Running Shoes" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ランニングシューズ"
+          }
+        }
+      }
+    },
+    "Sample" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "サンプル"
+          }
+        }
+      }
+    },
+    "Sample suggestion" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "サンプル提案"
           }
         }
       }
@@ -590,6 +726,16 @@
         }
       }
     },
+    "Surprise for Alice." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "アリスへのサプライズ。"
+          }
+        }
+      }
+    },
     "Tag" : {
 
     },
@@ -659,6 +805,17 @@
         }
       }
     },
+    "Travel" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "旅行"
+          }
+        }
+      }
+    },
     "Update Required" : {
 
     },
@@ -674,6 +831,16 @@
     },
     "Update Tag" : {
 
+    },
+    "Vacation Booking" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "休暇の予約"
+          }
+        }
+      }
     },
     "Version 1.0.0" : {
       "localizations" : {
@@ -691,6 +858,27 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ウェブサイトを表示"
+          }
+        }
+      }
+    },
+    "Work" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "仕事"
+          }
+        }
+      }
+    },
+    "WWDC 2025" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "WWDC 2025"
           }
         }
       }

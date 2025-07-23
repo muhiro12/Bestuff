@@ -59,8 +59,8 @@ struct StuffView: View {
         StuffView()
             .environment(
                 Stuff.create(
-                    title: "Sample",
-                    note: "Notes",
+                    title: String(localized: "Sample"),
+                    note: String(localized: "Notes"),
                     score: 80,
                     occurredAt: .now,
                     createdAt: .now

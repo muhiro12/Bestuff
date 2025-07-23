@@ -21,5 +21,5 @@ struct PlanView: View {
 }
 
 #Preview(traits: .sampleData) {
-    PlanView(suggestion: "Sample suggestion")
+    PlanView(suggestion: String(localized: "Sample suggestion"))
 }
