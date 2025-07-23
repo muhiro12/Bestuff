@@ -25,12 +25,20 @@ struct StuffRow: View {
 }
 
 #Preview(traits: .sampleData) {
-    StuffRow()
-        .environment(
-            Stuff.create(
-                title: String(localized: "Sample"),
-                occurredAt: .now,
-                createdAt: .now
-            )
+    let schema: Schema = .init([Stuff.self])
+    let configuration: ModelConfiguration = .init(schema: schema, isStoredInMemoryOnly: true)
+    let container: ModelContainer = try! .init(for: schema, configurations: [configuration])
+    let context: ModelContext = .init(container)
+    let sample = try! CreateStuffIntent.perform(
+        (
+            context: context,
+            title: String(localized: "Sample"),
+            note: nil,
+            occurredAt: .now,
+            tags: []
         )
+    )
+    return StuffRow()
+        .environment(sample)
+        .modelContainer(container)
 }

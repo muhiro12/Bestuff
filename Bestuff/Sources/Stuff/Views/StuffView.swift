@@ -55,16 +55,22 @@ struct StuffView: View {
 }
 
 #Preview(traits: .sampleData) {
-    NavigationStack {
+    let schema: Schema = .init([Stuff.self])
+    let configuration: ModelConfiguration = .init(schema: schema, isStoredInMemoryOnly: true)
+    let container: ModelContainer = try! .init(for: schema, configurations: [configuration])
+    let context: ModelContext = .init(container)
+    let sample = try! CreateStuffIntent.perform(
+        (
+            context: context,
+            title: String(localized: "Sample"),
+            note: String(localized: "Notes"),
+            occurredAt: .now,
+            tags: []
+        )
+    )
+    return NavigationStack {
         StuffView()
-            .environment(
-                Stuff.create(
-                    title: String(localized: "Sample"),
-                    note: String(localized: "Notes"),
-                    score: 80,
-                    occurredAt: .now,
-                    createdAt: .now
-                )
-            )
+            .environment(sample)
     }
+    .modelContainer(container)
 }
