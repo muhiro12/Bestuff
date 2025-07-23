@@ -30,8 +30,8 @@ struct StuffRow: View {
     StuffRow()
         .environment(
             Stuff.create(
-                title: "Sample",
-                category: "General",
+                title: String(localized: "Sample"),
+                category: String(localized: "General"),
                 occurredAt: .now,
                 createdAt: .now
             )

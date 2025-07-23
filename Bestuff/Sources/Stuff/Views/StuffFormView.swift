@@ -124,8 +124,8 @@ struct StuffFormView: View {
     StuffFormView()
         .environment(
             Stuff.create(
-                title: "Sample",
-                category: "General",
+                title: String(localized: "Sample"),
+                category: String(localized: "General"),
                 occurredAt: .now,
                 createdAt: .now
             )
