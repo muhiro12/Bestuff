@@ -129,7 +129,7 @@ struct StuffListView: View {
         } else {
             result = stuffs.filter { model in
                 model.title.localizedCaseInsensitiveContains(searchText) ||
-                    model.category.localizedCaseInsensitiveContains(searchText)
+                    (model.note?.localizedCaseInsensitiveContains(searchText) ?? false)
             }
         }
         return result.sorted { first, second in

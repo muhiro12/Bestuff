@@ -15,7 +15,6 @@ struct DeleteStuffIntentTests {
             (
                 context: context,
                 title: "Title",
-                category: "General",
                 note: nil,
                 occurredAt: .now
             )

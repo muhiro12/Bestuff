@@ -15,8 +15,6 @@ struct StuffRow: View {
         VStack(alignment: .leading) {
             Text(stuff.title)
                 .font(.headline)
-            Text(stuff.category)
-                .font(.subheadline)
             if let note = stuff.note, !note.isEmpty {
                 Text(note)
                     .font(.footnote)
@@ -31,7 +29,6 @@ struct StuffRow: View {
         .environment(
             Stuff.create(
                 title: "Sample",
-                category: "General",
                 occurredAt: .now,
                 createdAt: .now
             )

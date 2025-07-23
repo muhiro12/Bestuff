@@ -6,7 +6,7 @@ speech using App Intents and a language model.
 
 ## Features
 
-- Record stuff with a title, category, note and score
+- Record stuff with a title, note and score
 - Predict new entries from spoken text
 - Browse and search the saved items
 - Group items with custom tags

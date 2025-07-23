@@ -102,7 +102,6 @@ struct DebugListView: View {
                     (
                         context: modelContext,
                         title: stuff.title,
-                        category: stuff.category,
                         note: stuff.note,
                         occurredAt: .now
                     )
@@ -133,16 +132,15 @@ struct DebugListView: View {
 struct SampleData {
     struct StuffData {
         let title: String
-        let category: String
         let note: String?
     }
 
     static let stuffs: [StuffData] = [
-        .init(title: "Coffee Beans", category: "Groceries", note: "Order from the local roastery."),
-        .init(title: "Running Shoes", category: "Fitness", note: "Replace the worn-out pair."),
-        .init(title: "Conference Tickets", category: "Work", note: "WWDC 2025"),
-        .init(title: "Vacation Booking", category: "Travel", note: "Reserve hotel and flights."),
-        .init(title: "Birthday Gift", category: "Personal", note: "Surprise for Alice.")
+        .init(title: "Coffee Beans", note: "Order from the local roastery."),
+        .init(title: "Running Shoes", note: "Replace the worn-out pair."),
+        .init(title: "Conference Tickets", note: "WWDC 2025"),
+        .init(title: "Vacation Booking", note: "Reserve hotel and flights."),
+        .init(title: "Birthday Gift", note: "Surprise for Alice.")
     ]
 }
 

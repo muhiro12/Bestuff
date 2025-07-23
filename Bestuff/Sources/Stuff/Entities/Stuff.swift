@@ -11,7 +11,6 @@ import SwiftData
 @Model
 nonisolated final class Stuff {
     private(set) var title: String
-    private(set) var category: String
     private(set) var note: String?
     private(set) var score: Int
     @Relationship(inverse: \Tag.stuffs)
@@ -21,7 +20,6 @@ nonisolated final class Stuff {
 
     private init(
         title: String,
-        category: String,
         note: String? = nil,
         score: Int = 0,
         occurredAt: Date = .now,
@@ -29,7 +27,6 @@ nonisolated final class Stuff {
         tags: [Tag] = []
     ) {
         self.title = title
-        self.category = category
         self.note = note
         self.score = score
         self.occurredAt = occurredAt
@@ -39,7 +36,6 @@ nonisolated final class Stuff {
 
     static func create(
         title: String,
-        category: String,
         note: String? = nil,
         score: Int = 0,
         occurredAt: Date = .now,
@@ -48,7 +44,6 @@ nonisolated final class Stuff {
     ) -> Stuff {
         .init(
             title: title,
-            category: category,
             note: note,
             score: score,
             occurredAt: occurredAt,
@@ -59,7 +54,6 @@ nonisolated final class Stuff {
 
     func update(
         title: String? = nil,
-        category: String? = nil,
         note: String? = nil,
         score: Int? = nil,
         occurredAt: Date? = nil,
@@ -67,9 +61,6 @@ nonisolated final class Stuff {
     ) {
         if let title {
             self.title = title
-        }
-        if let category {
-            self.category = category
         }
         if let note {
             self.note = note
