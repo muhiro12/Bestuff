@@ -7,12 +7,27 @@
 
 @testable import Bestuff
 import Foundation
+import SwiftData
 import Testing
 
 struct BestuffTests {
+    let context: ModelContext
+
+    init() {
+        context = testContext
+    }
+
     @Test func stuffInitialization() throws {
-        let stuff = Stuff.create(title: "Sample", note: "Note", occurredAt: .now)
-        #expect(stuff.title == "Sample")
-        #expect(stuff.note == "Note")
+        let model = try CreateStuffIntent.perform(
+            (
+                context: context,
+                title: "Sample",
+                note: "Note",
+                occurredAt: .now,
+                tags: []
+            )
+        )
+        #expect(model.title == "Sample")
+        #expect(model.note == "Note")
     }
 }
