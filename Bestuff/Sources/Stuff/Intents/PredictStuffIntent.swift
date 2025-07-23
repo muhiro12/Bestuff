@@ -22,7 +22,6 @@ struct PredictStuffIntent: AppIntent, IntentPerformer {
         let prediction = try await generatePrediction(from: speech)
         let model = Stuff.create(
             title: prediction.title,
-            category: prediction.category,
             note: prediction.note,
             score: prediction.score,
             occurredAt: .now
@@ -46,7 +45,7 @@ struct PredictStuffIntent: AppIntent, IntentPerformer {
     private static func generatePrediction(from text: String) async throws -> StuffEntity {
         let language = Locale.current.language.languageCode?.identifier ?? Locale.current.identifier
         let prompt = """
-            Based on the following user speech, guess a title, category, optional note and a score from 0 to 100 for stuff the user might want to create. Respond in \(language).
+            Based on the following user speech, guess a title, optional note and a score from 0 to 100 for stuff the user might want to create. Respond in \(language).
             Speech: \(text)
             """
         let session = LanguageModelSession()

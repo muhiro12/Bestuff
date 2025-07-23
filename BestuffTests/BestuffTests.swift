@@ -11,9 +11,8 @@ import Testing
 
 struct BestuffTests {
     @Test func stuffInitialization() throws {
-        let stuff = Stuff.create(title: "Sample", category: "General", note: "Note", occurredAt: .now)
+        let stuff = Stuff.create(title: "Sample", note: "Note", occurredAt: .now)
         #expect(stuff.title == "Sample")
-        #expect(stuff.category == "General")
         #expect(stuff.note == "Note")
     }
 }

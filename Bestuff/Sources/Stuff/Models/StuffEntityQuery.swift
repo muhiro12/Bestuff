@@ -26,7 +26,7 @@ struct StuffEntityQuery: EntityStringQuery {
         return try modelContainer.mainContext.fetch(
             FetchDescriptor<Stuff>(predicate: #Predicate {
                 $0.title.localizedStandardContains(string) ||
-                    $0.category.localizedStandardContains(string)
+                    ($0.note ?? "").localizedStandardContains(string)
             })
         ).compactMap(StuffEntity.init)
     }

@@ -2,7 +2,13 @@ import AppIntents
 import SwiftData
 
 struct CreateStuffIntent: AppIntent, IntentPerformer {
-    typealias Input = (context: ModelContext, title: String, category: String, note: String?, occurredAt: Date)
+    typealias Input = (
+        context: ModelContext,
+        title: String,
+        note: String?,
+        occurredAt: Date,
+        tags: [Tag]
+    )
     typealias Output = Stuff
 
     nonisolated static var title: LocalizedStringResource {
@@ -12,25 +18,25 @@ struct CreateStuffIntent: AppIntent, IntentPerformer {
     @Parameter(title: "Title")
     private var title: String
 
-    @Parameter(title: "Category")
-    private var category: String
-
     @Parameter(title: "Note")
     private var note: String?
 
     @Parameter(title: "Date")
     private var occurredAt: Date
 
+    @Parameter(title: "Tags")
+    private var tags: [TagEntity]
+
     @Dependency private var modelContainer: ModelContainer
 
     static func perform(_ input: Input) throws -> Output {
-        let (context, title, category, note, occurredAt) = input
-        Logger(#file).info("Creating stuff titled '\(title)' in category '\(category)'")
+        let (context, title, note, occurredAt, tags) = input
+        Logger(#file).info("Creating stuff titled '\(title)'")
         let model = Stuff.create(
             title: title,
-            category: category,
             note: note,
-            occurredAt: occurredAt
+            occurredAt: occurredAt,
+            tags: tags
         )
         context.insert(model)
         Logger(#file).notice("Created stuff with id \(String(describing: model.id))")
@@ -39,7 +45,16 @@ struct CreateStuffIntent: AppIntent, IntentPerformer {
 
     func perform() throws -> some ReturnsValue<StuffEntity> {
         Logger(#file).info("Running CreateStuffIntent")
-        let model = try Self.perform((context: modelContainer.mainContext, title: title, category: category, note: note, occurredAt: occurredAt))
+        let tagModels = try tags.map { try $0.model(in: modelContainer.mainContext) }
+        let model = try Self.perform(
+            (
+                context: modelContainer.mainContext,
+                title: title,
+                note: note,
+                occurredAt: occurredAt,
+                tags: tagModels
+            )
+        )
         guard let entity = StuffEntity(model) else {
             Logger(#file).error("Failed to convert Stuff to StuffEntity")
             throw StuffError.stuffNotFound

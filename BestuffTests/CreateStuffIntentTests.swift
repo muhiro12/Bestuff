@@ -11,17 +11,16 @@ struct CreateStuffIntentTests {
     }
 
     @Test func perform() throws {
+        let tag = try CreateTagIntent.perform((context: context, name: "Tag"))
         let model = try CreateStuffIntent.perform(
             (
                 context: context,
                 title: "Title",
-                category: "General",
                 note: nil,
-                occurredAt: .now
+                occurredAt: .now,
+                tags: [tag]
             )
         )
-        let tag = try CreateTagIntent.perform((context: context, name: "Tag"))
-        model.update(tags: [tag])
         let stuffs = try context.fetch(FetchDescriptor<Stuff>())
         #expect(stuffs.count == 1)
         #expect(stuffs.first?.tags?.count == 1)
