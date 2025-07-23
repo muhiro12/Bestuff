@@ -14,9 +14,6 @@ struct StuffView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
-                Text(stuff.category)
-                    .font(.title3)
-                    .foregroundStyle(.secondary)
                 if let note = stuff.note {
                     Text(note)
                 }
@@ -44,7 +41,6 @@ struct StuffView: View {
                 ShareLink(
                     item: [
                         stuff.title,
-                        stuff.category,
                         "Score: \(stuff.score)",
                         stuff.note
                     ].compactMap(\.self).joined(separator: "\n")
@@ -64,7 +60,6 @@ struct StuffView: View {
             .environment(
                 Stuff.create(
                     title: String(localized: "Sample"),
-                    category: String(localized: "General"),
                     note: String(localized: "Notes"),
                     score: 80,
                     occurredAt: .now,

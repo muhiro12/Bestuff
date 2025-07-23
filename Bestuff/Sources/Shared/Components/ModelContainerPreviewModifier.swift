@@ -17,7 +17,6 @@ struct ModelContainerPreviewModifier: PreviewModifier {
             context.insert(
                 Stuff.create(
                     title: stuff.title,
-                    category: stuff.category,
                     note: stuff.note,
                     occurredAt: .now
                 )
