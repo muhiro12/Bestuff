@@ -71,6 +71,7 @@
       }
     },
     "Category" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -276,6 +277,9 @@
       }
     },
     "Name" : {
+
+    },
+    "New Tags (comma separated)" : {
 
     },
     "Next Month" : {

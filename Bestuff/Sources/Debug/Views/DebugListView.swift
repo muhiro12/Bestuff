@@ -103,7 +103,8 @@ struct DebugListView: View {
                         context: modelContext,
                         title: stuff.title,
                         note: stuff.note,
-                        occurredAt: .now
+                        occurredAt: Date.now,
+                        tags: []
                     )
                 )
             }

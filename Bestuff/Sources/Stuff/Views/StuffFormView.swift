@@ -95,7 +95,6 @@ struct StuffFormView: View {
                     .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
                     .filter { !$0.isEmpty }
                     .compactMap { try? CreateTagIntent.perform((context: modelContext, name: $0)) }
-                    .compactMap { try? $0.model(in: modelContext) }
             )
             selectedTags.formUnion(newTagSet)
             if let stuff {
