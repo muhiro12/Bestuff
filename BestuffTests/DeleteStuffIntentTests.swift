@@ -16,7 +16,8 @@ struct DeleteStuffIntentTests {
                 context: context,
                 title: "Title",
                 note: nil,
-                occurredAt: .now
+                occurredAt: .now,
+                tags: []
             )
         )
         #expect(try context.fetch(FetchDescriptor<Stuff>()).count == 1)
