@@ -17,7 +17,7 @@ struct StuffFormView: View {
     private var modelContext
 
     @State private var title = ""
-    @State private var category = ""
+    @State private var newTags = ""
     @State private var note = ""
     @State private var occurredAt = Date.now
     @State private var selectedTags: Set<Tag> = []
@@ -27,7 +27,6 @@ struct StuffFormView: View {
         Form {
             Section("Information") {
                 TextField("Title", text: $title)
-                TextField("Category", text: $category)
                 TextField("Note", text: $note)
                 DatePicker(
                     "Date",
@@ -36,6 +35,10 @@ struct StuffFormView: View {
                 )
             }
             Section("Tags") {
+                TextField(
+                    "New Tags (comma separated)",
+                    text: $newTags
+                )
                 Button {
                     Logger(#file).info("Tag picker button tapped")
                     isTagPickerPresented = true
@@ -73,7 +76,6 @@ struct StuffFormView: View {
         }
         .task {
             title = stuff?.title ?? .empty
-            category = stuff?.category ?? .empty
             note = stuff?.note ?? .empty
             occurredAt = stuff?.occurredAt ?? .now
             selectedTags = Set(stuff?.tags ?? [])
@@ -87,33 +89,38 @@ struct StuffFormView: View {
 
     private func save() {
         withAnimation {
+            let newTagSet: Set<Tag> = Set(
+                newTags
+                    .split(separator: ",")
+                    .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+                    .filter { !$0.isEmpty }
+                    .compactMap { try? CreateTagIntent.perform((context: modelContext, name: $0)) }
+            )
+            selectedTags.formUnion(newTagSet)
             if let stuff {
                 Logger(#file).info("Updating stuff \(String(describing: stuff.id))")
                 _ = try? UpdateStuffIntent.perform(
                     (
                         model: stuff,
                         title: title,
-                        category: category,
                         note: note.isEmpty ? nil : note,
-                        occurredAt: occurredAt
+                        occurredAt: occurredAt,
+                        tags: Array(selectedTags)
                     )
                 )
-                stuff.update(tags: Array(selectedTags))
                 Logger(#file).notice("Updated stuff \(String(describing: stuff.id))")
             } else {
                 Logger(#file).info("Creating new stuff")
-                if let model = try? CreateStuffIntent.perform(
+                _ = try? CreateStuffIntent.perform(
                     (
                         context: modelContext,
                         title: title,
-                        category: category,
                         note: note.isEmpty ? nil : note,
-                        occurredAt: occurredAt
+                        occurredAt: occurredAt,
+                        tags: Array(selectedTags)
                     )
-                ) {
-                    model.update(tags: Array(selectedTags))
-                    Logger(#file).notice("Created new stuff")
-                }
+                )
+                Logger(#file).notice("Created new stuff")
             }
             dismiss()
         }
@@ -121,13 +128,20 @@ struct StuffFormView: View {
 }
 
 #Preview(traits: .sampleData) {
-    StuffFormView()
-        .environment(
-            Stuff.create(
-                title: "Sample",
-                category: "General",
-                occurredAt: .now,
-                createdAt: .now
-            )
+    let schema: Schema = .init([Stuff.self])
+    let configuration: ModelConfiguration = .init(schema: schema, isStoredInMemoryOnly: true)
+    let container: ModelContainer = try! .init(for: schema, configurations: [configuration])
+    let context: ModelContext = .init(container)
+    let sample = try! CreateStuffIntent.perform(
+        (
+            context: context,
+            title: String(localized: "Sample"),
+            note: nil,
+            occurredAt: .now,
+            tags: []
         )
+    )
+    return StuffFormView()
+        .environment(sample)
+        .modelContainer(container)
 }

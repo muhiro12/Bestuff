@@ -5,6 +5,7 @@
 //  Created by Hiromu Nakano on 2025/07/08.
 //
 
+import SwiftData
 import SwiftUI
 
 struct StuffRow: View {
@@ -15,8 +16,6 @@ struct StuffRow: View {
         VStack(alignment: .leading) {
             Text(stuff.title)
                 .font(.headline)
-            Text(stuff.category)
-                .font(.subheadline)
             if let note = stuff.note, !note.isEmpty {
                 Text(note)
                     .font(.footnote)
@@ -27,13 +26,20 @@ struct StuffRow: View {
 }
 
 #Preview(traits: .sampleData) {
-    StuffRow()
-        .environment(
-            Stuff.create(
-                title: "Sample",
-                category: "General",
-                occurredAt: .now,
-                createdAt: .now
-            )
+    let schema: Schema = .init([Stuff.self])
+    let configuration: ModelConfiguration = .init(schema: schema, isStoredInMemoryOnly: true)
+    let container: ModelContainer = try! .init(for: schema, configurations: [configuration])
+    let context: ModelContext = .init(container)
+    let sample = try! CreateStuffIntent.perform(
+        (
+            context: context,
+            title: String(localized: "Sample"),
+            note: nil,
+            occurredAt: .now,
+            tags: []
         )
+    )
+    return StuffRow()
+        .environment(sample)
+        .modelContainer(container)
 }

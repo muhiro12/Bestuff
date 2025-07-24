@@ -31,7 +31,7 @@ struct PlanStuffIntent: AppIntent, IntentPerformer {
         descriptor.fetchLimit = 5
         let models = try context.fetch(descriptor)
         let items = models.map {
-            "\($0.title) (\($0.category)) score \($0.score)"
+            "\($0.title) score \($0.score)"
         }.joined(separator: "\n")
         let language = Locale.current.language.languageCode?.identifier ?? Locale.current.identifier
         let prompt = """

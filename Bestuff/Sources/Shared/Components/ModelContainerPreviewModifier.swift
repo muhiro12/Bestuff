@@ -14,12 +14,13 @@ struct ModelContainerPreviewModifier: PreviewModifier {
         )
         let context: ModelContext = .init(container)
         for stuff in SampleData.stuffs {
-            context.insert(
-                Stuff.create(
+            _ = try? CreateStuffIntent.perform(
+                (
+                    context: context,
                     title: stuff.title,
-                    category: stuff.category,
                     note: stuff.note,
-                    occurredAt: .now
+                    occurredAt: .now,
+                    tags: []
                 )
             )
         }

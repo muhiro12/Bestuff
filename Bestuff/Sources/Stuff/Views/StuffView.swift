@@ -5,6 +5,7 @@
 //  Created by Hiromu Nakano on 2025/07/08.
 //
 
+import SwiftData
 import SwiftUI
 
 struct StuffView: View {
@@ -14,9 +15,6 @@ struct StuffView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
-                Text(stuff.category)
-                    .font(.title3)
-                    .foregroundStyle(.secondary)
                 if let note = stuff.note {
                     Text(note)
                 }
@@ -44,7 +42,6 @@ struct StuffView: View {
                 ShareLink(
                     item: [
                         stuff.title,
-                        stuff.category,
                         "Score: \(stuff.score)",
                         stuff.note
                     ].compactMap(\.self).joined(separator: "\n")
@@ -59,17 +56,22 @@ struct StuffView: View {
 }
 
 #Preview(traits: .sampleData) {
-    NavigationStack {
+    let schema: Schema = .init([Stuff.self])
+    let configuration: ModelConfiguration = .init(schema: schema, isStoredInMemoryOnly: true)
+    let container: ModelContainer = try! .init(for: schema, configurations: [configuration])
+    let context: ModelContext = .init(container)
+    let sample = try! CreateStuffIntent.perform(
+        (
+            context: context,
+            title: String(localized: "Sample"),
+            note: String(localized: "Notes"),
+            occurredAt: .now,
+            tags: []
+        )
+    )
+    return NavigationStack {
         StuffView()
-            .environment(
-                Stuff.create(
-                    title: "Sample",
-                    category: "General",
-                    note: "Notes",
-                    score: 80,
-                    occurredAt: .now,
-                    createdAt: .now
-                )
-            )
+            .environment(sample)
     }
+    .modelContainer(container)
 }

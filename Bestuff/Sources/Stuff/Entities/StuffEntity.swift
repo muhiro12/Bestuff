@@ -6,9 +6,9 @@ import SwiftData
 nonisolated struct StuffEntity {
     let id: String
     let title: String
-    let category: String
     let note: String?
     let score: Int
+    let tags: [String]
     @Guide(description: "yyyyMMdd format")
     let occurredAt: String
 }
@@ -24,7 +24,7 @@ extension StuffEntity: AppEntity {
     var displayRepresentation: DisplayRepresentation {
         .init(
             title: .init(stringLiteral: title),
-            subtitle: .init(stringLiteral: category)
+            subtitle: .init(stringLiteral: note ?? "")
         )
     }
 }
@@ -45,9 +45,9 @@ extension StuffEntity: ModelBridgeable {
         self.init(
             id: encodedID,
             title: model.title,
-            category: model.category,
             note: model.note,
             score: model.score,
+            tags: model.tags?.map(\.name) ?? [],
             occurredAt: occurredAtString
         )
     }
@@ -63,6 +63,10 @@ extension StuffEntity: ModelBridgeable {
             throw StuffError.stuffNotFound
         }
         model.update(occurredAt: occurredDate)
+        if !tags.isEmpty {
+            let tagModels: [Tag] = tags.map { Tag.findOrCreate(name: $0, in: context) }
+            model.update(tags: tagModels)
+        }
         return model
     }
 }
