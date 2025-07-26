@@ -3,7 +3,7 @@ import SwiftUI
 
 struct ModelContainerPreviewModifier: PreviewModifier {
     static func makeSharedContext() throws -> ModelContainer {
-        let schema: Schema = .init([Stuff.self])
+        let schema: Schema = .init([Stuff.self, Tag.self])
         let configuration: ModelConfiguration = .init(
             schema: schema,
             isStoredInMemoryOnly: true
@@ -14,13 +14,16 @@ struct ModelContainerPreviewModifier: PreviewModifier {
         )
         let context: ModelContext = .init(container)
         for stuff in SampleData.stuffs {
+            let tagModels: [Tag] = stuff.tags.map {
+                Tag.findOrCreate(name: $0, in: context)
+            }
             _ = try? CreateStuffIntent.perform(
                 (
                     context: context,
                     title: stuff.title,
                     note: stuff.note,
                     occurredAt: .now,
-                    tags: []
+                    tags: tagModels
                 )
             )
         }

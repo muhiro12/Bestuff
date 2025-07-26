@@ -98,13 +98,16 @@ struct DebugListView: View {
         Logger(#file).info("Creating sample data")
         withAnimation {
             for stuff in SampleData.stuffs {
+                let tagModels: [Tag] = stuff.tags.map {
+                    Tag.findOrCreate(name: $0, in: modelContext)
+                }
                 _ = try? CreateStuffIntent.perform(
                     (
                         context: modelContext,
                         title: stuff.title,
                         note: stuff.note,
                         occurredAt: Date.now,
-                        tags: []
+                        tags: tagModels
                     )
                 )
             }
@@ -134,28 +137,34 @@ struct SampleData {
     struct StuffData {
         let title: String
         let note: String?
+        let tags: [String]
     }
 
     static let stuffs: [StuffData] = [
         .init(
             title: String(localized: "Coffee Beans"),
-            note: String(localized: "Order from the local roastery.")
+            note: String(localized: "Order from the local roastery."),
+            tags: [String(localized: "Groceries")]
         ),
         .init(
             title: String(localized: "Running Shoes"),
-            note: String(localized: "Replace the worn-out pair.")
+            note: String(localized: "Replace the worn-out pair."),
+            tags: [String(localized: "Fitness")]
         ),
         .init(
             title: String(localized: "Conference Tickets"),
-            note: String(localized: "WWDC 2025")
+            note: String(localized: "WWDC 2025"),
+            tags: [String(localized: "Work")]
         ),
         .init(
             title: String(localized: "Vacation Booking"),
-            note: String(localized: "Reserve hotel and flights.")
+            note: String(localized: "Reserve hotel and flights."),
+            tags: [String(localized: "Travel")]
         ),
         .init(
             title: String(localized: "Birthday Gift"),
-            note: String(localized: "Surprise for Alice.")
+            note: String(localized: "Surprise for Alice."),
+            tags: [String(localized: "Personal")]
         )
     ]
 }
