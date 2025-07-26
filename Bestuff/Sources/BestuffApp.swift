@@ -27,6 +27,8 @@ struct BestuffApp: App {
 
     private var sharedStore: Store = .init()
     private var sharedConfigurationService: ConfigurationService = .init()
+    @AppStorage(BoolAppStorageKey.isDebugOn)
+    private var isDebugOn
 
     init() {
         sharedStore.open(
@@ -34,6 +36,9 @@ struct BestuffApp: App {
             productIDs: ["com.example.bestuff.subscription"],
             purchasedSubscriptionsDidSet: nil
         )
+#if DEBUG
+        isDebugOn = true
+#endif
     }
 
     var body: some Scene {

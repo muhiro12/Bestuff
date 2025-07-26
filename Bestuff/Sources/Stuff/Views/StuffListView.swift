@@ -25,6 +25,8 @@ struct StuffListView: View {
     @State private var isRecapPresented = false
     @State private var isPlanPresented = false
     @State private var isTagPresented = false
+    @AppStorage(BoolAppStorageKey.isDebugOn)
+    private var isDebugOn
 
     init(
         stuffs: [Stuff]? = nil,
@@ -105,11 +107,11 @@ struct StuffListView: View {
             ToolbarItem(placement: .secondaryAction) {
                 SettingsButton()
             }
-            #if DEBUG
-            ToolbarItem(placement: .secondaryAction) {
-                DebugButton()
+            if isDebugOn {
+                ToolbarItem(placement: .secondaryAction) {
+                    DebugButton()
+                }
             }
-            #endif
         }
         .sheet(isPresented: $isRecapPresented) {
             RecapNavigationView()
