@@ -40,6 +40,9 @@
         }
       }
     },
+    "Are you really going to use DebugMode?" : {
+
+    },
     "Best Stuff" : {
       "localizations" : {
         "ja" : {
