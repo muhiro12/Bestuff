@@ -16,12 +16,16 @@ struct StuffFormView: View {
     @Environment(\.modelContext)
     private var modelContext
 
+    @AppStorage(BoolAppStorageKey.isDebugOn)
+    private var isDebugOn
+
     @State private var title = ""
     @State private var category = ""
     @State private var note = ""
     @State private var occurredAt = Date.now
     @State private var selectedTags: Set<Tag> = []
     @State private var isTagPickerPresented = false
+    @State private var isDebugDialogPresented = false
 
     var body: some View {
         Form {
@@ -62,7 +66,9 @@ struct StuffFormView: View {
         .navigationTitle(stuff == nil ? "Add Stuff" : "Edit Stuff")
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
-                CloseButton()
+                Button(action: cancel) {
+                    Text("Cancel")
+                }
             }
             ToolbarItem(placement: .confirmationAction) {
                 Button("Save", systemImage: "tray.and.arrow.down", action: save)
@@ -82,6 +88,18 @@ struct StuffFormView: View {
             NavigationStack {
                 TagPickerListView(selection: $selectedTags)
             }
+        }
+        .confirmationDialog(
+            "Debug",
+            isPresented: $isDebugDialogPresented
+        ) {
+            Button("OK", role: .destructive) {
+                isDebugOn = true
+                dismiss()
+            }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text("Are you really going to use DebugMode?")
         }
     }
 
@@ -117,6 +135,15 @@ struct StuffFormView: View {
             }
             dismiss()
         }
+    }
+
+    private func cancel() {
+        if title == "Enable Debug" {
+            title = .empty
+            isDebugDialogPresented = true
+            return
+        }
+        dismiss()
     }
 }
 
