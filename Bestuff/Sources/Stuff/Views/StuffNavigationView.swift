@@ -27,6 +27,12 @@ struct StuffNavigationView: View {
             }
         }
         .searchable(text: $searchText)
+        .onChange(of: selection) { newSelection in
+            Logger(#file).notice("Selection changed to \(String(describing: newSelection?.id))")
+        }
+        .onAppear {
+            Logger(#file).info("StuffNavigationView appeared")
+        }
     }
 }
 

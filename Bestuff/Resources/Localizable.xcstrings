@@ -218,7 +218,11 @@
         }
       }
     },
+    "Created" : {
+
+    },
     "Created %@" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -469,7 +473,11 @@
         }
       }
     },
+    "Occurred" : {
+
+    },
     "Occurred %@" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -683,6 +691,9 @@
           }
         }
       }
+    },
+    "Score" : {
+
     },
     "Score: %lld" : {
       "localizations" : {

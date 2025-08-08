@@ -13,7 +13,7 @@ struct StuffView: View {
     private var stuff
 
     var body: some View {
-        List {
+        Form {
             if let note = stuff.note {
                 Section("Note") {
                     Text(note)
@@ -49,6 +49,9 @@ struct StuffView: View {
                 EditStuffButton()
                     .environment(stuff)
             }
+        }
+        .onAppear {
+            Logger(#file).info("StuffView appeared for id \(String(describing: stuff.id))")
         }
     }
 }
