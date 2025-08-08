@@ -1,6 +1,7 @@
 import AppIntents
 import SwiftData
 
+@MainActor
 struct DeleteStuffIntent: AppIntent, IntentPerformer {
     typealias Input = Stuff
     typealias Output = Void
@@ -21,7 +22,6 @@ struct DeleteStuffIntent: AppIntent, IntentPerformer {
         Logger(#file).notice("Deleted stuff with id \(String(describing: model.id))")
     }
 
-    @MainActor
     func perform() throws -> some IntentResult {
         let entity = stuff
         let model = try entity.model(in: modelContainer.mainContext)

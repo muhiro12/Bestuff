@@ -10,6 +10,7 @@ import Foundation
 import SwiftData
 import Testing
 
+@MainActor
 struct BestuffTests {
     let context: ModelContext
 

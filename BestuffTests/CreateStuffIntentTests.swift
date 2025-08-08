@@ -3,6 +3,7 @@ import Foundation
 import SwiftData
 import Testing
 
+@MainActor
 struct CreateStuffIntentTests {
     let context: ModelContext
 

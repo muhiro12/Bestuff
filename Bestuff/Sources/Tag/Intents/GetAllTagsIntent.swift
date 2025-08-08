@@ -1,6 +1,7 @@
 import AppIntents
 import SwiftData
 
+@MainActor
 struct GetAllTagsIntent: AppIntent, IntentPerformer {
     typealias Input = ModelContext
     typealias Output = [TagEntity]
@@ -15,7 +16,6 @@ struct GetAllTagsIntent: AppIntent, IntentPerformer {
         try input.fetch(FetchDescriptor<Tag>()).compactMap(TagEntity.init)
     }
 
-    @MainActor
     func perform() throws -> some ReturnsValue<[TagEntity]> {
         let tags = try Self.perform(modelContainer.mainContext)
         return .result(value: tags)

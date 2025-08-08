@@ -9,9 +9,9 @@ import Foundation
 @_exported import OSLog
 
 extension Logger {
-    nonisolated(unsafe) init(_ file: String) {
+    init(_ file: String) {
         self.init(
-            subsystem: ProcessInfo.processInfo.processName,
+            subsystem: Bundle.main.bundleIdentifier!,
             category: file
         )
     }
