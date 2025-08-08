@@ -2,7 +2,7 @@
 import Testing
 
 struct ConfigurationServiceTests {
-    @Test func updateCheck() async throws {
+    @Test @MainActor func updateCheck() async throws {
         let service = ConfigurationService()
         try? await service.load()
         _ = service.isUpdateRequired()

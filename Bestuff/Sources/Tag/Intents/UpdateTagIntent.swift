@@ -10,7 +10,7 @@ struct UpdateTagIntent: AppIntent, IntentPerformer {
 
     @Parameter(title: "Name")
     private var name: String
-    
+
     @Dependency private var modelContainer: ModelContainer
 
     nonisolated static var title: LocalizedStringResource {
@@ -22,6 +22,7 @@ struct UpdateTagIntent: AppIntent, IntentPerformer {
         return input.model
     }
 
+    @MainActor
     func perform() throws -> some ReturnsValue<TagEntity> {
         let model = try tag.model(in: modelContainer.mainContext)
         let updated = try Self.perform((model: model, name: name))
