@@ -13,28 +13,26 @@ struct StuffView: View {
     private var stuff
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 16) {
-                if let note = stuff.note {
+        List {
+            if let note = stuff.note {
+                Section("Note") {
                     Text(note)
                 }
-                Text("Score: \(stuff.score)")
+            }
+            Section("Score") {
+                Text("\(stuff.score)")
                     .font(.headline)
-                Text("Occurred \(stuff.occurredAt.formatted(.dateTime))")
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-                Text("Created \(stuff.createdAt.formatted(.dateTime))")
+            }
+            Section("Occurred") {
+                Text(stuff.occurredAt.formatted(.dateTime))
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding()
-            .background(.thinMaterial)
-            .clipShape(
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
-            )
-            .glassEffect()
-            .padding()
+            Section("Created") {
+                Text(stuff.createdAt.formatted(.dateTime))
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+            }
         }
         .navigationTitle(stuff.title)
         .toolbar {
