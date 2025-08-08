@@ -3,6 +3,7 @@ import Foundation
 import SwiftData
 import Testing
 
+@MainActor
 struct CreateStuffIntentTests {
     let context: ModelContext
 
@@ -12,7 +13,7 @@ struct CreateStuffIntentTests {
 
     @Test func perform() throws {
         let tag = try CreateTagIntent.perform((context: context, name: "Tag"))
-        let model = try CreateStuffIntent.perform(
+        _ = try CreateStuffIntent.perform(
             (
                 context: context,
                 title: "Title",

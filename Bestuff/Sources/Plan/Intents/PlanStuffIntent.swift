@@ -9,6 +9,7 @@ import AppIntents
 import FoundationModels
 import SwiftData
 
+@MainActor
 struct PlanStuffIntent: AppIntent, IntentPerformer {
     typealias Input = (context: ModelContext, period: PlanPeriod)
     typealias Output = PlanSuggestion
@@ -48,7 +49,6 @@ struct PlanStuffIntent: AppIntent, IntentPerformer {
         return response.content
     }
 
-    @MainActor
     func perform() async throws -> some ReturnsValue<[String]> {
         Logger(#file).info("Running PlanStuffIntent")
         let result = try await Self.perform(

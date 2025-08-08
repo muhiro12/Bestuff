@@ -36,9 +36,9 @@ struct BestuffApp: App {
             productIDs: ["com.example.bestuff.subscription"],
             purchasedSubscriptionsDidSet: nil
         )
-#if DEBUG
+        #if DEBUG
         isDebugOn = true
-#endif
+        #endif
     }
 
     var body: some Scene {

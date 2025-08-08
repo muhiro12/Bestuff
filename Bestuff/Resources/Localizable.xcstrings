@@ -28,7 +28,14 @@
       }
     },
     "Add Tag" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "タグを追加"
+          }
+        }
+      }
     },
     "App Version" : {
       "localizations" : {
@@ -41,7 +48,14 @@
       }
     },
     "Are you really going to use DebugMode?" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "本当にデバッグモードを使用しますか？"
+          }
+        }
+      }
     },
     "Best Stuff" : {
       "localizations" : {
@@ -195,9 +209,20 @@
       }
     },
     "Create Tag" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "タグを作成"
+          }
+        }
+      }
+    },
+    "Created" : {
 
     },
     "Created %@" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -248,7 +273,14 @@
       }
     },
     "Done" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "完了"
+          }
+        }
+      }
     },
     "Edit Stuff" : {
       "localizations" : {
@@ -261,7 +293,14 @@
       }
     },
     "Edit Tag" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "タグを編集"
+          }
+        }
+      }
     },
     "Fitness" : {
       "localizations" : {
@@ -294,10 +333,24 @@
       }
     },
     "Get All Tags" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "すべてのタグを取得"
+          }
+        }
+      }
     },
     "Get Tag By ID" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "IDでタグを取得"
+          }
+        }
+      }
     },
     "Groceries" : {
       "localizations" : {
@@ -330,10 +383,24 @@
       }
     },
     "Name" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "名前"
+          }
+        }
+      }
     },
     "New Tags (comma separated)" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新しいタグ（カンマ区切り）"
+          }
+        }
+      }
     },
     "Next Month" : {
       "localizations" : {
@@ -376,7 +443,14 @@
       }
     },
     "None" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "なし"
+          }
+        }
+      }
     },
     "Note" : {
       "localizations" : {
@@ -399,7 +473,11 @@
         }
       }
     },
+    "Occurred" : {
+
+    },
     "Occurred %@" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -413,7 +491,14 @@
       "shouldTranslate" : false
     },
     "Open App Store" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App Store を開く"
+          }
+        }
+      }
     },
     "Options" : {
       "localizations" : {
@@ -496,7 +581,14 @@
       }
     },
     "Please update Bestuff to the latest version to continue using it." : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bestuff を最新バージョンに更新して使用を続けてください。"
+          }
+        }
+      }
     },
     "Predict" : {
       "localizations" : {
@@ -600,6 +692,9 @@
         }
       }
     },
+    "Score" : {
+
+    },
     "Score: %lld" : {
       "localizations" : {
         "ja" : {
@@ -641,7 +736,14 @@
       }
     },
     "Select Tag" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "タグを選択"
+          }
+        }
+      }
     },
     "Settings" : {
       "localizations" : {
@@ -704,7 +806,14 @@
       }
     },
     "Subscription" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "サブスクリプション"
+          }
+        }
+      }
     },
     "Suggestion" : {
       "localizations" : {
@@ -737,13 +846,34 @@
       }
     },
     "Tag" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "タグ"
+          }
+        }
+      }
     },
     "Tag ID" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "タグ ID"
+          }
+        }
+      }
     },
     "Tags" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "タグ"
+          }
+        }
+      }
     },
     "This Week" : {
       "localizations" : {
@@ -816,7 +946,14 @@
       }
     },
     "Update Required" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "アップデートが必要です"
+          }
+        }
+      }
     },
     "Update Stuff" : {
       "localizations" : {
@@ -829,7 +966,14 @@
       }
     },
     "Update Tag" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "タグを更新"
+          }
+        }
+      }
     },
     "Vacation Booking" : {
       "localizations" : {

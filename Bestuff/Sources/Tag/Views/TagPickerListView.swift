@@ -26,7 +26,7 @@ struct TagPickerListView: View {
                 CloseButton()
             }
             ToolbarItem(placement: .confirmationAction) {
-                Button("Done", action: { dismiss() })
+                Button("Done") { dismiss() }
                     .buttonStyle(.borderedProminent)
                     .tint(.accentColor)
             }

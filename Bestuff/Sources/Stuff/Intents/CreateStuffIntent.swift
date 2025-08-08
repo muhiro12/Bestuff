@@ -1,6 +1,7 @@
 import AppIntents
 import SwiftData
 
+@MainActor
 struct CreateStuffIntent: AppIntent, IntentPerformer {
     typealias Input = (
         context: ModelContext,
@@ -43,7 +44,6 @@ struct CreateStuffIntent: AppIntent, IntentPerformer {
         return model
     }
 
-    @MainActor
     func perform() throws -> some ReturnsValue<StuffEntity> {
         Logger(#file).info("Running CreateStuffIntent")
         let tagModels = try tags.map { try $0.model(in: modelContainer.mainContext) }

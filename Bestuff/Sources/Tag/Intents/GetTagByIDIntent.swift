@@ -1,6 +1,7 @@
 import AppIntents
 import SwiftData
 
+@MainActor
 struct GetTagByIDIntent: AppIntent, IntentPerformer {
     typealias Input = (context: ModelContext, id: String)
     typealias Output = TagEntity?
@@ -24,7 +25,6 @@ struct GetTagByIDIntent: AppIntent, IntentPerformer {
         return TagEntity(tag)
     }
 
-    @MainActor
     func perform() throws -> some ReturnsValue<TagEntity?> {
         let entity = try Self.perform((context: modelContainer.mainContext, id: id))
         return .result(value: entity)

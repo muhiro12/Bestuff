@@ -1,6 +1,7 @@
 import AppIntents
 import SwiftData
 
+@MainActor
 struct UpdateTagIntent: AppIntent, IntentPerformer {
     typealias Input = (model: Tag, name: String)
     typealias Output = Tag
@@ -22,7 +23,6 @@ struct UpdateTagIntent: AppIntent, IntentPerformer {
         return input.model
     }
 
-    @MainActor
     func perform() throws -> some ReturnsValue<TagEntity> {
         let model = try tag.model(in: modelContainer.mainContext)
         let updated = try Self.perform((model: model, name: name))
