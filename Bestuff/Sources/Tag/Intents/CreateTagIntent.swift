@@ -17,6 +17,7 @@ struct CreateTagIntent: AppIntent, IntentPerformer {
         Tag.findOrCreate(name: input.name, in: input.context)
     }
 
+    @MainActor
     func perform() throws -> some ReturnsValue<TagEntity> {
         let tag = try Self.perform((context: modelContainer.mainContext, name: name))
         guard let entity = TagEntity(tag) else {

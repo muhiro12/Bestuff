@@ -43,6 +43,7 @@ struct CreateStuffIntent: AppIntent, IntentPerformer {
         return model
     }
 
+    @MainActor
     func perform() throws -> some ReturnsValue<StuffEntity> {
         Logger(#file).info("Running CreateStuffIntent")
         let tagModels = try tags.map { try $0.model(in: modelContainer.mainContext) }

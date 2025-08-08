@@ -31,6 +31,7 @@ struct PredictStuffIntent: AppIntent, IntentPerformer {
         return model
     }
 
+    @MainActor
     func perform() async throws -> some ReturnsValue<StuffEntity> {
         Logger(#file).info("Running PredictStuffIntent")
         let model = try await Self.perform((context: modelContainer.mainContext, speech: speech))

@@ -1,6 +1,7 @@
 import AppIntents
 import SwiftData
 
+@MainActor
 struct StuffEntityQuery: EntityStringQuery {
     @Dependency private var modelContainer: ModelContainer
 

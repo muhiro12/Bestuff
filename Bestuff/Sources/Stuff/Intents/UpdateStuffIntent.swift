@@ -43,6 +43,7 @@ struct UpdateStuffIntent: AppIntent, IntentPerformer {
         return model
     }
 
+    @MainActor
     func perform() throws -> some ReturnsValue<StuffEntity> {
         Logger(#file).info("Running UpdateStuffIntent")
         let model = try stuff.model(in: modelContainer.mainContext)

@@ -24,10 +24,9 @@ struct GetTagByIDIntent: AppIntent, IntentPerformer {
         return TagEntity(tag)
     }
 
+    @MainActor
     func perform() throws -> some ReturnsValue<TagEntity?> {
-        guard let entity = try Self.perform((context: modelContainer.mainContext, id: id)) else {
-            return .result(value: nil)
-        }
+        let entity = try Self.perform((context: modelContainer.mainContext, id: id))
         return .result(value: entity)
     }
 }

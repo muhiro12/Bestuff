@@ -264,7 +264,6 @@
 
     },
     "Fitness" : {
-      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -301,7 +300,6 @@
 
     },
     "Groceries" : {
-      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -458,7 +456,6 @@
       }
     },
     "Personal" : {
-      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -809,7 +806,6 @@
       }
     },
     "Travel" : {
-      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -866,7 +862,6 @@
       }
     },
     "Work" : {
-      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
