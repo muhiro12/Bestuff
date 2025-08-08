@@ -103,15 +103,22 @@ final class SpeechTranscriptionManager {
             guard let self else {
                 return
             }
-            outputContinuation?.yield(buffer)
+            Task { [weak self, buffer] in
+                await MainActor.run {
+                    self?.outputContinuation?.yield(buffer)
+                }
+            }
         }
 
         audioEngine.prepare()
         try audioEngine.start()
 
-        return AsyncStream(AVAudioPCMBuffer.self, bufferingPolicy: .unbounded) { continuation in
-            outputContinuation = continuation
-        }
+        let streamContainer = AsyncStream.makeStream(
+            of: AVAudioPCMBuffer.self,
+            bufferingPolicy: .unbounded
+        )
+        outputContinuation = streamContainer.continuation
+        return streamContainer.stream
     }
 
     private func setupAudioEngine() throws {
