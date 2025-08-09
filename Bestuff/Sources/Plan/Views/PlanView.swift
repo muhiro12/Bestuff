@@ -248,6 +248,7 @@ struct PlanView: View {
                         tags: tagModels
                     )
                 )
+                model.update(source: "plan:\(selection.period.rawValue)")
                 alertMessage = "Saved as Stuff"
                 isShowingAlert = true
                 savedStuff = model

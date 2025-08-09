@@ -19,6 +19,7 @@ nonisolated final class Stuff {
     private(set) var createdAt: Date
     private(set) var isCompleted: Bool
     private(set) var lastFeedback: Int?
+    private(set) var source: String?
 
     private init(
         title: String,
@@ -28,7 +29,8 @@ nonisolated final class Stuff {
         createdAt: Date = .now,
         tags: [Tag] = [],
         isCompleted: Bool = false,
-        lastFeedback: Int? = nil
+        lastFeedback: Int? = nil,
+        source: String? = nil
     ) {
         self.title = title
         self.note = note
@@ -38,6 +40,7 @@ nonisolated final class Stuff {
         self.tags = tags
         self.isCompleted = isCompleted
         self.lastFeedback = lastFeedback
+        self.source = source
     }
 
     static func create(
@@ -48,7 +51,8 @@ nonisolated final class Stuff {
         createdAt: Date = .now,
         tags: [Tag] = [],
         isCompleted: Bool = false,
-        lastFeedback: Int? = nil
+        lastFeedback: Int? = nil,
+        source: String? = nil
     ) -> Stuff {
         .init(
             title: title,
@@ -58,7 +62,8 @@ nonisolated final class Stuff {
             createdAt: createdAt,
             tags: tags,
             isCompleted: isCompleted,
-            lastFeedback: lastFeedback
+            lastFeedback: lastFeedback,
+            source: source
         )
     }
 
@@ -69,7 +74,8 @@ nonisolated final class Stuff {
         occurredAt: Date? = nil,
         tags: [Tag]? = nil,
         isCompleted: Bool? = nil,
-        lastFeedback: Int? = nil
+        lastFeedback: Int? = nil,
+        source: String? = nil
     ) {
         if let title {
             self.title = title
@@ -91,6 +97,9 @@ nonisolated final class Stuff {
         }
         if let lastFeedback {
             self.lastFeedback = lastFeedback
+        }
+        if let source {
+            self.source = source
         }
     }
 }

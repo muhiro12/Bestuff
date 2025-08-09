@@ -4,6 +4,12 @@
     "%lld" : {
       "shouldTranslate" : false
     },
+    "%lld min" : {
+
+    },
+    "%lld." : {
+
+    },
     "1.0.0" : {
       "shouldTranslate" : false
     },
@@ -36,6 +42,15 @@
           }
         }
       }
+    },
+    "Add to Calendar…" : {
+
+    },
+    "Add to Reminders" : {
+
+    },
+    "Add to Reminders…" : {
+
     },
     "App Version" : {
       "localizations" : {
@@ -148,6 +163,12 @@
         }
       }
     },
+    "Complete" : {
+
+    },
+    "Completed" : {
+
+    },
     "Conference Tickets" : {
       "localizations" : {
         "ja" : {
@@ -197,6 +218,9 @@
           }
         }
       }
+    },
+    "Create step reminders" : {
+
     },
     "Create Stuff" : {
       "localizations" : {
@@ -282,6 +306,12 @@
         }
       }
     },
+    "Due" : {
+
+    },
+    "Due Date" : {
+
+    },
     "Edit Stuff" : {
       "localizations" : {
         "ja" : {
@@ -301,6 +331,12 @@
           }
         }
       }
+    },
+    "Export" : {
+
+    },
+    "Feedback" : {
+
     },
     "Fitness" : {
       "localizations" : {
@@ -362,6 +398,9 @@
         }
       }
     },
+    "Helpful" : {
+
+    },
     "Information" : {
       "localizations" : {
         "ja" : {
@@ -381,6 +420,9 @@
           }
         }
       }
+    },
+    "Mark Complete" : {
+
     },
     "Name" : {
       "localizations" : {
@@ -451,6 +493,9 @@
           }
         }
       }
+    },
+    "Not helpful" : {
+
     },
     "Note" : {
       "localizations" : {
@@ -529,6 +574,12 @@
           }
         }
       }
+    },
+    "Overview" : {
+
+    },
+    "P%lld" : {
+
     },
     "Period" : {
       "localizations" : {
@@ -610,6 +661,9 @@
         }
       }
     },
+    "Priority %lld" : {
+
+    },
     "Recap" : {
       "localizations" : {
         "ja" : {
@@ -649,6 +703,12 @@
           }
         }
       }
+    },
+    "Resources" : {
+
+    },
+    "Risks" : {
+
     },
     "Running Shoes" : {
       "localizations" : {
@@ -691,6 +751,9 @@
           }
         }
       }
+    },
+    "Save as Stuff" : {
+
     },
     "Score" : {
 
@@ -785,6 +848,12 @@
         }
       }
     },
+    "Steps" : {
+
+    },
+    "Steps Preview" : {
+
+    },
     "Stored Items" : {
       "localizations" : {
         "ja" : {
@@ -814,6 +883,9 @@
           }
         }
       }
+    },
+    "Success Criteria" : {
+
     },
     "Suggestion" : {
       "localizations" : {
