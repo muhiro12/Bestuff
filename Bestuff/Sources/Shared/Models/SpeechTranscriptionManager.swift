@@ -9,6 +9,7 @@
 import Observation
 import Speech
 
+@MainActor
 @Observable
 final class SpeechTranscriptionManager {
     private(set) var transcriptionError: Error?
@@ -32,7 +33,7 @@ final class SpeechTranscriptionManager {
         isRecording = true
         Logger(#file).info("Started recording")
         transcriptionError = nil
-        recognizerTask = Task { [weak self] in
+        recognizerTask = Task { @MainActor [weak self] in
             guard let self else {
                 return
             }
@@ -50,8 +51,8 @@ final class SpeechTranscriptionManager {
         }
         isRecording = false
         Logger(#file).info("Stopped recording")
-        Task {
-            await finalizeRecording()
+        Task { @MainActor [weak self] in
+            await self?.finalizeRecording()
         }
     }
 
@@ -68,6 +69,7 @@ final class SpeechTranscriptionManager {
     private func record() async throws {
         guard await isAuthorized() else {
             Logger(#file).error("User denied microphone permission")
+            transcriptionError = TranscriptionError.microphonePermissionDenied
             return
         }
 
@@ -100,18 +102,23 @@ final class SpeechTranscriptionManager {
             bufferSize: 4_096,
             format: audioEngine.inputNode.outputFormat(forBus: 0)
         ) { [weak self] buffer, _ in
-            guard let self else {
-                return
+            Task { @MainActor [weak self, buffer] in
+                guard let self else {
+                    return
+                }
+                outputContinuation?.yield(buffer)
             }
-            outputContinuation?.yield(buffer)
         }
 
         audioEngine.prepare()
         try audioEngine.start()
 
-        return AsyncStream(AVAudioPCMBuffer.self, bufferingPolicy: .unbounded) { continuation in
-            outputContinuation = continuation
-        }
+        let streamContainer = AsyncStream.makeStream(
+            of: AVAudioPCMBuffer.self,
+            bufferingPolicy: .unbounded
+        )
+        outputContinuation = streamContainer.continuation
+        return streamContainer.stream
     }
 
     private func setupAudioEngine() throws {
@@ -197,4 +204,20 @@ enum TranscriptionError: Error {
     case failedToSetupRecognitionStream
     case localeNotSupported
     case invalidAudioDataType
+    case microphonePermissionDenied
+}
+
+extension TranscriptionError: LocalizedError {
+    var errorDescription: String? {
+        switch self {
+        case .failedToSetupRecognitionStream:
+            "Failed to set up speech recognition"
+        case .localeNotSupported:
+            "The current locale is not supported"
+        case .invalidAudioDataType:
+            "Received invalid audio data"
+        case .microphonePermissionDenied:
+            "Microphone access was denied"
+        }
+    }
 }

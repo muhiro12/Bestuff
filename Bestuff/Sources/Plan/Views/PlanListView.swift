@@ -11,14 +11,14 @@ struct PlanListView: View {
     @Environment(\.modelContext)
     private var modelContext
 
-    @Binding private var selection: String?
+    @Binding private var selection: PlanSelection?
 
-    @State private var suggestions: [PlanPeriod: [String]] = [:]
+    @State private var suggestions: [PlanPeriod: [PlanItem]] = [:]
     @State private var isProcessing = false
 
     private let periods: [PlanPeriod] = [.today, .thisWeek, .nextTrip]
 
-    init(selection: Binding<String?> = .constant(nil)) {
+    init(selection: Binding<PlanSelection?> = .constant(nil)) {
         _selection = selection
     }
 
@@ -29,12 +29,28 @@ struct PlanListView: View {
                     .foregroundStyle(.secondary)
             } else {
                 ForEach(periods) { period in
-                    if let actions = suggestions[period] {
+                    if let items = suggestions[period] {
                         Section(period.title) {
-                            ForEach(actions, id: \.self) { suggestion in
-                                Text(suggestion)
-                                    .lineLimit(1)
-                                    .tag(suggestion)
+                            ForEach(items, id: \.self) { item in
+                                HStack(spacing: 8) {
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        Text(item.title)
+                                            .font(.body)
+                                            .lineLimit(1)
+                                        Text(item.rationale)
+                                            .font(.footnote)
+                                            .foregroundStyle(.secondary)
+                                            .lineLimit(1)
+                                    }
+                                    Spacer(minLength: 8)
+                                    Label("\(item.estimatedMinutes)", systemImage: "clock")
+                                        .font(.footnote)
+                                        .foregroundStyle(.secondary)
+                                    Text("P\(item.priority)")
+                                        .font(.footnote)
+                                        .foregroundStyle(.secondary)
+                                }
+                                .tag(PlanSelection(period: period, item: item))
                             }
                         }
                     }
@@ -64,12 +80,12 @@ private extension PlanListView {
         Logger(#file).info("Generating plan suggestions")
         isProcessing = true
         Task {
-            var results: [PlanPeriod: [String]] = [:]
+            var results: [PlanPeriod: [PlanItem]] = [:]
             for period in [PlanPeriod.today, .thisWeek, .nextTrip] {
                 let result = try? await PlanStuffIntent.perform(
                     (context: modelContext, period: period)
                 )
-                results[period] = result?.actions ?? []
+                results[period] = result?.items ?? []
             }
             suggestions = results
             isProcessing = false
