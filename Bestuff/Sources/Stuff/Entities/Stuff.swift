@@ -17,6 +17,8 @@ nonisolated final class Stuff {
     private(set) var tags: [Tag]?
     private(set) var occurredAt: Date
     private(set) var createdAt: Date
+    private(set) var isCompleted: Bool
+    private(set) var lastFeedback: Int?
 
     private init(
         title: String,
@@ -24,7 +26,9 @@ nonisolated final class Stuff {
         score: Int = 0,
         occurredAt: Date = .now,
         createdAt: Date = .now,
-        tags: [Tag] = []
+        tags: [Tag] = [],
+        isCompleted: Bool = false,
+        lastFeedback: Int? = nil
     ) {
         self.title = title
         self.note = note
@@ -32,6 +36,8 @@ nonisolated final class Stuff {
         self.occurredAt = occurredAt
         self.createdAt = createdAt
         self.tags = tags
+        self.isCompleted = isCompleted
+        self.lastFeedback = lastFeedback
     }
 
     static func create(
@@ -40,7 +46,9 @@ nonisolated final class Stuff {
         score: Int = 0,
         occurredAt: Date = .now,
         createdAt: Date = .now,
-        tags: [Tag] = []
+        tags: [Tag] = [],
+        isCompleted: Bool = false,
+        lastFeedback: Int? = nil
     ) -> Stuff {
         .init(
             title: title,
@@ -48,7 +56,9 @@ nonisolated final class Stuff {
             score: score,
             occurredAt: occurredAt,
             createdAt: createdAt,
-            tags: tags
+            tags: tags,
+            isCompleted: isCompleted,
+            lastFeedback: lastFeedback
         )
     }
 
@@ -57,7 +67,9 @@ nonisolated final class Stuff {
         note: String? = nil,
         score: Int? = nil,
         occurredAt: Date? = nil,
-        tags: [Tag]? = nil
+        tags: [Tag]? = nil,
+        isCompleted: Bool? = nil,
+        lastFeedback: Int? = nil
     ) {
         if let title {
             self.title = title
@@ -73,6 +85,12 @@ nonisolated final class Stuff {
         }
         if let tags {
             self.tags = tags
+        }
+        if let isCompleted {
+            self.isCompleted = isCompleted
+        }
+        if let lastFeedback {
+            self.lastFeedback = lastFeedback
         }
     }
 }

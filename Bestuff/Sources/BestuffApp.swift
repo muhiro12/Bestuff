@@ -12,11 +12,15 @@ import SwiftUI
 @main
 struct BestuffApp: App {
     var sharedModelContainer: ModelContainer = {
+        let isRunningTests = ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
         let schema = Schema([
             Stuff.self,
             Tag.self
         ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+        let modelConfiguration = ModelConfiguration(
+            schema: schema,
+            isStoredInMemoryOnly: isRunningTests
+        )
 
         do {
             return try ModelContainer(for: schema, configurations: [modelConfiguration])

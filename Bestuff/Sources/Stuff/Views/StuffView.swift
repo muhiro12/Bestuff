@@ -11,9 +11,36 @@ import SwiftUI
 struct StuffView: View {
     @Environment(Stuff.self)
     private var stuff
+    @Environment(\.modelContext)
+    private var modelContext
 
     var body: some View {
         Form {
+            Section("Feedback") {
+                HStack(spacing: 12) {
+                    Button {
+                        applyFeedback(delta: 10)
+                    } label: {
+                        Label("Helpful", systemImage: "hand.thumbsup")
+                    }
+                    .buttonStyle(.bordered)
+
+                    Button {
+                        applyFeedback(delta: -10)
+                    } label: {
+                        Label("Not helpful", systemImage: "hand.thumbsdown")
+                    }
+                    .buttonStyle(.bordered)
+
+                    Button {
+                        markCompleted()
+                    } label: {
+                        Label(stuff.isCompleted ? "Completed" : "Mark Complete", systemImage: "checkmark.circle")
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(stuff.isCompleted ? .green : .accentColor)
+                }
+            }
             if let note = stuff.note {
                 Section("Note") {
                     Text(note)
@@ -53,6 +80,20 @@ struct StuffView: View {
         .onAppear {
             Logger(#file).info("StuffView appeared for id \(String(describing: stuff.id))")
         }
+    }
+
+    private func applyFeedback(delta: Int) {
+        let newScore = max(0, min(100, stuff.score + delta))
+        stuff.update(score: newScore, lastFeedback: delta.signum())
+        modelContext.insert(stuff)
+    }
+
+    private func markCompleted() {
+        guard !stuff.isCompleted else { return }
+        let bonus = 15
+        let newScore = max(0, min(100, stuff.score + bonus))
+        stuff.update(score: newScore, isCompleted: true)
+        modelContext.insert(stuff)
     }
 }
 
