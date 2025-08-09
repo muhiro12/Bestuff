@@ -39,6 +39,7 @@ struct RecapNavigationView: View {
             if let stuff = detail {
                 StuffView()
                     .environment(stuff)
+                    .id(stuff.id)
             } else {
                 Text("Select Stuff")
                     .foregroundStyle(.secondary)

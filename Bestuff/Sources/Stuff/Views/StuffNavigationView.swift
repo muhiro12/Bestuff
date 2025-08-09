@@ -21,6 +21,7 @@ struct StuffNavigationView: View {
             if let stuff = selection {
                 StuffView()
                     .environment(stuff)
+                    .id(stuff.id)
             } else {
                 Text("Select Stuff")
                     .foregroundStyle(.secondary)
