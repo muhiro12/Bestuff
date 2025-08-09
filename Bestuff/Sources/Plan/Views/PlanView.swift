@@ -22,6 +22,8 @@ struct PlanView: View {
     @State private var shouldExpandSteps = false
     @Environment(\.modelContext)
     private var modelContext
+    @State private var savedStuff: Stuff?
+    @State private var isShowingSavedSheet = false
 
     var body: some View {
         List {
@@ -149,6 +151,14 @@ struct PlanView: View {
             }
             .presentationDetents([.medium, .large])
         }
+        .sheet(isPresented: $isShowingSavedSheet) {
+            if let savedStuff {
+                NavigationStack {
+                    StuffView()
+                        .environment(savedStuff)
+                }
+            }
+        }
     }
 
     private func presentEventEditor() {
@@ -229,7 +239,7 @@ struct PlanView: View {
                     tagModels.append(Tag.findOrCreate(name: trimmed, in: modelContext))
                 }
 
-                _ = try CreateStuffIntent.perform(
+                let model = try CreateStuffIntent.perform(
                     (
                         context: modelContext,
                         title: title,
@@ -240,6 +250,8 @@ struct PlanView: View {
                 )
                 alertMessage = "Saved as Stuff"
                 isShowingAlert = true
+                savedStuff = model
+                isShowingSavedSheet = true
             } catch {
                 alertMessage = "Failed to save as Stuff"
                 isShowingAlert = true
