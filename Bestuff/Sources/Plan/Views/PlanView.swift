@@ -6,6 +6,7 @@
 //
 
 import EventKit
+import SwiftData
 import SwiftUI
 
 struct PlanView: View {
@@ -19,6 +20,8 @@ struct PlanView: View {
     @State private var preparedEvent: EKEvent?
     @State private var reminderDueDate: Date = .now
     @State private var shouldExpandSteps = false
+    @Environment(\.modelContext)
+    private var modelContext
 
     var body: some View {
         List {
@@ -84,6 +87,10 @@ struct PlanView: View {
                     }
                     Button("Add to Reminders…", systemImage: "checklist") {
                         presentReminderEditor()
+                    }
+                    Divider()
+                    Button("Save as Stuff", systemImage: "tray.and.arrow.down") {
+                        saveAsStuff()
                     }
                 }
             }
@@ -185,6 +192,56 @@ struct PlanView: View {
                 isShowingAlert = true
             } catch {
                 alertMessage = "Failed to save reminder"
+                isShowingAlert = true
+            }
+        }
+    }
+
+    private func saveAsStuff() {
+        Task {
+            do {
+                let occurredAt = EventKitService.shared.defaultStartDate(for: selection.period)
+                let title = selection.item.title
+
+                var noteLines: [String] = []
+                if !selection.item.rationale.isEmpty {
+                    noteLines.append("Rationale: \(selection.item.rationale)")
+                }
+                if !selection.item.steps.isEmpty {
+                    noteLines.append("Steps:")
+                    for (index, step) in selection.item.steps.enumerated() {
+                        noteLines.append("\(index + 1). \(step)")
+                    }
+                }
+                if !selection.item.resources.isEmpty {
+                    noteLines.append("Resources: \(selection.item.resources.joined(separator: ", "))")
+                }
+                if !selection.item.successCriteria.isEmpty {
+                    noteLines.append("Success: \(selection.item.successCriteria.joined(separator: ", "))")
+                }
+                let note = noteLines.isEmpty ? nil : noteLines.joined(separator: "\n")
+
+                var tagModels: [Tag] = []
+                tagModels.append(Tag.findOrCreate(name: selection.period.title, in: modelContext))
+                for resource in selection.item.resources.prefix(5) {
+                    let trimmed = resource.trimmingCharacters(in: .whitespacesAndNewlines)
+                    guard !trimmed.isEmpty else { continue }
+                    tagModels.append(Tag.findOrCreate(name: trimmed, in: modelContext))
+                }
+
+                _ = try CreateStuffIntent.perform(
+                    (
+                        context: modelContext,
+                        title: title,
+                        note: note,
+                        occurredAt: occurredAt,
+                        tags: tagModels
+                    )
+                )
+                alertMessage = "Saved as Stuff"
+                isShowingAlert = true
+            } catch {
+                alertMessage = "Failed to save as Stuff"
                 isShowingAlert = true
             }
         }
