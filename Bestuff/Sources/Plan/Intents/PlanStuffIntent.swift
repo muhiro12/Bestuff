@@ -36,9 +36,22 @@ struct PlanStuffIntent: AppIntent, IntentPerformer {
         }.joined(separator: "\n")
         let language = Locale.current.language.languageCode?.identifier ?? Locale.current.identifier
         let prompt = """
-            Here are some highly rated items:
+            You are a helpful planning assistant. The user has these highly rated items:
             \(items)
-            Based on these, suggest things I should do in \(period.promptDescription). Answer in \(language).
+
+            Propose actionable plans for \(period.promptDescription).
+            Provide rich, specific content so the user clearly understands the proposal.
+            For each plan item, include:
+            - title: short, action-oriented
+            - rationale: why this is recommended, grounded in the items
+            - steps: 3–6 concrete steps, each phrased as an action
+            - estimatedMinutes: integer total time in minutes (approximate)
+            - resources: concrete tools, links, or materials if applicable
+            - risks: likely blockers or pitfalls and what to watch out for
+            - successCriteria: 2–3 measurable outcomes to know it’s done well
+            - priority: 1 (high), 2 (medium), or 3 (low)
+
+            Respond in \(language).
             """
         let session = LanguageModelSession()
         let response = try await session.respond(
@@ -55,6 +68,8 @@ struct PlanStuffIntent: AppIntent, IntentPerformer {
             (context: modelContainer.mainContext, period: period)
         )
         Logger(#file).notice("PlanStuffIntent finished successfully")
-        return .result(value: result.actions)
+        // Maintain simple result for generic integrations by surfacing titles.
+        let titles = result.items.map(\.title)
+        return .result(value: titles)
     }
 }

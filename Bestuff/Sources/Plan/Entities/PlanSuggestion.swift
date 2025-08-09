@@ -9,6 +9,36 @@ import FoundationModels
 
 @Generable
 struct PlanSuggestion {
-    @Guide(description: "A list of recommended actions", .count(3))
-    var actions: [String]
+    @Guide(
+        description: "Detailed plan items to act on",
+        .count(3)
+    )
+    var items: [PlanItem]
+}
+
+@Generable
+struct PlanItem: Hashable, Sendable {
+    @Guide(description: "Short, action-oriented title")
+    var title: String
+
+    @Guide(description: "Why this is recommended")
+    var rationale: String
+
+    @Guide(description: "Step-by-step actions", .count(3))
+    var steps: [String]
+
+    @Guide(description: "Estimated time in minutes (integer)")
+    var estimatedMinutes: Int
+
+    @Guide(description: "Required tools or resources", .count(3))
+    var resources: [String]
+
+    @Guide(description: "Potential risks or blockers", .count(3))
+    var risks: [String]
+
+    @Guide(description: "How to measure success", .count(2))
+    var successCriteria: [String]
+
+    @Guide(description: "Priority where 1=high, 3=low")
+    var priority: Int
 }
