@@ -38,9 +38,9 @@ final class SpeechTranscriptionManager {
                 return
             }
             do {
-                try await self.record()
+                try await record()
             } catch {
-                self.transcriptionError = error
+                transcriptionError = error
             }
         }
     }
@@ -106,7 +106,7 @@ final class SpeechTranscriptionManager {
                 guard let self else {
                     return
                 }
-                self.outputContinuation?.yield(buffer)
+                outputContinuation?.yield(buffer)
             }
         }
 
