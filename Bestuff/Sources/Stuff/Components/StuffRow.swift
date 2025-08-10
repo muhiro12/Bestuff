@@ -74,13 +74,13 @@ struct StuffRow: View {
     let configuration: ModelConfiguration = .init(schema: schema, isStoredInMemoryOnly: true)
     let container: ModelContainer = try! .init(for: schema, configurations: [configuration])
     let context: ModelContext = .init(container)
-      let sample = try! StuffService.create(
-          context: context,
-          title: String(localized: "Sample"),
-          note: nil,
-          occurredAt: .now,
-          tags: []
-      )
+    let sample = try! StuffService.create(
+        context: context,
+        title: String(localized: "Sample"),
+        note: nil,
+        occurredAt: .now,
+        tags: []
+    )
     return StuffRow()
         .environment(sample)
         .modelContainer(container)

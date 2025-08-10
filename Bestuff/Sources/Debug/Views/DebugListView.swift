@@ -101,13 +101,13 @@ struct DebugListView: View {
                 let tagModels: [Tag] = stuff.tags.map {
                     Tag.findOrCreate(name: $0, in: modelContext)
                 }
-                  _ = try? StuffService.create(
-                      context: modelContext,
-                      title: stuff.title,
-                      note: stuff.note,
-                      occurredAt: Date.now,
-                      tags: tagModels
-                  )
+                _ = try? StuffService.create(
+                    context: modelContext,
+                    title: stuff.title,
+                    note: stuff.note,
+                    occurredAt: Date.now,
+                    tags: tagModels
+                )
             }
         }
         Logger(#file).notice("Sample data created")
@@ -118,9 +118,9 @@ struct DebugListView: View {
         withAnimation {
             let descriptor: FetchDescriptor<Stuff> = .init()
             let allStuffs = (try? modelContext.fetch(descriptor)) ?? []
-              for stuff in allStuffs {
-                  try? StuffService.delete(model: stuff)
-              }
+            for stuff in allStuffs {
+                try? StuffService.delete(model: stuff)
+            }
         }
         Logger(#file).notice("All data cleared")
     }

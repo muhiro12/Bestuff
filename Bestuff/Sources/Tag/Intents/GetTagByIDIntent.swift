@@ -3,7 +3,6 @@ import SwiftData
 
 @MainActor
 struct GetTagByIDIntent: AppIntent {
-
     @Parameter(title: "Tag ID")
     private var id: String
 

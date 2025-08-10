@@ -102,13 +102,13 @@ struct StuffView: View {
     let configuration: ModelConfiguration = .init(schema: schema, isStoredInMemoryOnly: true)
     let container: ModelContainer = try! .init(for: schema, configurations: [configuration])
     let context: ModelContext = .init(container)
-      let sample = try! StuffService.create(
-          context: context,
-          title: String(localized: "Sample"),
-          note: String(localized: "Notes"),
-          occurredAt: .now,
-          tags: []
-      )
+    let sample = try! StuffService.create(
+        context: context,
+        title: String(localized: "Sample"),
+        note: String(localized: "Notes"),
+        occurredAt: .now,
+        tags: []
+    )
     return NavigationStack {
         StuffView()
             .environment(sample)

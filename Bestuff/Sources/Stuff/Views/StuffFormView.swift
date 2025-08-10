@@ -112,28 +112,28 @@ struct StuffFormView: View {
                     .split(separator: ",")
                     .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
                     .filter { !$0.isEmpty }
-                      .compactMap { try? TagService.create(context: modelContext, name: $0) }
+                    .compactMap { try? TagService.create(context: modelContext, name: $0) }
             )
             selectedTags.formUnion(newTagSet)
             if let stuff {
                 Logger(#file).info("Updating stuff \(String(describing: stuff.id))")
-                  _ = try? StuffService.update(
-                      model: stuff,
-                      title: title,
-                      note: note.isEmpty ? nil : note,
-                      occurredAt: occurredAt,
-                      tags: Array(selectedTags)
-                  )
+                _ = try? StuffService.update(
+                    model: stuff,
+                    title: title,
+                    note: note.isEmpty ? nil : note,
+                    occurredAt: occurredAt,
+                    tags: Array(selectedTags)
+                )
                 Logger(#file).notice("Updated stuff \(String(describing: stuff.id))")
             } else {
                 Logger(#file).info("Creating new stuff")
-                  _ = try? StuffService.create(
-                      context: modelContext,
-                      title: title,
-                      note: note.isEmpty ? nil : note,
-                      occurredAt: occurredAt,
-                      tags: Array(selectedTags)
-                  )
+                _ = try? StuffService.create(
+                    context: modelContext,
+                    title: title,
+                    note: note.isEmpty ? nil : note,
+                    occurredAt: occurredAt,
+                    tags: Array(selectedTags)
+                )
                 Logger(#file).notice("Created new stuff")
             }
             dismiss()
@@ -155,13 +155,13 @@ struct StuffFormView: View {
     let configuration: ModelConfiguration = .init(schema: schema, isStoredInMemoryOnly: true)
     let container: ModelContainer = try! .init(for: schema, configurations: [configuration])
     let context: ModelContext = .init(container)
-      let sample = try! StuffService.create(
-          context: context,
-          title: String(localized: "Sample"),
-          note: nil,
-          occurredAt: .now,
-          tags: []
-      )
+    let sample = try! StuffService.create(
+        context: context,
+        title: String(localized: "Sample"),
+        note: nil,
+        occurredAt: .now,
+        tags: []
+    )
     return StuffFormView()
         .environment(sample)
         .modelContainer(container)

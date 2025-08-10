@@ -3,7 +3,6 @@ import SwiftData
 
 @MainActor
 struct GetAllTagsIntent: AppIntent {
-
     @Dependency private var modelContainer: ModelContainer
 
     nonisolated static var title: LocalizedStringResource {

@@ -3,7 +3,6 @@ import SwiftData
 
 @MainActor
 struct CreateTagIntent: AppIntent {
-
     @Parameter(title: "Name")
     private var name: String
     @Dependency private var modelContainer: ModelContainer

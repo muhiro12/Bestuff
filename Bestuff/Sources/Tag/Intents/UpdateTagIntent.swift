@@ -3,7 +3,6 @@ import SwiftData
 
 @MainActor
 struct UpdateTagIntent: AppIntent {
-
     @Parameter(title: "Tag")
     private var tag: TagEntity
 

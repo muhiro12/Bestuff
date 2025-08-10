@@ -3,7 +3,6 @@ import SwiftData
 
 @MainActor
 struct DeleteStuffIntent: AppIntent {
-
     nonisolated static var title: LocalizedStringResource {
         "Delete Stuff"
     }

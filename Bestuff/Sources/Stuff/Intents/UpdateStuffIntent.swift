@@ -3,7 +3,6 @@ import SwiftData
 
 @MainActor
 struct UpdateStuffIntent: AppIntent {
-
     nonisolated static var title: LocalizedStringResource { "Update Stuff" }
 
     @Parameter(title: "Stuff")

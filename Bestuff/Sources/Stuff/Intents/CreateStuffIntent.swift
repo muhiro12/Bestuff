@@ -3,7 +3,6 @@ import SwiftData
 
 @MainActor
 struct CreateStuffIntent: AppIntent {
-
     nonisolated static var title: LocalizedStringResource {
         "Create Stuff"
     }

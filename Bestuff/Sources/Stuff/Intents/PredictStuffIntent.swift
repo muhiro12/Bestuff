@@ -5,7 +5,6 @@ import SwiftData
 
 @MainActor
 struct PredictStuffIntent: AppIntent {
-
     nonisolated static var title: LocalizedStringResource {
         "Predict Stuff"
     }
@@ -28,5 +27,4 @@ struct PredictStuffIntent: AppIntent {
         Logger(#file).notice("PredictStuffIntent finished successfully")
         return .result(value: entity)
     }
-
 }

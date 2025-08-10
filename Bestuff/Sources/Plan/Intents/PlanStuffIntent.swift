@@ -11,7 +11,6 @@ import SwiftData
 
 @MainActor
 struct PlanStuffIntent: AppIntent {
-
     nonisolated static var title: LocalizedStringResource {
         "Plan Stuff"
     }
