@@ -2,10 +2,7 @@ import AppIntents
 import SwiftData
 
 @MainActor
-struct UpdateTagIntent: AppIntent, IntentPerformer {
-    typealias Input = (model: Tag, name: String)
-    typealias Output = Tag
-
+struct UpdateTagIntent: AppIntent {
     @Parameter(title: "Tag")
     private var tag: TagEntity
 
@@ -18,14 +15,9 @@ struct UpdateTagIntent: AppIntent, IntentPerformer {
         "Update Tag"
     }
 
-    static func perform(_ input: Input) throws -> Output {
-        input.model.update(name: input.name)
-        return input.model
-    }
-
     func perform() throws -> some ReturnsValue<TagEntity> {
         let model = try tag.model(in: modelContainer.mainContext)
-        let updated = try Self.perform((model: model, name: name))
+        let updated = TagService.update(model: model, name: name)
         guard let entity = TagEntity(updated) else {
             throw TagError.tagNotFound
         }

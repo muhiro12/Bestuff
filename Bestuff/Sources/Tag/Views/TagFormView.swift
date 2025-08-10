@@ -36,11 +36,11 @@ struct TagFormView: View {
         withAnimation {
             if let tag {
                 Logger(#file).info("Updating tag \(String(describing: tag.id))")
-                _ = try? UpdateTagIntent.perform((model: tag, name: name))
+                _ = try? TagService.update(model: tag, name: name)
                 Logger(#file).notice("Updated tag \(String(describing: tag.id))")
             } else {
                 Logger(#file).info("Creating new tag")
-                _ = try? CreateTagIntent.perform((context: modelContext, name: name))
+                _ = try? TagService.create(context: modelContext, name: name)
                 Logger(#file).notice("Created new tag")
             }
             dismiss()

@@ -101,14 +101,12 @@ struct DebugListView: View {
                 let tagModels: [Tag] = stuff.tags.map {
                     Tag.findOrCreate(name: $0, in: modelContext)
                 }
-                _ = try? CreateStuffIntent.perform(
-                    (
-                        context: modelContext,
-                        title: stuff.title,
-                        note: stuff.note,
-                        occurredAt: Date.now,
-                        tags: tagModels
-                    )
+                _ = try? StuffService.create(
+                    context: modelContext,
+                    title: stuff.title,
+                    note: stuff.note,
+                    occurredAt: Date.now,
+                    tags: tagModels
                 )
             }
         }
@@ -121,7 +119,7 @@ struct DebugListView: View {
             let descriptor: FetchDescriptor<Stuff> = .init()
             let allStuffs = (try? modelContext.fetch(descriptor)) ?? []
             for stuff in allStuffs {
-                try? DeleteStuffIntent.perform(stuff)
+                try? StuffService.delete(model: stuff)
             }
         }
         Logger(#file).notice("All data cleared")

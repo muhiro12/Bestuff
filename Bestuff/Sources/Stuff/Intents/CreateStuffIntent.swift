@@ -2,16 +2,7 @@ import AppIntents
 import SwiftData
 
 @MainActor
-struct CreateStuffIntent: AppIntent, IntentPerformer {
-    typealias Input = (
-        context: ModelContext,
-        title: String,
-        note: String?,
-        occurredAt: Date,
-        tags: [Tag]
-    )
-    typealias Output = Stuff
-
+struct CreateStuffIntent: AppIntent {
     nonisolated static var title: LocalizedStringResource {
         "Create Stuff"
     }
@@ -30,31 +21,15 @@ struct CreateStuffIntent: AppIntent, IntentPerformer {
 
     @Dependency private var modelContainer: ModelContainer
 
-    static func perform(_ input: Input) throws -> Output {
-        let (context, title, note, occurredAt, tags) = input
-        Logger(#file).info("Creating stuff titled '\(title)'")
-        let model = Stuff.create(
-            title: title,
-            note: note,
-            occurredAt: occurredAt,
-            tags: tags
-        )
-        context.insert(model)
-        Logger(#file).notice("Created stuff with id \(String(describing: model.id))")
-        return model
-    }
-
     func perform() throws -> some ReturnsValue<StuffEntity> {
         Logger(#file).info("Running CreateStuffIntent")
         let tagModels = try tags.map { try $0.model(in: modelContainer.mainContext) }
-        let model = try Self.perform(
-            (
-                context: modelContainer.mainContext,
-                title: title,
-                note: note,
-                occurredAt: occurredAt,
-                tags: tagModels
-            )
+        let model = StuffService.create(
+            context: modelContainer.mainContext,
+            title: title,
+            note: note,
+            occurredAt: occurredAt,
+            tags: tagModels
         )
         guard let entity = StuffEntity(model) else {
             Logger(#file).error("Failed to convert Stuff to StuffEntity")

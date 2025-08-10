@@ -7,7 +7,7 @@ struct TagEntityQuery: EntityStringQuery {
 
     func entities(for identifiers: [TagEntity.ID]) throws -> [TagEntity] {
         try identifiers.compactMap { id in
-            try GetTagByIDIntent.perform((context: modelContainer.mainContext, id: id))
+            try TagService.get(context: modelContainer.mainContext, id: id)
         }
     }
 

@@ -49,7 +49,7 @@ struct PredictStuffFormView: View {
         Logger(#file).info("Starting prediction")
         isProcessing = true
         Task {
-            _ = try? await PredictStuffIntent.perform((context: modelContext, speech: speech))
+            _ = try? await StuffService.predict(context: modelContext, speech: speech)
             isProcessing = false
             Logger(#file).notice("Prediction completed")
             dismiss()
