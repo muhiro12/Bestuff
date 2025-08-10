@@ -82,10 +82,11 @@ private extension PlanListView {
         Task {
             var results: [PlanPeriod: [PlanItem]] = [:]
             for period in [PlanPeriod.today, .thisWeek, .nextTrip] {
-                let result = try? await PlanStuffIntent.perform(
-                    (context: modelContext, period: period)
-                )
-                results[period] = result?.items ?? []
+                  let result = try? await PlanService.plan(
+                      context: modelContext,
+                      period: period
+                  )
+                  results[period] = result?.items ?? []
             }
             suggestions = results
             isProcessing = false

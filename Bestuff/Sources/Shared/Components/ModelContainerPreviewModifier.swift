@@ -17,15 +17,13 @@ struct ModelContainerPreviewModifier: PreviewModifier {
             let tagModels: [Tag] = stuff.tags.map {
                 Tag.findOrCreate(name: $0, in: context)
             }
-            _ = try? CreateStuffIntent.perform(
-                (
-                    context: context,
-                    title: stuff.title,
-                    note: stuff.note,
-                    occurredAt: .now,
-                    tags: tagModels
-                )
-            )
+              _ = try? StuffService.create(
+                  context: context,
+                  title: stuff.title,
+                  note: stuff.note,
+                  occurredAt: .now,
+                  tags: tagModels
+              )
         }
         return container
     }

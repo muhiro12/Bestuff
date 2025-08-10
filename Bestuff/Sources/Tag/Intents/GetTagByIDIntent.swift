@@ -2,9 +2,7 @@ import AppIntents
 import SwiftData
 
 @MainActor
-struct GetTagByIDIntent: AppIntent, IntentPerformer {
-    typealias Input = (context: ModelContext, id: String)
-    typealias Output = TagEntity?
+struct GetTagByIDIntent: AppIntent {
 
     @Parameter(title: "Tag ID")
     private var id: String
@@ -15,12 +13,11 @@ struct GetTagByIDIntent: AppIntent, IntentPerformer {
         "Get Tag By ID"
     }
 
-    static func perform(_ input: Input) throws -> Output {
-        try TagService.get(context: input.context, id: input.id)
-    }
-
     func perform() throws -> some ReturnsValue<TagEntity?> {
-        let entity = try Self.perform((context: modelContainer.mainContext, id: id))
+        let entity = try TagService.get(
+            context: modelContainer.mainContext,
+            id: id
+        )
         return .result(value: entity)
     }
 }
