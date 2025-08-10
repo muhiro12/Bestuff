@@ -239,15 +239,13 @@ struct PlanView: View {
                     tagModels.append(Tag.findOrCreate(name: trimmed, in: modelContext))
                 }
 
-                let model = try CreateStuffIntent.perform(
-                    (
-                        context: modelContext,
-                        title: title,
-                        note: note,
-                        occurredAt: occurredAt,
-                        tags: tagModels
-                    )
-                )
+                  let model = try StuffService.create(
+                      context: modelContext,
+                      title: title,
+                      note: note,
+                      occurredAt: occurredAt,
+                      tags: tagModels
+                  )
                 model.update(source: "plan:\(selection.period.rawValue)")
                 alertMessage = "Saved as Stuff"
                 isShowingAlert = true

@@ -10,9 +10,7 @@ import FoundationModels
 import SwiftData
 
 @MainActor
-struct PlanStuffIntent: AppIntent, IntentPerformer {
-    typealias Input = (context: ModelContext, period: PlanPeriod)
-    typealias Output = PlanSuggestion
+struct PlanStuffIntent: AppIntent {
 
     nonisolated static var title: LocalizedStringResource {
         "Plan Stuff"
@@ -23,14 +21,11 @@ struct PlanStuffIntent: AppIntent, IntentPerformer {
 
     @Dependency private var modelContainer: ModelContainer
 
-    static func perform(_ input: Input) async throws -> Output {
-        try await PlanService.plan(context: input.context, period: input.period)
-    }
-
     func perform() async throws -> some ReturnsValue<[String]> {
         Logger(#file).info("Running PlanStuffIntent")
-        let result = try await Self.perform(
-            (context: modelContainer.mainContext, period: period)
+        let result = try await PlanService.plan(
+            context: modelContainer.mainContext,
+            period: period
         )
         Logger(#file).notice("PlanStuffIntent finished successfully")
         // Maintain simple result for generic integrations by surfacing titles.

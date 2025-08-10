@@ -2,15 +2,7 @@ import AppIntents
 import SwiftData
 
 @MainActor
-struct UpdateStuffIntent: AppIntent, IntentPerformer {
-    typealias Input = (
-        model: Stuff,
-        title: String,
-        note: String?,
-        occurredAt: Date,
-        tags: [Tag]
-    )
-    typealias Output = Stuff
+struct UpdateStuffIntent: AppIntent {
 
     nonisolated static var title: LocalizedStringResource { "Update Stuff" }
 
@@ -31,28 +23,16 @@ struct UpdateStuffIntent: AppIntent, IntentPerformer {
 
     @Dependency private var modelContainer: ModelContainer
 
-    static func perform(_ input: Input) throws -> Output {
-        StuffService.update(
-            model: input.model,
-            title: input.title,
-            note: input.note,
-            occurredAt: input.occurredAt,
-            tags: input.tags
-        )
-    }
-
     func perform() throws -> some ReturnsValue<StuffEntity> {
         Logger(#file).info("Running UpdateStuffIntent")
         let model = try stuff.model(in: modelContainer.mainContext)
         let tagModels = try tags.map { try $0.model(in: modelContainer.mainContext) }
-        let updatedModel = try Self.perform(
-            (
-                model: model,
-                title: title,
-                note: note,
-                occurredAt: occurredAt,
-                tags: tagModels
-            )
+        let updatedModel = StuffService.update(
+            model: model,
+            title: title,
+            note: note,
+            occurredAt: occurredAt,
+            tags: tagModels
         )
         guard let entity = StuffEntity(updatedModel) else {
             Logger(#file).error("Failed to convert Stuff to StuffEntity")
