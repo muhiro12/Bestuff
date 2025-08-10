@@ -828,6 +828,9 @@
         }
       }
     },
+    "Speech" : {
+
+    },
     "Steps" : {
 
     },
@@ -926,6 +929,9 @@
           }
         }
       }
+    },
+    "Text" : {
+
     },
     "This Week" : {
       "localizations" : {
