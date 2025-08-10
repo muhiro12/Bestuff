@@ -828,26 +828,6 @@
         }
       }
     },
-    "Speech" : {
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "音声"
-          }
-        }
-      }
-    },
-    "Speech Recognition Error" : {
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "音声認識エラー"
-          }
-        }
-      }
-    },
     "Steps" : {
 
     },
