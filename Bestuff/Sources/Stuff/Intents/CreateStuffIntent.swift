@@ -31,17 +31,13 @@ struct CreateStuffIntent: AppIntent, IntentPerformer {
     @Dependency private var modelContainer: ModelContainer
 
     static func perform(_ input: Input) throws -> Output {
-        let (context, title, note, occurredAt, tags) = input
-        Logger(#file).info("Creating stuff titled '\(title)'")
-        let model = Stuff.create(
-            title: title,
-            note: note,
-            occurredAt: occurredAt,
-            tags: tags
+        StuffService.create(
+            context: input.context,
+            title: input.title,
+            note: input.note,
+            occurredAt: input.occurredAt,
+            tags: input.tags
         )
-        context.insert(model)
-        Logger(#file).notice("Created stuff with id \(String(describing: model.id))")
-        return model
     }
 
     func perform() throws -> some ReturnsValue<StuffEntity> {

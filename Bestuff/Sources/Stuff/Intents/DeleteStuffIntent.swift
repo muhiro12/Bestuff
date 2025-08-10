@@ -16,10 +16,7 @@ struct DeleteStuffIntent: AppIntent, IntentPerformer {
     @Dependency private var modelContainer: ModelContainer
 
     static func perform(_ input: Input) throws -> Output {
-        let model = input
-        Logger(#file).info("Deleting stuff with id \(String(describing: model.id))")
-        model.delete()
-        Logger(#file).notice("Deleted stuff with id \(String(describing: model.id))")
+        StuffService.delete(model: input)
     }
 
     func perform() throws -> some IntentResult {

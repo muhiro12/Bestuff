@@ -16,13 +16,7 @@ struct GetTagByIDIntent: AppIntent, IntentPerformer {
     }
 
     static func perform(_ input: Input) throws -> Output {
-        let persistentID = try PersistentIdentifier(base64Encoded: input.id)
-        guard let tag = try input.context.fetch(
-            FetchDescriptor<Tag>(predicate: #Predicate { $0.id == persistentID })
-        ).first else {
-            return nil
-        }
-        return TagEntity(tag)
+        try TagService.get(context: input.context, id: input.id)
     }
 
     func perform() throws -> some ReturnsValue<TagEntity?> {
