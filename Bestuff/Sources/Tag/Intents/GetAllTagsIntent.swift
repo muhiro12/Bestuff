@@ -13,7 +13,7 @@ struct GetAllTagsIntent: AppIntent, IntentPerformer {
     }
 
     static func perform(_ input: Input) throws -> Output {
-        try input.fetch(FetchDescriptor<Tag>()).compactMap(TagEntity.init)
+        try TagService.getAll(context: input)
     }
 
     func perform() throws -> some ReturnsValue<[TagEntity]> {

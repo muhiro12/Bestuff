@@ -32,16 +32,13 @@ struct UpdateStuffIntent: AppIntent, IntentPerformer {
     @Dependency private var modelContainer: ModelContainer
 
     static func perform(_ input: Input) throws -> Output {
-        let (model, title, note, occurredAt, tags) = input
-        Logger(#file).info("Updating stuff with id \(String(describing: model.id))")
-        model.update(
-            title: title,
-            note: note,
-            occurredAt: occurredAt,
-            tags: tags
+        StuffService.update(
+            model: input.model,
+            title: input.title,
+            note: input.note,
+            occurredAt: input.occurredAt,
+            tags: input.tags
         )
-        Logger(#file).notice("Updated stuff with id \(String(describing: model.id))")
-        return model
     }
 
     func perform() throws -> some ReturnsValue<StuffEntity> {

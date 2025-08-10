@@ -19,8 +19,7 @@ struct UpdateTagIntent: AppIntent, IntentPerformer {
     }
 
     static func perform(_ input: Input) throws -> Output {
-        input.model.update(name: input.name)
-        return input.model
+        TagService.update(model: input.model, name: input.name)
     }
 
     func perform() throws -> some ReturnsValue<TagEntity> {

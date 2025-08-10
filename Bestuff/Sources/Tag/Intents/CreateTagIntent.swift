@@ -15,7 +15,7 @@ struct CreateTagIntent: AppIntent, IntentPerformer {
     }
 
     static func perform(_ input: Input) throws -> Output {
-        Tag.findOrCreate(name: input.name, in: input.context)
+        TagService.create(context: input.context, name: input.name)
     }
 
     func perform() throws -> some ReturnsValue<TagEntity> {
