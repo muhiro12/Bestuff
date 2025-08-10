@@ -4,9 +4,8 @@ import SwiftUI
 struct TagPickerListView: View {
     @Environment(\.dismiss)
     private var dismiss
-    @Environment(\.modelContext)
-    private var modelContext
-    @State private var tags: [Tag] = []
+    @Query(sort: \Tag.name)
+    private var tags: [Tag]
 
     @Binding private var selection: Set<Tag>
 
@@ -29,11 +28,6 @@ struct TagPickerListView: View {
                 Button("Done") { dismiss() }
                     .buttonStyle(.borderedProminent)
                     .tint(.accentColor)
-            }
-        }
-        .task {
-            if let entities = try? GetAllTagsIntent.perform(modelContext) {
-                tags = entities.compactMap { try? $0.model(in: modelContext) }
             }
         }
     }
