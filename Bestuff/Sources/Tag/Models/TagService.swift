@@ -11,6 +11,41 @@ enum TagService {
         try context.fetch(FetchDescriptor<Tag>()).compactMap(TagEntity.init)
     }
 
+    static func getAllLabels(context: ModelContext) throws -> [Tag] {
+        try context.fetch(
+            FetchDescriptor<Tag>(
+                predicate: #Predicate { $0.typeID == TagType.label.rawValue },
+                sortBy: [SortDescriptor(\Tag.name, order: .forward)]
+            )
+        )
+    }
+
+    static func suggestLabels(
+        context: ModelContext,
+        prefix: String,
+        excluding excluded: [Tag] = [],
+        limit: Int = 10
+    ) throws -> [Tag] {
+        let trimmed = prefix.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else {
+            return []
+        }
+        let excludedIDs: Set<PersistentIdentifier> = Set(excluded.compactMap(\.id))
+        let descriptor = FetchDescriptor<Tag>(
+            predicate: #Predicate { tag in
+                tag.typeID == TagType.label.rawValue &&
+                    tag.name.localizedStandardContains(trimmed) &&
+                    !excludedIDs.contains(tag.id)
+            },
+            sortBy: [SortDescriptor(\Tag.name, order: .forward)]
+        )
+        var results = try context.fetch(descriptor)
+        if results.count > limit {
+            results = Array(results.prefix(limit))
+        }
+        return results
+    }
+
     static func get(context: ModelContext, id: String) throws -> TagEntity? {
         let persistentID = try PersistentIdentifier(base64Encoded: id)
         guard let tag = try context.fetch(
