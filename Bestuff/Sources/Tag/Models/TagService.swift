@@ -52,6 +52,10 @@ enum TagService {
         }
     }
 
+    static func findDuplicates(context: ModelContext) throws -> [Tag] {
+        try findDuplicateGroups(context: context).values.compactMap(\.first)
+    }
+
     private static func findDuplicateGroups(context: ModelContext) throws -> [String: [Tag]] {
         let allTags: [Tag] = try context.fetch(FetchDescriptor<Tag>())
         let key: (Tag) -> String = { tag in
