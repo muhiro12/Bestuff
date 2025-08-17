@@ -24,6 +24,18 @@ struct TagNavigationView: View {
             }
         }
         .searchable(text: $searchText)
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                NavigationLink(value: "duplicates") {
+                    Label("Duplicates", systemImage: "square.stack.3d.up")
+                }
+            }
+        }
+        .navigationDestination(for: String.self) { value in
+            if value == "duplicates" {
+                DuplicateTagListView()
+            }
+        }
     }
 }
 

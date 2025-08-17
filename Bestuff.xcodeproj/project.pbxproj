@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		AD585EDA2E1D62FD003BB6D1 /* SwiftUtilities in Frameworks */ = {isa = PBXBuildFile; productRef = AD585ED92E1D62FD003BB6D1 /* SwiftUtilities */; };
 		AD585EDD2E1D631B003BB6D1 /* StoreKitWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = AD585EDC2E1D631B003BB6D1 /* StoreKitWrapper */; };
 		AD585EE02E1D6334003BB6D1 /* LicenseListWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = AD585EDF2E1D6334003BB6D1 /* LicenseListWrapper */; };
+		ADB088C62E51715700655540 /* SwiftAppUtilities in Frameworks */ = {isa = PBXBuildFile; productRef = ADB088C52E51715700655540 /* SwiftAppUtilities */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -71,9 +71,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AD585EDA2E1D62FD003BB6D1 /* SwiftUtilities in Frameworks */,
 				AD585EE02E1D6334003BB6D1 /* LicenseListWrapper in Frameworks */,
 				AD585EDD2E1D631B003BB6D1 /* StoreKitWrapper in Frameworks */,
+				ADB088C62E51715700655540 /* SwiftAppUtilities in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -134,9 +134,9 @@
 			);
 			name = Bestuff;
 			packageProductDependencies = (
-				AD585ED92E1D62FD003BB6D1 /* SwiftUtilities */,
 				AD585EDC2E1D631B003BB6D1 /* StoreKitWrapper */,
 				AD585EDF2E1D6334003BB6D1 /* LicenseListWrapper */,
+				ADB088C52E51715700655540 /* SwiftAppUtilities */,
 			);
 			productName = Bestuff;
 			productReference = AD585E872E1D5EF1003BB6D1 /* Bestuff.app */;
@@ -222,9 +222,9 @@
 			mainGroup = AD585E7E2E1D5EF1003BB6D1;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				AD585ED82E1D62FD003BB6D1 /* XCRemoteSwiftPackageReference "SwiftUtilities" */,
 				AD585EDB2E1D631B003BB6D1 /* XCRemoteSwiftPackageReference "StoreKitWrapper" */,
 				AD585EDE2E1D6334003BB6D1 /* XCRemoteSwiftPackageReference "LicenseListWrapper" */,
+				ADB088C42E51715700655540 /* XCRemoteSwiftPackageReference "SwiftAppUtilities" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = AD585E882E1D5EF1003BB6D1 /* Products */;
@@ -652,14 +652,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		AD585ED82E1D62FD003BB6D1 /* XCRemoteSwiftPackageReference "SwiftUtilities" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/muhiro12/SwiftUtilities.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
-			};
-		};
 		AD585EDB2E1D631B003BB6D1 /* XCRemoteSwiftPackageReference "StoreKitWrapper" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/muhiro12/StoreKitWrapper";
@@ -676,14 +668,17 @@
 				minimumVersion = 1.0.0;
 			};
 		};
+		ADB088C42E51715700655540 /* XCRemoteSwiftPackageReference "SwiftAppUtilities" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/muhiro12/SwiftAppUtilities";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		AD585ED92E1D62FD003BB6D1 /* SwiftUtilities */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = AD585ED82E1D62FD003BB6D1 /* XCRemoteSwiftPackageReference "SwiftUtilities" */;
-			productName = SwiftUtilities;
-		};
 		AD585EDC2E1D631B003BB6D1 /* StoreKitWrapper */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = AD585EDB2E1D631B003BB6D1 /* XCRemoteSwiftPackageReference "StoreKitWrapper" */;
@@ -693,6 +688,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = AD585EDE2E1D6334003BB6D1 /* XCRemoteSwiftPackageReference "LicenseListWrapper" */;
 			productName = LicenseListWrapper;
+		};
+		ADB088C52E51715700655540 /* SwiftAppUtilities */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = ADB088C42E51715700655540 /* XCRemoteSwiftPackageReference "SwiftAppUtilities" */;
+			productName = SwiftAppUtilities;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

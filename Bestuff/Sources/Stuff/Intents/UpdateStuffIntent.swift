@@ -24,11 +24,15 @@ struct UpdateStuffIntent: AppIntent {
 
     func perform() throws -> some ReturnsValue<StuffEntity> {
         Logger(#file).info("Running UpdateStuffIntent")
+        let trimmedTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmedTitle.isEmpty else {
+            throw $title.needsValueError()
+        }
         let model = try stuff.model(in: modelContainer.mainContext)
         let tagModels = try tags.map { try $0.model(in: modelContainer.mainContext) }
         let updatedModel = StuffService.update(
             model: model,
-            title: title,
+            title: trimmedTitle,
             note: note,
             occurredAt: occurredAt,
             tags: tagModels

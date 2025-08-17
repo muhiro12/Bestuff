@@ -13,9 +13,13 @@ struct GetTagByIDIntent: AppIntent {
     }
 
     func perform() throws -> some ReturnsValue<TagEntity?> {
+        let trimmed = id.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else {
+            throw $id.needsValueError()
+        }
         let entity = try TagService.get(
             context: modelContainer.mainContext,
-            id: id
+            id: trimmed
         )
         return .result(value: entity)
     }

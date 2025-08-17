@@ -239,7 +239,7 @@ struct PlanView: View {
                     tagModels.append(Tag.findOrCreate(name: trimmed, in: modelContext))
                 }
 
-                let model = try StuffService.create(
+                let model = StuffService.create(
                     context: modelContext,
                     title: title,
                     note: note,
@@ -251,9 +251,6 @@ struct PlanView: View {
                 isShowingAlert = true
                 savedStuff = model
                 isShowingSavedSheet = true
-            } catch {
-                alertMessage = "Failed to save as Stuff"
-                isShowingAlert = true
             }
         }
     }

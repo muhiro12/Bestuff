@@ -112,12 +112,12 @@ struct StuffFormView: View {
                     .split(separator: ",")
                     .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
                     .filter { !$0.isEmpty }
-                    .compactMap { try? TagService.create(context: modelContext, name: $0) }
+                    .compactMap { TagService.create(context: modelContext, name: $0) }
             )
             selectedTags.formUnion(newTagSet)
             if let stuff {
                 Logger(#file).info("Updating stuff \(String(describing: stuff.id))")
-                _ = try? StuffService.update(
+                _ = StuffService.update(
                     model: stuff,
                     title: title,
                     note: note.isEmpty ? nil : note,
@@ -127,7 +127,7 @@ struct StuffFormView: View {
                 Logger(#file).notice("Updated stuff \(String(describing: stuff.id))")
             } else {
                 Logger(#file).info("Creating new stuff")
-                _ = try? StuffService.create(
+                _ = StuffService.create(
                     context: modelContext,
                     title: title,
                     note: note.isEmpty ? nil : note,
@@ -155,7 +155,7 @@ struct StuffFormView: View {
     let configuration: ModelConfiguration = .init(schema: schema, isStoredInMemoryOnly: true)
     let container: ModelContainer = try! .init(for: schema, configurations: [configuration])
     let context: ModelContext = .init(container)
-    let sample = try! StuffService.create(
+    let sample = StuffService.create(
         context: context,
         title: String(localized: "Sample"),
         note: nil,

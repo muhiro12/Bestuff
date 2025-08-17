@@ -16,8 +16,12 @@ struct UpdateTagIntent: AppIntent {
     }
 
     func perform() throws -> some ReturnsValue<TagEntity> {
+        let trimmedName = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmedName.isEmpty else {
+            throw $name.needsValueError()
+        }
         let model = try tag.model(in: modelContainer.mainContext)
-        let updated = TagService.update(model: model, name: name)
+        let updated = TagService.update(model: model, name: trimmedName)
         guard let entity = TagEntity(updated) else {
             throw TagError.tagNotFound
         }

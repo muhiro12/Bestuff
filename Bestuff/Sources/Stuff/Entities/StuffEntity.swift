@@ -29,7 +29,7 @@ extension StuffEntity: AppEntity {
     }
 }
 
-extension StuffEntity: ModelBridgeable {
+extension StuffEntity {
     private static let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyyMMdd"
