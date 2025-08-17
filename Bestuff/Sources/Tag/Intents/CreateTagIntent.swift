@@ -12,7 +12,11 @@ struct CreateTagIntent: AppIntent {
     }
 
     func perform() throws -> some ReturnsValue<TagEntity> {
-        let tag = TagService.create(context: modelContainer.mainContext, name: name)
+        let trimmedName = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmedName.isEmpty else {
+            throw $name.needsValueError()
+        }
+        let tag = TagService.create(context: modelContainer.mainContext, name: trimmedName)
         guard let entity = TagEntity(tag) else {
             throw TagError.tagNotFound
         }

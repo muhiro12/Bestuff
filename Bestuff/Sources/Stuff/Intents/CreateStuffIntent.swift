@@ -23,10 +23,14 @@ struct CreateStuffIntent: AppIntent {
 
     func perform() throws -> some ReturnsValue<StuffEntity> {
         Logger(#file).info("Running CreateStuffIntent")
+        let trimmedTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmedTitle.isEmpty else {
+            throw $title.needsValueError()
+        }
         let tagModels = try tags.map { try $0.model(in: modelContainer.mainContext) }
         let model = StuffService.create(
             context: modelContainer.mainContext,
-            title: title,
+            title: trimmedTitle,
             note: note,
             occurredAt: occurredAt,
             tags: tagModels
