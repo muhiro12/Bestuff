@@ -8,12 +8,12 @@ nonisolated final class Tag {
 
     private(set) var stuffs: [Stuff]?
 
-    private init(name: String, typeID: String = TagType.custom.rawValue) {
+    private init(name: String, typeID: String = TagType.label.rawValue) {
         self.name = name
         self.typeID = typeID
     }
 
-    static func create(name: String, type: TagType = .custom) -> Tag {
+    static func create(name: String, type: TagType = .label) -> Tag {
         .init(name: name, typeID: type.rawValue)
     }
 
@@ -25,7 +25,7 @@ nonisolated final class Tag {
         self.typeID = type.rawValue
     }
 
-    static func fetch(byName name: String, type: TagType = .custom, in context: ModelContext) throws -> Tag? {
+    static func fetch(byName name: String, type: TagType = .label, in context: ModelContext) throws -> Tag? {
         try context.fetch(
             FetchDescriptor<Tag>(
                 predicate: #Predicate {
@@ -35,7 +35,7 @@ nonisolated final class Tag {
         ).first
     }
 
-    static func findOrCreate(name: String, in context: ModelContext, type: TagType = .custom) -> Tag {
+    static func findOrCreate(name: String, in context: ModelContext, type: TagType = .label) -> Tag {
         if let existing = try? fetch(byName: name, type: type, in: context) {
             return existing
         }

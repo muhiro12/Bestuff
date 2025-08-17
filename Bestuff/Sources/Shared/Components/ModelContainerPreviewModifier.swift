@@ -14,7 +14,7 @@ struct ModelContainerPreviewModifier: PreviewModifier {
         )
         let context: ModelContext = .init(container)
         for stuff in SampleData.stuffs {
-            let tagModels: [Tag] = stuff.tags.map { Tag.findOrCreate(name: $0, in: context, type: .custom) }
+            let tagModels: [Tag] = stuff.tags.map { Tag.findOrCreate(name: $0, in: context, type: .label) }
             _ = StuffService.create(
                 context: context,
                 title: stuff.title,

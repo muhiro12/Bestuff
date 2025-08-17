@@ -98,7 +98,7 @@ struct DebugListView: View {
         Logger(#file).info("Creating sample data")
         withAnimation {
             for stuff in SampleData.stuffs {
-                let tagModels: [Tag] = stuff.tags.map { Tag.findOrCreate(name: $0, in: modelContext, type: .custom) }
+                let tagModels: [Tag] = stuff.tags.map { Tag.findOrCreate(name: $0, in: modelContext, type: .label) }
                 _ = StuffService.create(
                     context: modelContext,
                     title: stuff.title,
