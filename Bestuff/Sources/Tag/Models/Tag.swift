@@ -47,4 +47,15 @@ nonisolated final class Tag {
 
 extension Tag {
     var type: TagType? { TagType(rawValue: typeID) }
+
+    var displayName: String {
+        switch type {
+        case .period:
+            name
+        case .resource:
+            name
+        case .label, .none:
+            name
+        }
+    }
 }

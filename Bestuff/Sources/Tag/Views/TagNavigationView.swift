@@ -6,13 +6,29 @@ struct TagNavigationView: View {
     @State private var selection: Tag?
     @State private var searchText = ""
     @State private var duplicateCount: Int = 0
+    @State private var filterType: TagType?
 
     var body: some View {
         NavigationSplitView {
-            TagListView(
-                selection: $selection,
-                searchText: $searchText
-            )
+            VStack(spacing: 8) {
+                Picker("Filter", selection: Binding(get: {
+                    filterType ?? .label
+                }, set: { newValue in
+                    filterType = newValue
+                    if searchText.isEmpty { /* no-op */ }
+                })) {
+                    Text("All").tag(TagType?.none)
+                    Text("Labels").tag(TagType?.some(.label))
+                    Text("Periods").tag(TagType?.some(.period))
+                    Text("Resources").tag(TagType?.some(.resource))
+                }
+                .pickerStyle(.segmented)
+                TagListView(
+                    selection: $selection,
+                    searchText: $searchText,
+                    filterType: $filterType
+                )
+            }
         } detail: {
             if let tag = selection {
                 StuffListView(
