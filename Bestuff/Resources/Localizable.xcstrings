@@ -52,6 +52,9 @@
     "Add to Reminders…" : {
 
     },
+    "After Date" : {
+
+    },
     "App Version" : {
       "localizations" : {
         "ja" : {
@@ -71,6 +74,9 @@
           }
         }
       }
+    },
+    "Before Date" : {
+
     },
     "Best Stuff" : {
       "localizations" : {
@@ -312,6 +318,12 @@
     "Due Date" : {
 
     },
+    "Duplicate Tags" : {
+
+    },
+    "Duplicates" : {
+
+    },
     "Edit Stuff" : {
       "localizations" : {
         "ja" : {
@@ -377,6 +389,15 @@
           }
         }
       }
+    },
+    "Get Next Stuff" : {
+
+    },
+    "Get Previous Stuff" : {
+
+    },
+    "Get Stuffs On Date" : {
+
     },
     "Get Tag By ID" : {
       "localizations" : {
@@ -703,6 +724,9 @@
           }
         }
       }
+    },
+    "Resolve" : {
+
     },
     "Resources" : {
 
