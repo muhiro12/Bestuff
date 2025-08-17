@@ -79,6 +79,21 @@ enum TagService {
         }
     }
 
+    static func mergeDuplicates(parent: Tag, children: [Tag]) throws {
+        for child in children {
+            for item in child.stuffs ?? [] {
+                var itemTags = item.tags ?? []
+                if !itemTags.contains(where: { $0 === parent }) {
+                    itemTags.append(parent)
+                    item.update(tags: itemTags)
+                }
+            }
+        }
+        for child in children {
+            child.delete()
+        }
+    }
+
     private static func findDuplicateGroups(context: ModelContext) throws -> [String: [Tag]] {
         let allTags: [Tag] = try context.fetch(FetchDescriptor<Tag>())
         let key: (Tag) -> String = { tag in

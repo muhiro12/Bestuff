@@ -9,18 +9,32 @@ struct DuplicateTagListView: View {
 
     @State private var groups: [[Tag]] = []
     @State private var isResolving = false
+    @State private var selectedParents: [Int: Tag] = [:]
 
     var body: some View {
         NavigationStack {
             List {
-                ForEach(Array(groups.enumerated()), id: \.offset) { _, group in
+                ForEach(Array(groups.enumerated()), id: \.offset) { index, group in
                     Section(header: Text(sectionTitle(for: group))) {
                         ForEach(group) { tag in
-                            Text(tag.name)
+                            HStack {
+                                Text(tag.name)
+                                Spacer()
+                                if selectedParents[index]?.id == tag.id {
+                                    Text("Parent")
+                                        .font(.footnote)
+                                        .foregroundStyle(.secondary)
+                                }
+                            }
+                            .contentShape(Rectangle())
+                            .onTapGesture {
+                                selectedParents[index] = tag
+                            }
                         }
                         Button("Merge", systemImage: "link") {
-                            merge(group: group)
+                            merge(groupIndex: index)
                         }
+                        .disabled(selectedParents[index] == nil || isResolving)
                     }
                 }
             }
@@ -56,10 +70,16 @@ struct DuplicateTagListView: View {
         isResolving = false
     }
 
-    private func merge(group: [Tag]) {
+    private func merge(groupIndex: Int) {
         isResolving = true
         do {
-            try TagService.mergeDuplicates(tags: group)
+            let group = groups[groupIndex]
+            guard let parent = selectedParents[groupIndex] else {
+                isResolving = false
+                return
+            }
+            let children = group.filter { $0.id != parent.id }
+            try TagService.mergeDuplicates(parent: parent, children: children)
             refresh()
         } catch {
             // No-op
