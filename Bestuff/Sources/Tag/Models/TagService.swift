@@ -106,4 +106,27 @@ enum TagService {
         }
         return groups.filter { $0.value.count > 1 }
     }
+
+    // MARK: - Label operations
+
+    static func addLabels(context: ModelContext, to model: Stuff, names: [String]) {
+        let labels: [Tag] = names
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .filter { !$0.isEmpty }
+            .map { Tag.findOrCreate(name: $0, in: context, type: .label) }
+        var current = model.tags ?? []
+        for tag in labels where current.contains(where: { $0.id == tag.id }) == false {
+            current.append(tag)
+        }
+        model.update(tags: current)
+    }
+
+    static func removeLabels(from model: Stuff, names: [String]) {
+        let targets = Set(names.map { $0.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() })
+        let filtered = (model.tags ?? []).filter { tag in
+            guard tag.type == .label else { return true }
+            return targets.contains(tag.name.lowercased()) == false
+        }
+        model.update(tags: filtered)
+    }
 }

@@ -14,6 +14,7 @@ struct StuffView: View {
     @Environment(\.modelContext)
     private var modelContext
     @State private var isEditPresented = false
+    @State private var isLabelEditorPresented = false
 
     var body: some View {
         Form {
@@ -77,6 +78,12 @@ struct StuffView: View {
                 EditStuffButton { isEditPresented = true }
                     .environment(stuff)
             }
+            ToolbarItem(placement: .primaryAction) {
+                Button("Labels", systemImage: "tag") {
+                    isLabelEditorPresented = true
+                }
+                .buttonStyle(.bordered)
+            }
         }
         .onAppear {
             Logger(#file).info("StuffView appeared for id \(String(describing: stuff.id))")
@@ -84,6 +91,10 @@ struct StuffView: View {
     }
     .sheet(isPresented: $isEditPresented) {
     NavigationStack { StuffFormView() }
+    .environment(stuff)
+    }
+    .sheet(isPresented: $isLabelEditorPresented) {
+    NavigationStack { LabelEditorView() }
     .environment(stuff)
     }
 
