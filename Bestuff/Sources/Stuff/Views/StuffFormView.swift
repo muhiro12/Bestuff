@@ -57,7 +57,7 @@ struct StuffFormView: View {
                 )
                 .textInputAutocapitalization(.never)
                 .autocorrectionDisabled()
-                // Suggestions
+                // Suggestions by prefix
                 if let suggestions = try? TagService.suggestLabels(
                     context: modelContext,
                     prefix: newTags,
@@ -69,6 +69,25 @@ struct StuffFormView: View {
                                 Button(tag.name) {
                                     selectedTags.insert(tag)
                                     newTags = ""
+                                }
+                                .buttonStyle(.bordered)
+                            }
+                        }
+                        .padding(.vertical, 4)
+                    }
+                }
+                // Quick picks when no input
+                if newTags.isEmpty,
+                   let recents = try? TagService.mostUsedLabels(
+                    context: modelContext,
+                    excluding: Array(selectedTags),
+                    limit: 10
+                   ), !recents.isEmpty {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 8) {
+                            ForEach(recents) { tag in
+                                Button(tag.name) {
+                                    selectedTags.insert(tag)
                                 }
                                 .buttonStyle(.bordered)
                             }

@@ -50,6 +50,28 @@ struct LabelEditorView: View {
                         .padding(.vertical, 4)
                     }
                 }
+                if addText.isEmpty,
+                   let recents = try? TagService.mostUsedLabels(
+                    context: modelContext,
+                    excluding: Array(stuff.tags ?? []),
+                    limit: 10
+                   ), !recents.isEmpty {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 8) {
+                            ForEach(recents) { tag in
+                                Button(tag.name) {
+                                    if addText.isEmpty {
+                                        addText = tag.name
+                                    } else {
+                                        addText += ",\(tag.name)"
+                                    }
+                                }
+                                .buttonStyle(.bordered)
+                            }
+                        }
+                        .padding(.vertical, 4)
+                    }
+                }
             }
             Section("Remove Labels") {
                 TextField("Comma separated", text: $removeText)

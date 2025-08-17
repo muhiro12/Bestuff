@@ -57,6 +57,24 @@ enum TagService {
         return results
     }
 
+    static func mostUsedLabels(
+        context: ModelContext,
+        excluding excluded: [Tag] = [],
+        limit: Int = 10
+    ) throws -> [Tag] {
+        let excludedIDs: Set<PersistentIdentifier> = Set(excluded.compactMap(\.id))
+        let labels = try getAllLabels(context: context).filter { tag in
+            !excludedIDs.contains(tag.id)
+        }
+        let sorted = labels.sorted { lhs, rhs in
+            (lhs.stuffs?.count ?? 0) > (rhs.stuffs?.count ?? 0)
+        }
+        if sorted.count > limit {
+            return Array(sorted.prefix(limit))
+        }
+        return sorted
+    }
+
     static func get(context: ModelContext, id: String) throws -> TagEntity? {
         let persistentID = try PersistentIdentifier(base64Encoded: id)
         guard let tag = try context.fetch(
