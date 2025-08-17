@@ -10,6 +10,9 @@ struct GetStuffsInMonthIntent: AppIntent {
     @Parameter(title: "Any Date In Month")
     private var date: Date
 
+    @Parameter(title: "Filter Tag Type")
+    private var filterType: TagTypeIntent?
+
     @Dependency private var modelContainer: ModelContainer
 
     func perform() throws -> some ReturnsValue<[StuffEntity]> {
@@ -17,7 +20,15 @@ struct GetStuffsInMonthIntent: AppIntent {
             context: modelContainer.mainContext,
             monthOf: date
         )
-        let entities = models.compactMap(StuffEntity.init)
+        let filtered: [Stuff]
+        if let filterType {
+            filtered = models.filter { model in
+                (model.tags ?? []).contains { $0.type == filterType.modelType }
+            }
+        } else {
+            filtered = models
+        }
+        let entities = filtered.compactMap(StuffEntity.init)
         return .result(value: entities)
     }
 }

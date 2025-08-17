@@ -21,6 +21,10 @@ enum TagService {
         return .init(tag)
     }
 
+    static func getByName(context: ModelContext, name: String, type: TagType = .label) throws -> Tag? {
+        try Tag.fetch(byName: name, type: type, in: context)
+    }
+
     static func update(model: Tag, name: String) -> Tag {
         model.update(name: name)
         return model
