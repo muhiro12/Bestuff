@@ -4,37 +4,47 @@ import SwiftData
 @Model
 nonisolated final class Tag {
     private(set) var name: String
+    private(set) var typeID: String
 
     private(set) var stuffs: [Stuff]?
 
-    private init(name: String) {
+    private init(name: String, typeID: String = TagType.custom.rawValue) {
         self.name = name
+        self.typeID = typeID
     }
 
-    static func create(name: String) -> Tag {
-        .init(name: name)
+    static func create(name: String, type: TagType = .custom) -> Tag {
+        .init(name: name, typeID: type.rawValue)
     }
 
     func update(name: String) {
         self.name = name
     }
 
-    static func fetch(byName name: String, in context: ModelContext) throws -> Tag? {
+    func update(type: TagType) {
+        self.typeID = type.rawValue
+    }
+
+    static func fetch(byName name: String, type: TagType = .custom, in context: ModelContext) throws -> Tag? {
         try context.fetch(
             FetchDescriptor<Tag>(
                 predicate: #Predicate {
-                    $0.name.localizedStandardContains(name)
+                    $0.name == name && $0.typeID == type.rawValue
                 }
             )
         ).first
     }
 
-    static func findOrCreate(name: String, in context: ModelContext) -> Tag {
-        if let existing = try? fetch(byName: name, in: context) {
+    static func findOrCreate(name: String, in context: ModelContext, type: TagType = .custom) -> Tag {
+        if let existing = try? fetch(byName: name, type: type, in: context) {
             return existing
         }
-        let tag = create(name: name)
+        let tag = create(name: name, type: type)
         context.insert(tag)
         return tag
     }
+}
+
+extension Tag {
+    var type: TagType? { TagType(rawValue: typeID) }
 }

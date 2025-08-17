@@ -3,8 +3,8 @@ import SwiftData
 
 @MainActor
 enum TagService {
-    static func create(context: ModelContext, name: String) -> Tag {
-        Tag.findOrCreate(name: name, in: context)
+    static func create(context: ModelContext, name: String, type: TagType = .custom) -> Tag {
+        Tag.findOrCreate(name: name, in: context, type: type)
     }
 
     static func getAll(context: ModelContext) throws -> [TagEntity] {
@@ -96,10 +96,10 @@ enum TagService {
 
     private static func findDuplicateGroups(context: ModelContext) throws -> [String: [Tag]] {
         let allTags: [Tag] = try context.fetch(FetchDescriptor<Tag>())
-        let key: (Tag) -> String = { tag in
-            tag.name.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        let groups = Dictionary(grouping: allTags) { tag in
+            let normalized = tag.name.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+            return tag.typeID + "::" + normalized
         }
-        let groups = Dictionary(grouping: allTags, by: key)
         return groups.filter { $0.value.count > 1 }
     }
 }

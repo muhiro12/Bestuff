@@ -232,11 +232,11 @@ struct PlanView: View {
                 let note = noteLines.isEmpty ? nil : noteLines.joined(separator: "\n")
 
                 var tagModels: [Tag] = []
-                tagModels.append(Tag.findOrCreate(name: selection.period.title, in: modelContext))
+                tagModels.append(Tag.findOrCreate(name: selection.period.title, in: modelContext, type: .period))
                 for resource in selection.item.resources.prefix(5) {
                     let trimmed = resource.trimmingCharacters(in: .whitespacesAndNewlines)
                     guard !trimmed.isEmpty else { continue }
-                    tagModels.append(Tag.findOrCreate(name: trimmed, in: modelContext))
+                    tagModels.append(Tag.findOrCreate(name: trimmed, in: modelContext, type: .resource))
                 }
 
                 let model = StuffService.create(
