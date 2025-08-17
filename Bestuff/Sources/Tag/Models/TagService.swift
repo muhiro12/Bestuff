@@ -56,6 +56,29 @@ enum TagService {
         try findDuplicateGroups(context: context).values.compactMap(\.first)
     }
 
+    static func duplicateGroups(context: ModelContext) throws -> [[Tag]] {
+        Array(try findDuplicateGroups(context: context).values)
+            .map { $0.sorted { $0.name < $1.name } }
+            .sorted { ($0.first?.name ?? "") < ($1.first?.name ?? "") }
+    }
+
+    static func mergeDuplicates(tags: [Tag]) throws {
+        guard let parent = tags.first else { return }
+        let children = tags.dropFirst()
+        for child in children {
+            for item in child.stuffs ?? [] {
+                var itemTags = item.tags ?? []
+                if !itemTags.contains(where: { $0 === parent }) {
+                    itemTags.append(parent)
+                    item.update(tags: itemTags)
+                }
+            }
+        }
+        for child in children {
+            child.delete()
+        }
+    }
+
     private static func findDuplicateGroups(context: ModelContext) throws -> [String: [Tag]] {
         let allTags: [Tag] = try context.fetch(FetchDescriptor<Tag>())
         let key: (Tag) -> String = { tag in
