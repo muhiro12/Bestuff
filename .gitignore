@@ -104,3 +104,6 @@ fastlane/test_output
 # https://github.com/johnno1962/injectionforxcode
 
 iOSInjectionProject/
+
+# Codex CLI local artifacts
+.codex_*
