@@ -25,6 +25,9 @@ struct StuffListView: View {
     @State private var isRecapPresented = false
     @State private var isPlanPresented = false
     @State private var isTagPresented = false
+    @State private var isAddPresented = false
+    @State private var isSettingsPresented = false
+    @State private var isDebugPresented = false
     @AppStorage(BoolAppStorageKey.isDebugOn)
     private var isDebugOn
 
@@ -70,7 +73,7 @@ struct StuffListView: View {
         .navigationTitle("Best Stuff")
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
-                AddStuffButton()
+                AddStuffButton { isAddPresented = true }
             }
             ToolbarItem(placement: .primaryAction) {
                 Menu {
@@ -105,11 +108,11 @@ struct StuffListView: View {
                 .buttonStyle(.bordered)
             }
             ToolbarItem(placement: .secondaryAction) {
-                SettingsButton()
+                SettingsButton { isSettingsPresented = true }
             }
             if isDebugOn {
                 ToolbarItem(placement: .secondaryAction) {
-                    DebugButton()
+                    DebugButton { isDebugPresented = true }
                 }
             }
         }
@@ -121,6 +124,15 @@ struct StuffListView: View {
         }
         .sheet(isPresented: $isTagPresented) {
             TagNavigationView()
+        }
+        .sheet(isPresented: $isAddPresented) {
+            NavigationStack { StuffFormView() }
+        }
+        .sheet(isPresented: $isSettingsPresented) {
+            NavigationStack { SettingsListView() }
+        }
+        .sheet(isPresented: $isDebugPresented) {
+            NavigationStack { DebugListView() }
         }
     }
 

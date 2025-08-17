@@ -8,22 +8,17 @@
 import SwiftUI
 
 struct AddStuffButton: View {
-    @State private var isPresented = false
+    var onTap: () -> Void = {}
 
     var body: some View {
         Button("Add Stuff", systemImage: "plus") {
-            Logger(#file).info("StuffFormButton tapped for new")
-            isPresented = true
+            Logger(#file).info("AddStuffButton tapped")
+            onTap()
         }
         .glassEffect()
-        .sheet(isPresented: $isPresented) {
-            NavigationStack {
-                StuffFormView()
-            }
-        }
     }
 }
 
 #Preview(traits: .sampleData) {
-    AddStuffButton()
+    AddStuffButton {}
 }

@@ -13,6 +13,7 @@ struct StuffView: View {
     private var stuff
     @Environment(\.modelContext)
     private var modelContext
+    @State private var isEditPresented = false
 
     var body: some View {
         Form {
@@ -73,13 +74,17 @@ struct StuffView: View {
                 )
             }
             ToolbarItem(placement: .primaryAction) {
-                EditStuffButton()
+                EditStuffButton { isEditPresented = true }
                     .environment(stuff)
             }
         }
         .onAppear {
             Logger(#file).info("StuffView appeared for id \(String(describing: stuff.id))")
         }
+    }
+    .sheet(isPresented: $isEditPresented) {
+    NavigationStack { StuffFormView() }
+    .environment(stuff)
     }
 
     private func applyFeedback(delta: Int) {

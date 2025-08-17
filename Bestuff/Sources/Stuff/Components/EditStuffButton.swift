@@ -11,23 +11,17 @@ struct EditStuffButton: View {
     @Environment(Stuff.self)
     private var stuff
 
-    @State private var isPresented = false
+    var onTap: () -> Void = {}
 
     var body: some View {
         Button("Edit Stuff", systemImage: "pencil") {
-            Logger(#file).info("StuffFormButton tapped for edit")
-            isPresented = true
+            Logger(#file).info("EditStuffButton tapped")
+            onTap()
         }
         .glassEffect()
-        .sheet(isPresented: $isPresented) {
-            NavigationStack {
-                StuffFormView()
-            }
-            .environment(stuff)
-        }
     }
 }
 
 #Preview(traits: .sampleData) {
-    AddStuffButton()
+    EditStuffButton {}
 }
