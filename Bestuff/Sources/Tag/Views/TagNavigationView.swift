@@ -1,8 +1,11 @@
+import SwiftData
 import SwiftUI
 
 struct TagNavigationView: View {
+    @Environment(\.modelContext) private var modelContext
     @State private var selection: Tag?
     @State private var searchText = ""
+    @State private var duplicateCount: Int = 0
 
     var body: some View {
         NavigationSplitView {
@@ -27,7 +30,11 @@ struct TagNavigationView: View {
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 NavigationLink(value: "duplicates") {
-                    Label("Duplicates", systemImage: "square.stack.3d.up")
+                    if duplicateCount > 0 {
+                        Label("Duplicates (\(duplicateCount))", systemImage: "square.stack.3d.up")
+                    } else {
+                        Label("Duplicates", systemImage: "square.stack.3d.up")
+                    }
                 }
             }
         }
@@ -36,6 +43,15 @@ struct TagNavigationView: View {
                 DuplicateTagListView()
             }
         }
+        .task {
+            await refreshDuplicateCount()
+        }
+    }
+
+    @MainActor
+    private func refreshDuplicateCount() {
+        let count = (try? TagService.findDuplicates(context: modelContext).count) ?? 0
+        duplicateCount = count
     }
 }
 
