@@ -67,7 +67,7 @@ struct TagNavigationView: View {
             }
         }
         .task {
-            await refreshDuplicateCount()
+            refreshDuplicateCount()
         }
     }
 

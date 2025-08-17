@@ -23,6 +23,12 @@
         }
       }
     },
+    "Add label" : {
+
+    },
+    "Add Labels" : {
+
+    },
     "Add Stuff" : {
       "localizations" : {
         "ja" : {
@@ -52,7 +58,10 @@
     "Add to Reminders…" : {
 
     },
-    "After Date" : {
+    "All" : {
+
+    },
+    "Any Date In Month" : {
 
     },
     "App Version" : {
@@ -74,9 +83,6 @@
           }
         }
       }
-    },
-    "Before Date" : {
-
     },
     "Best Stuff" : {
       "localizations" : {
@@ -168,6 +174,9 @@
           }
         }
       }
+    },
+    "Comma separated" : {
+
     },
     "Complete" : {
 
@@ -262,6 +271,9 @@
         }
       }
     },
+    "Current Labels" : {
+
+    },
     "Date" : {
       "localizations" : {
         "ja" : {
@@ -291,6 +303,9 @@
           }
         }
       }
+    },
+    "Delete All" : {
+
     },
     "Delete Stuff" : {
       "localizations" : {
@@ -324,6 +339,12 @@
     "Duplicates" : {
 
     },
+    "Duplicates (%lld)" : {
+
+    },
+    "Edit Labels" : {
+
+    },
     "Edit Stuff" : {
       "localizations" : {
         "ja" : {
@@ -348,6 +369,12 @@
 
     },
     "Feedback" : {
+
+    },
+    "Filter" : {
+
+    },
+    "Filter Tag Type" : {
 
     },
     "Fitness" : {
@@ -390,10 +417,10 @@
         }
       }
     },
-    "Get Next Stuff" : {
+    "Get Stuffs By Tag" : {
 
     },
-    "Get Previous Stuff" : {
+    "Get Stuffs In Month" : {
 
     },
     "Get Stuffs On Date" : {
@@ -432,6 +459,12 @@
         }
       }
     },
+    "Label" : {
+
+    },
+    "Labels" : {
+
+    },
     "Language" : {
       "localizations" : {
         "ja" : {
@@ -445,6 +478,9 @@
     "Mark Complete" : {
 
     },
+    "Merge" : {
+
+    },
     "Name" : {
       "localizations" : {
         "ja" : {
@@ -456,6 +492,7 @@
       }
     },
     "New Tags (comma separated)" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -495,6 +532,9 @@
         }
       }
     },
+    "No labels" : {
+
+    },
     "No suggestions yet" : {
       "localizations" : {
         "ja" : {
@@ -504,6 +544,9 @@
           }
         }
       }
+    },
+    "No unused labels" : {
+
     },
     "None" : {
       "localizations" : {
@@ -602,6 +645,9 @@
     "P%lld" : {
 
     },
+    "Parent" : {
+
+    },
     "Period" : {
       "localizations" : {
         "ja" : {
@@ -611,6 +657,9 @@
           }
         }
       }
+    },
+    "Periods" : {
+
     },
     "Personal" : {
       "localizations" : {
@@ -705,6 +754,9 @@
         }
       }
     },
+    "Remove Labels" : {
+
+    },
     "Replace the worn-out pair." : {
       "localizations" : {
         "ja" : {
@@ -725,7 +777,10 @@
         }
       }
     },
-    "Resolve" : {
+    "Resolve All" : {
+
+    },
+    "Resource" : {
 
     },
     "Resources" : {
@@ -944,6 +999,12 @@
         }
       }
     },
+    "Tag Name" : {
+
+    },
+    "Tag Type" : {
+
+    },
     "Tags" : {
       "localizations" : {
         "ja" : {
@@ -1026,6 +1087,12 @@
           }
         }
       }
+    },
+    "Unused" : {
+
+    },
+    "Unused Labels" : {
+
     },
     "Update Required" : {
       "localizations" : {

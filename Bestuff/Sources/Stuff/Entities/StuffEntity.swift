@@ -1,6 +1,7 @@
 import AppIntents
-import FoundationModels
 import SwiftData
+#if canImport(FoundationModels)
+import FoundationModels
 
 @Generable
 nonisolated struct StuffEntity {
@@ -12,6 +13,16 @@ nonisolated struct StuffEntity {
     @Guide(description: "yyyyMMdd format")
     let occurredAt: String
 }
+#else
+nonisolated struct StuffEntity {
+    let id: String
+    let title: String
+    let note: String?
+    let score: Int
+    let tags: [String]
+    let occurredAt: String
+}
+#endif
 
 extension StuffEntity: AppEntity {
     static var typeDisplayRepresentation: TypeDisplayRepresentation {

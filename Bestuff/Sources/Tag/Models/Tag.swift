@@ -26,10 +26,12 @@ nonisolated final class Tag {
     }
 
     static func fetch(byName name: String, type: TagType = .label, in context: ModelContext) throws -> Tag? {
-        try context.fetch(
+        let typeID = type.rawValue
+        let targetName = name
+        return try context.fetch(
             FetchDescriptor<Tag>(
                 predicate: #Predicate {
-                    $0.name == name && $0.typeID == type.rawValue
+                    $0.name == targetName && $0.typeID == typeID
                 }
             )
         ).first

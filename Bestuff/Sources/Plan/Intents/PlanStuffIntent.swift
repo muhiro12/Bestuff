@@ -6,8 +6,10 @@
 //
 
 import AppIntents
-import FoundationModels
 import SwiftData
+#if canImport(FoundationModels)
+import FoundationModels
+#endif
 
 @MainActor
 struct PlanStuffIntent: AppIntent {

@@ -12,23 +12,17 @@ enum TagService {
     }
 
     static func getAllLabels(context: ModelContext) throws -> [Tag] {
-        try context.fetch(
+        let all = try context.fetch(
             FetchDescriptor<Tag>(
-                predicate: #Predicate { $0.typeID == TagType.label.rawValue },
                 sortBy: [SortDescriptor(\Tag.name, order: .forward)]
             )
         )
+        return all.filter { $0.typeID == TagType.label.rawValue }
     }
 
     static func getUnusedLabels(context: ModelContext) throws -> [Tag] {
-        try context.fetch(
-            FetchDescriptor<Tag>(
-                predicate: #Predicate {
-                    $0.typeID == TagType.label.rawValue && ($0.stuffs ?? []).isEmpty
-                },
-                sortBy: [SortDescriptor(\Tag.name, order: .forward)]
-            )
-        )
+        let labels = try getAllLabels(context: context)
+        return labels.filter { ($0.stuffs ?? []).isEmpty }
     }
 
     static func suggestLabels(
@@ -42,15 +36,11 @@ enum TagService {
             return []
         }
         let excludedIDs: Set<PersistentIdentifier> = Set(excluded.compactMap(\.id))
-        let descriptor = FetchDescriptor<Tag>(
-            predicate: #Predicate { tag in
-                tag.typeID == TagType.label.rawValue &&
-                    tag.name.localizedStandardContains(trimmed) &&
-                    !excludedIDs.contains(tag.id)
-            },
-            sortBy: [SortDescriptor(\Tag.name, order: .forward)]
-        )
-        var results = try context.fetch(descriptor)
+        let labels = try getAllLabels(context: context)
+        var results = labels.filter { tag in
+            tag.name.localizedStandardContains(trimmed) && !excludedIDs.contains(tag.id)
+        }
+        results.sort { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
         if results.count > limit {
             results = Array(results.prefix(limit))
         }
@@ -77,9 +67,8 @@ enum TagService {
 
     static func get(context: ModelContext, id: String) throws -> TagEntity? {
         let persistentID = try PersistentIdentifier(base64Encoded: id)
-        guard let tag = try context.fetch(
-            FetchDescriptor<Tag>(predicate: #Predicate { $0.id == persistentID })
-        ).first else {
+        let all: [Tag] = try context.fetch(FetchDescriptor<Tag>())
+        guard let tag = all.first(where: { $0.id == persistentID }) else {
             return nil
         }
         return .init(tag)

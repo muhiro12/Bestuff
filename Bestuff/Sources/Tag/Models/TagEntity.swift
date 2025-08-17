@@ -1,12 +1,19 @@
 import AppIntents
-import FoundationModels
 import SwiftData
+#if canImport(FoundationModels)
+import FoundationModels
 
 @Generable
 nonisolated struct TagEntity {
     let id: String
     let name: String
 }
+#else
+nonisolated struct TagEntity {
+    let id: String
+    let name: String
+}
+#endif
 
 extension TagEntity: AppEntity {
     static var typeDisplayRepresentation: TypeDisplayRepresentation {
