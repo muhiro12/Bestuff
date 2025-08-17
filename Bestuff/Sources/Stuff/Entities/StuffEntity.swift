@@ -64,7 +64,7 @@ extension StuffEntity {
         }
         model.update(occurredAt: occurredDate)
         if !tags.isEmpty {
-            let tagModels: [Tag] = tags.map { Tag.findOrCreate(name: $0, in: context) }
+            let tagModels: [Tag] = tags.map { Tag.findOrCreate(name: $0, in: context, type: .label) }
             model.update(tags: tagModels)
         }
         return model

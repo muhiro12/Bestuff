@@ -3,8 +3,8 @@ import SwiftData
 
 @MainActor
 enum TagService {
-    static func create(context: ModelContext, name: String) -> Tag {
-        Tag.findOrCreate(name: name, in: context)
+    static func create(context: ModelContext, name: String, type: TagType = .label) -> Tag {
+        Tag.findOrCreate(name: name, in: context, type: type)
     }
 
     static func getAll(context: ModelContext) throws -> [TagEntity] {
@@ -19,6 +19,10 @@ enum TagService {
             return nil
         }
         return .init(tag)
+    }
+
+    static func getByName(context: ModelContext, name: String, type: TagType = .label) throws -> Tag? {
+        try Tag.fetch(byName: name, type: type, in: context)
     }
 
     static func update(model: Tag, name: String) -> Tag {
@@ -56,12 +60,73 @@ enum TagService {
         try findDuplicateGroups(context: context).values.compactMap(\.first)
     }
 
+    static func duplicateGroups(context: ModelContext) throws -> [[Tag]] {
+        Array(try findDuplicateGroups(context: context).values)
+            .map { $0.sorted { $0.name < $1.name } }
+            .sorted { ($0.first?.name ?? "") < ($1.first?.name ?? "") }
+    }
+
+    static func mergeDuplicates(tags: [Tag]) throws {
+        guard let parent = tags.first else { return }
+        let children = tags.dropFirst()
+        for child in children {
+            for item in child.stuffs ?? [] {
+                var itemTags = item.tags ?? []
+                if !itemTags.contains(where: { $0 === parent }) {
+                    itemTags.append(parent)
+                    item.update(tags: itemTags)
+                }
+            }
+        }
+        for child in children {
+            child.delete()
+        }
+    }
+
+    static func mergeDuplicates(parent: Tag, children: [Tag]) throws {
+        for child in children {
+            for item in child.stuffs ?? [] {
+                var itemTags = item.tags ?? []
+                if !itemTags.contains(where: { $0 === parent }) {
+                    itemTags.append(parent)
+                    item.update(tags: itemTags)
+                }
+            }
+        }
+        for child in children {
+            child.delete()
+        }
+    }
+
     private static func findDuplicateGroups(context: ModelContext) throws -> [String: [Tag]] {
         let allTags: [Tag] = try context.fetch(FetchDescriptor<Tag>())
-        let key: (Tag) -> String = { tag in
-            tag.name.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        let groups = Dictionary(grouping: allTags) { tag in
+            let normalized = tag.name.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+            return tag.typeID + "::" + normalized
         }
-        let groups = Dictionary(grouping: allTags, by: key)
         return groups.filter { $0.value.count > 1 }
+    }
+
+    // MARK: - Label operations
+
+    static func addLabels(context: ModelContext, to model: Stuff, names: [String]) {
+        let labels: [Tag] = names
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .filter { !$0.isEmpty }
+            .map { Tag.findOrCreate(name: $0, in: context, type: .label) }
+        var current = model.tags ?? []
+        for tag in labels where current.contains(where: { $0.id == tag.id }) == false {
+            current.append(tag)
+        }
+        model.update(tags: current)
+    }
+
+    static func removeLabels(from model: Stuff, names: [String]) {
+        let targets = Set(names.map { $0.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() })
+        let filtered = (model.tags ?? []).filter { tag in
+            guard tag.type == .label else { return true }
+            return targets.contains(tag.name.lowercased()) == false
+        }
+        model.update(tags: filtered)
     }
 }

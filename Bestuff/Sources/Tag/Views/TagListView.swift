@@ -10,16 +10,18 @@ struct TagListView: View {
 
     @Binding private var selection: Tag?
     @Binding private var searchText: String
+    @Binding private var filterType: TagType?
 
-    init(selection: Binding<Tag?>, searchText: Binding<String>) {
+    init(selection: Binding<Tag?>, searchText: Binding<String>, filterType: Binding<TagType?>) {
         _selection = selection
         _searchText = searchText
+        _filterType = filterType
     }
 
     var body: some View {
         List(selection: $selection) {
             ForEach(filteredTags) { tag in
-                Text(tag.name).tag(tag)
+                Text(tag.displayName).tag(tag)
             }
         }
         .navigationTitle("Tags")
@@ -34,20 +36,17 @@ struct TagListView: View {
     }
 
     private var filteredTags: [Tag] {
-        if searchText.isEmpty {
-            return queriedTags
+        var base = queriedTags
+        if let filterType {
+            base = base.filter { $0.type == filterType }
         }
-        return queriedTags.filter {
-            $0.name.localizedCaseInsensitiveContains(searchText)
-        }
+        if searchText.isEmpty { return base }
+        return base.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
     }
 }
 
 #Preview(traits: .sampleData) {
     NavigationStack {
-        TagListView(
-            selection: .constant(nil),
-            searchText: .constant("")
-        )
+        TagListView(selection: .constant(nil), searchText: .constant(""), filterType: .constant(nil))
     }
 }

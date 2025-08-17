@@ -40,7 +40,7 @@ struct TagFormView: View {
                 Logger(#file).notice("Updated tag \(String(describing: tag.id))")
             } else {
                 Logger(#file).info("Creating new tag")
-                _ = TagService.create(context: modelContext, name: name)
+                _ = TagService.create(context: modelContext, name: name, type: .label)
                 Logger(#file).notice("Created new tag")
             }
             dismiss()

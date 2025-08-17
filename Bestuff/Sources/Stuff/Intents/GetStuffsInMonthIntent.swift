@@ -2,12 +2,12 @@ import AppIntents
 import SwiftData
 
 @MainActor
-struct GetStuffsOnDateIntent: AppIntent {
+struct GetStuffsInMonthIntent: AppIntent {
     nonisolated static var title: LocalizedStringResource {
-        "Get Stuffs On Date"
+        "Get Stuffs In Month"
     }
 
-    @Parameter(title: "Date")
+    @Parameter(title: "Any Date In Month")
     private var date: Date
 
     @Parameter(title: "Filter Tag Type")
@@ -18,7 +18,7 @@ struct GetStuffsOnDateIntent: AppIntent {
     func perform() throws -> some ReturnsValue<[StuffEntity]> {
         let models = try StuffService.stuffs(
             context: modelContainer.mainContext,
-            sameDayAs: date
+            monthOf: date
         )
         let filtered: [Stuff]
         if let filterType {

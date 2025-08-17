@@ -112,7 +112,7 @@ struct StuffFormView: View {
                     .split(separator: ",")
                     .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
                     .filter { !$0.isEmpty }
-                    .compactMap { TagService.create(context: modelContext, name: $0) }
+                    .compactMap { TagService.create(context: modelContext, name: $0, type: .label) }
             )
             selectedTags.formUnion(newTagSet)
             if let stuff {

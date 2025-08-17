@@ -1,22 +1,17 @@
 import SwiftUI
 
 struct DebugButton: View {
-    @State private var isPresented = false
+    var onTap: () -> Void = {}
 
     var body: some View {
         Button("Debug", systemImage: "ladybug") {
             Logger(#file).info("Debug button tapped")
-            isPresented = true
+            onTap()
         }
         .glassEffect()
-        .sheet(isPresented: $isPresented) {
-            NavigationStack {
-                DebugListView()
-            }
-        }
     }
 }
 
 #Preview {
-    DebugButton()
+    DebugButton {}
 }
