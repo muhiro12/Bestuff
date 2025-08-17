@@ -11,7 +11,7 @@ import SwiftUI
 
 @main
 struct BestuffApp: App {
-    var sharedModelContainer: ModelContainer = {
+    let sharedModelContainer: ModelContainer = {
         let isRunningTests = ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
         let schema = Schema([
             Stuff.self,
@@ -29,8 +29,8 @@ struct BestuffApp: App {
         }
     }()
 
-    private var sharedStore: Store = .init()
-    private var sharedConfigurationService: ConfigurationService = .init()
+    private let sharedStore: Store = .init()
+    private let sharedConfigurationService: ConfigurationService = .init()
     @AppStorage(BoolAppStorageKey.isDebugOn)
     private var isDebugOn
 
