@@ -21,7 +21,7 @@ extension TagEntity: AppEntity {
     }
 }
 
-extension TagEntity: ModelBridgeable {
+extension TagEntity {
     init?(_ model: Tag) {
         guard let encodedID = try? model.id.base64Encoded() else {
             return nil
