@@ -20,6 +20,17 @@ enum TagService {
         )
     }
 
+    static func getUnusedLabels(context: ModelContext) throws -> [Tag] {
+        try context.fetch(
+            FetchDescriptor<Tag>(
+                predicate: #Predicate {
+                    $0.typeID == TagType.label.rawValue && ($0.stuffs ?? []).isEmpty
+                },
+                sortBy: [SortDescriptor(\Tag.name, order: .forward)]
+            )
+        )
+    }
+
     static func suggestLabels(
         context: ModelContext,
         prefix: String,
