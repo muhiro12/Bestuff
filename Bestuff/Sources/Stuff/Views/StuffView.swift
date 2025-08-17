@@ -88,14 +88,18 @@ struct StuffView: View {
         .onAppear {
             Logger(#file).info("StuffView appeared for id \(String(describing: stuff.id))")
         }
-    }
-    .sheet(isPresented: $isEditPresented) {
-    NavigationStack { StuffFormView() }
-    .environment(stuff)
-    }
-    .sheet(isPresented: $isLabelEditorPresented) {
-    NavigationStack { LabelEditorView() }
-    .environment(stuff)
+        .sheet(isPresented: $isEditPresented) {
+            NavigationStack {
+                StuffFormView()
+            }
+            .environment(stuff)
+        }
+        .sheet(isPresented: $isLabelEditorPresented) {
+            NavigationStack {
+                LabelEditorView()
+            }
+            .environment(stuff)
+        }
     }
 
     private func applyFeedback(delta: Int) {
@@ -105,7 +109,9 @@ struct StuffView: View {
     }
 
     private func markCompleted() {
-        guard !stuff.isCompleted else { return }
+        guard !stuff.isCompleted else {
+            return
+        }
         let bonus = 15
         let newScore = max(0, min(100, stuff.score + bonus))
         stuff.update(score: newScore, isCompleted: true)

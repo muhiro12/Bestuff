@@ -53,10 +53,17 @@ struct TagNavigationView: View {
                     }
                 }
             }
+            ToolbarItem(placement: .primaryAction) {
+                NavigationLink(value: "unused") {
+                    Label("Unused", systemImage: "trash")
+                }
+            }
         }
         .navigationDestination(for: String.self) { value in
             if value == "duplicates" {
                 DuplicateTagListView()
+            } else if value == "unused" {
+                UnusedTagListView()
             }
         }
         .task {

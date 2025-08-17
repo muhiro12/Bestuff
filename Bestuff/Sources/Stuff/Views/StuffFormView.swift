@@ -39,10 +39,63 @@ struct StuffFormView: View {
                 )
             }
             Section("Tags") {
+                // Selected label chips
+                if !selectedTags.isEmpty {
+                    FlowLayout(alignment: .leading, spacing: 8) {
+                        ForEach(Array(selectedTags).sorted { $0.name < $1.name }) { tag in
+                            LabelChipView(title: tag.name) {
+                                selectedTags.remove(tag)
+                            }
+                        }
+                    }
+                    .padding(.vertical, 4)
+                }
+                // Quick add label
                 TextField(
-                    "New Tags (comma separated)",
+                    "Add label",
                     text: $newTags
                 )
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled()
+                // Suggestions by prefix
+                if let suggestions = try? TagService.suggestLabels(
+                    context: modelContext,
+                    prefix: newTags,
+                    excluding: Array(selectedTags)
+                ), !newTags.isEmpty, !suggestions.isEmpty {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 8) {
+                            ForEach(suggestions) { tag in
+                                Button(tag.name) {
+                                    selectedTags.insert(tag)
+                                    newTags = ""
+                                }
+                                .buttonStyle(.bordered)
+                            }
+                        }
+                        .padding(.vertical, 4)
+                    }
+                }
+                // Quick picks when no input
+                if newTags.isEmpty,
+                   let recents = try? TagService.mostUsedLabels(
+                    context: modelContext,
+                    excluding: Array(selectedTags),
+                    limit: 10
+                   ), !recents.isEmpty {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 8) {
+                            ForEach(recents) { tag in
+                                Button(tag.name) {
+                                    selectedTags.insert(tag)
+                                }
+                                .buttonStyle(.bordered)
+                            }
+                        }
+                        .padding(.vertical, 4)
+                    }
+                }
+                // Tag picker (full list)
                 Button {
                     Logger(#file).info("Tag picker button tapped")
                     isTagPickerPresented = true
@@ -107,12 +160,12 @@ struct StuffFormView: View {
 
     private func save() {
         withAnimation {
+            let quickAdd = newTags
+                .split(separator: ",")
+                .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+                .filter { !$0.isEmpty }
             let newTagSet: Set<Tag> = Set(
-                newTags
-                    .split(separator: ",")
-                    .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
-                    .filter { !$0.isEmpty }
-                    .compactMap { TagService.create(context: modelContext, name: $0, type: .label) }
+                quickAdd.map { TagService.create(context: modelContext, name: $0, type: .label) }
             )
             selectedTags.formUnion(newTagSet)
             if let stuff {
@@ -165,4 +218,46 @@ struct StuffFormView: View {
     return StuffFormView()
         .environment(sample)
         .modelContainer(container)
+}
+
+// MARK: - LabelChipView & FlowLayout
+
+private struct LabelChipView: View {
+    let title: String
+    let onRemove: () -> Void
+
+    var body: some View {
+        HStack(spacing: 6) {
+            Text(title)
+                .font(.footnote)
+            Button(role: .destructive) {
+                onRemove()
+            } label: {
+                Image(systemName: "xmark.circle.fill")
+                    .font(.footnote)
+            }
+            .buttonStyle(.plain)
+        }
+        .padding(.horizontal, 8)
+        .padding(.vertical, 4)
+        .background(.thinMaterial, in: Capsule())
+    }
+}
+
+private struct FlowLayout<Content: View>: View {
+    let alignment: HorizontalAlignment
+    let spacing: CGFloat
+    @ViewBuilder let content: Content
+
+    init(alignment: HorizontalAlignment = .leading, spacing: CGFloat = 8, @ViewBuilder content: () -> Content) {
+        self.alignment = alignment
+        self.spacing = spacing
+        self.content = content()
+    }
+
+    var body: some View {
+        LazyVGrid(columns: [GridItem(.adaptive(minimum: 60), spacing: spacing, alignment: .top)], spacing: spacing) {
+            content
+        }
+    }
 }

@@ -15,7 +15,8 @@ struct LabelEditorView: View {
     var body: some View {
         Form {
             Section("Current Labels") {
-                if let labels = (stuff.tags ?? []).filter({ $0.type == .label }), !labels.isEmpty {
+                let labels = (stuff.tags ?? []).filter { $0.type == .label }
+                if !labels.isEmpty {
                     ForEach(labels) { tag in
                         Text(tag.displayName)
                     }
@@ -26,6 +27,51 @@ struct LabelEditorView: View {
             }
             Section("Add Labels") {
                 TextField("Comma separated", text: $addText)
+                    .textInputAutocapitalization(.never)
+                    .autocorrectionDisabled()
+                if let suggestions = try? TagService.suggestLabels(
+                    context: modelContext,
+                    prefix: addText,
+                    excluding: Array(stuff.tags ?? [])
+                ), !addText.isEmpty, !suggestions.isEmpty {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 8) {
+                            ForEach(suggestions) { tag in
+                                Button(tag.name) {
+                                    if addText.isEmpty {
+                                        addText = tag.name
+                                    } else {
+                                        addText += ",\(tag.name)"
+                                    }
+                                }
+                                .buttonStyle(.bordered)
+                            }
+                        }
+                        .padding(.vertical, 4)
+                    }
+                }
+                if addText.isEmpty,
+                   let recents = try? TagService.mostUsedLabels(
+                    context: modelContext,
+                    excluding: Array(stuff.tags ?? []),
+                    limit: 10
+                   ), !recents.isEmpty {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 8) {
+                            ForEach(recents) { tag in
+                                Button(tag.name) {
+                                    if addText.isEmpty {
+                                        addText = tag.name
+                                    } else {
+                                        addText += ",\(tag.name)"
+                                    }
+                                }
+                                .buttonStyle(.bordered)
+                            }
+                        }
+                        .padding(.vertical, 4)
+                    }
+                }
             }
             Section("Remove Labels") {
                 TextField("Comma separated", text: $removeText)
@@ -64,10 +110,10 @@ struct LabelEditorView: View {
         let configuration: ModelConfiguration = .init(schema: schema, isStoredInMemoryOnly: true)
         let container: ModelContainer = try! .init(for: schema, configurations: [configuration])
         let context = ModelContext(container)
-        let s = Stuff.create(title: "Sample")
-        context.insert(s)
+        let sampleStuff = Stuff.create(title: "Sample")
+        context.insert(sampleStuff)
         return LabelEditorView()
-            .environment(s)
+            .environment(sampleStuff)
             .modelContainer(container)
     }
 }
