@@ -17,7 +17,7 @@ struct ModelContainerPreviewModifier: PreviewModifier {
             let tagModels: [Tag] = stuff.tags.map {
                 Tag.findOrCreate(name: $0, in: context)
             }
-            _ = try? StuffService.create(
+            _ = StuffService.create(
                 context: context,
                 title: stuff.title,
                 note: stuff.note,

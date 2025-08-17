@@ -144,7 +144,7 @@ struct StuffListView: View {
             for index in offsets {
                 let stuff = stuffs[index]
                 Logger(#file).info("Deleting stuff \(String(describing: stuff.id))")
-                try? StuffService.delete(model: stuff)
+                StuffService.delete(model: stuff)
                 Logger(#file).notice("Deleted stuff \(String(describing: stuff.id))")
             }
         }
