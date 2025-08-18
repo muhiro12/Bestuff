@@ -9,6 +9,12 @@ import Foundation
 import SwiftData
 import SwiftUI
 import UniformTypeIdentifiers
+#if canImport(UIKit)
+import UIKit
+#endif
+#if canImport(AppKit)
+import AppKit
+#endif
 
 struct SettingsListView: View {
     @AppStorage(BoolAppStorageKey.isSubscribeOn)
@@ -40,7 +46,7 @@ struct SettingsListView: View {
             }
             Section("Support") {
                 Link(
-                    destination: URL(string: "mailto:support@example.com")!
+                    destination: supportMailURL ?? URL(string: "mailto:support@example.com")!
                 ) {
                     Label("Contact Support", systemImage: "envelope")
                 }
@@ -154,6 +160,34 @@ struct SettingsListView: View {
 }
 
 private extension SettingsListView {
+    var supportMailURL: URL? {
+        let to = "support@example.com"
+        var subject = "Bestuff Support Request"
+        if let appName = Bundle.main.infoDictionary?["CFBundleName"] as? String {
+            subject = "\(appName) Support Request"
+        }
+        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
+        let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? ""
+        let osInfo: String = {
+            #if canImport(UIKit)
+            let device = UIDevice.current
+            return "\(device.systemName) \(device.systemVersion)"
+            #elseif canImport(AppKit)
+            return ProcessInfo.processInfo.operatingSystemVersionString
+            #else
+            return "Unknown OS"
+            #endif
+        }()
+        let header = "Please describe your issue here.\n\n---"
+        let meta = "App: \(Bundle.main.infoDictionary?["CFBundleName"] as? String ?? "Bestuff") \(version) (Build \(build))\nOS: \(osInfo)"
+        let body = "\(header)\n\(meta)\n"
+        func encode(_ s: String) -> String {
+            s.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? s
+        }
+        let urlString = "mailto:\(to)?subject=\(encode(subject))&body=\(encode(body))"
+        return URL(string: urlString)
+    }
+
     func contextTagCount() throws -> Int {
         try modelContext.fetch(FetchDescriptor<Tag>()).count
     }
