@@ -73,7 +73,7 @@ enum BackupService {
 
         // Restore tags first
         for dump in payload.tags {
-            if let existing = try? Tag.fetch(byName: dump.name, type: TagType(rawValue: dump.typeID) ?? .label, in: context), existing != nil {
+            if (try? Tag.fetch(byName: dump.name, type: TagType(rawValue: dump.typeID) ?? .label, in: context)) != nil {
                 continue
             }
             let type = TagType(rawValue: dump.typeID) ?? .label
@@ -103,7 +103,7 @@ enum BackupService {
             let existing: Stuff? = try context.fetch(FetchDescriptor<Stuff>())
                 .first { $0.title == dump.title && isSame($0.occurredAt, dump.occurredAt) }
             switch (existing, conflictStrategy) {
-            case (.some(let model), .skip):
+            case (.some, .skip):
                 // Keep the existing one
                 continue
             case (.some(let model), .update):
