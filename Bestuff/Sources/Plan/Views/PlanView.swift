@@ -6,6 +6,12 @@
 //
 
 import EventKit
+#if canImport(UIKit)
+import UIKit
+#endif
+#if canImport(AppKit)
+import AppKit
+#endif
 import SwiftData
 import SwiftUI
 
@@ -24,6 +30,14 @@ struct PlanView: View {
     private var modelContext
     @State private var savedStuff: Stuff?
     @State private var isShowingSavedSheet = false
+    @State private var isShowingEventSavedAlert = false
+    @State private var isShowingReminderSavedAlert = false
+    @State private var lastSavedEventID: String?
+    @State private var lastSavedReminderID: String?
+    @State private var lastSavedEventStartDate: Date?
+    @State private var lastSavedEventCalendarName: String?
+    @State private var lastSavedReminderDueDate: Date?
+    @State private var lastSavedReminderListName: String?
 
     var body: some View {
         List {
@@ -100,20 +114,59 @@ struct PlanView: View {
         .alert(isPresented: $isShowingAlert) {
             Alert(title: Text(alertMessage))
         }
+        .alert("Event Saved", isPresented: $isShowingEventSavedAlert) {
+            Button("Open") {
+                openCalendarEvent(id: lastSavedEventID)
+            }
+            Button("OK", role: .cancel) {}
+        } message: {
+            let start = lastSavedEventStartDate?.formatted(.dateTime) ?? ""
+            let cal = lastSavedEventCalendarName ?? ""
+            if !start.isEmpty || !cal.isEmpty {
+                Text([start.isEmpty ? nil : "Start: \(start)", cal.isEmpty ? nil : "Calendar: \(cal)"].compactMap(\.self).joined(separator: "\n"))
+            } else {
+                Text("Your calendar event was saved.")
+            }
+        }
+        .alert("Reminder Saved", isPresented: $isShowingReminderSavedAlert) {
+            Button("Open Reminders") {
+                openRemindersApp()
+            }
+            Button("OK", role: .cancel) {}
+        } message: {
+            let due = lastSavedReminderDueDate?.formatted(.dateTime) ?? ""
+            let list = lastSavedReminderListName ?? ""
+            if !due.isEmpty || !list.isEmpty {
+                Text([due.isEmpty ? nil : "Due: \(due)", list.isEmpty ? nil : "List: \(list)"].compactMap(\.self).joined(separator: "\n"))
+            } else {
+                Text("Your reminder was saved.")
+            }
+        }
         #if canImport(EventKitUI)
         .sheet(isPresented: $isShowingEventEditor) {
             if let event = preparedEvent {
                 EKEventEditView(store: EventKitService.shared.eventStore, event: event) { result in
                     switch result {
                     case .saved(let id):
-                        alertMessage = "Calendar event saved (id: \(id ?? "n/a"))"
+                        lastSavedEventID = id
+                        if let id, let saved = EventKitService.shared.eventStore.event(withIdentifier: id) {
+                            lastSavedEventStartDate = saved.startDate
+                            lastSavedEventCalendarName = saved.calendar?.title
+                        } else {
+                            lastSavedEventStartDate = event.startDate
+                            lastSavedEventCalendarName = event.calendar?.title
+                        }
+                        alertMessage = "Calendar event saved"
+                        isShowingEventSavedAlert = true
                     case .deleted:
                         alertMessage = "Calendar event deleted"
                     case .canceled:
                         alertMessage = "Canceled"
                     }
                     isShowingEventEditor = false
-                    isShowingAlert = true
+                    if isShowingEventSavedAlert == false {
+                        isShowingAlert = true
+                    }
                 }
             }
         }
@@ -156,6 +209,16 @@ struct PlanView: View {
                 NavigationStack {
                     StuffView()
                         .environment(savedStuff)
+                        .toolbar {
+                            ToolbarItem(placement: .primaryAction) {
+                                ShareLink(item: shareText(for: savedStuff))
+                            }
+                            ToolbarItem(placement: .primaryAction) {
+                                Button("Copy", systemImage: "doc.on.doc") {
+                                    copyToClipboard(shareText(for: savedStuff))
+                                }
+                            }
+                        }
                 }
             }
         }
@@ -190,7 +253,7 @@ struct PlanView: View {
     private func exportToReminders(dueDate: Date, expandSteps: Bool) {
         Task {
             do {
-                let id = try await EventKitService.shared.addReminder(
+                let result = try await EventKitService.shared.addReminder(
                     title: selection.item.title,
                     notes: selection.item.rationale,
                     dueDate: dueDate,
@@ -198,8 +261,11 @@ struct PlanView: View {
                     expandSteps: expandSteps,
                     priority: selection.item.priority
                 )
-                alertMessage = "Reminder saved (id: \(id))"
-                isShowingAlert = true
+                lastSavedReminderID = result.id
+                lastSavedReminderDueDate = result.dueDate
+                lastSavedReminderListName = result.calendarTitle
+                alertMessage = "Reminder saved"
+                isShowingReminderSavedAlert = true
             } catch {
                 alertMessage = "Failed to save reminder"
                 isShowingAlert = true
@@ -253,6 +319,67 @@ struct PlanView: View {
                 isShowingSavedSheet = true
             }
         }
+    }
+
+    private func shareText(for model: Stuff) -> String {
+        var lines: [String] = []
+        lines.append(model.title)
+        if let note = model.note, !note.isEmpty {
+            lines.append(note)
+        }
+        let tagLine = (model.tags ?? []).map(\.name).joined(separator: ", ")
+        if !tagLine.isEmpty {
+            lines.append("Tags: \(tagLine)")
+        }
+        lines.append("Occurred: \(model.occurredAt.formatted(.dateTime))")
+        return lines.joined(separator: "\n")
+    }
+
+    private func copyToClipboard(_ text: String) {
+        #if canImport(UIKit)
+        UIPasteboard.general.string = text
+        #elseif canImport(AppKit)
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.setString(text, forType: .string)
+        #endif
+        alertMessage = "Copied to clipboard"
+        isShowingAlert = true
+    }
+
+    private func openCalendarEvent(id: String?) {
+        #if canImport(UIKit)
+        let store = EventKitService.shared.eventStore
+        if let id, let event = store.event(withIdentifier: id) {
+            let seconds = event.startDate.timeIntervalSinceReferenceDate
+            if let url = URL(string: "calshow:\(seconds)") {
+                UIApplication.shared.open(url)
+                return
+            }
+        }
+        if let url = URL(string: "calshow:\(Date().timeIntervalSinceReferenceDate)") {
+            UIApplication.shared.open(url)
+        }
+        #elseif canImport(AppKit)
+        if let url = URL(string: "calshow:\(Date().timeIntervalSinceReferenceDate)") {
+            NSWorkspace.shared.open(url)
+        } else {
+            NSWorkspace.shared.open(URL(fileURLWithPath: "/Applications/Calendar.app"))
+        }
+        #endif
+    }
+
+    private func openRemindersApp() {
+        #if canImport(UIKit)
+        if let url = URL(string: "x-apple-reminderkit://") {
+            UIApplication.shared.open(url)
+        }
+        #elseif canImport(AppKit)
+        if let url = URL(string: "x-apple-reminderkit://") {
+            NSWorkspace.shared.open(url)
+        } else {
+            NSWorkspace.shared.open(URL(fileURLWithPath: "/Applications/Reminders.app"))
+        }
+        #endif
     }
 }
 

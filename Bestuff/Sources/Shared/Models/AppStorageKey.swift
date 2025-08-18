@@ -13,10 +13,21 @@ extension AppStorage where Value == Bool {
 
 enum StringAppStorageKey: String {
     case backupImportStrategy = "bKp_ImportStrategy"
+    case tagSearchText = "tag_search_text"
+    case tagFilterType = "tag_filter_type"
 }
 
 extension AppStorage where Value == String {
     init(_ key: StringAppStorageKey) {
-        self.init(wrappedValue: "update", key.rawValue)
+        let defaultValue: String
+        switch key {
+        case .backupImportStrategy:
+            defaultValue = "update"
+        case .tagSearchText:
+            defaultValue = ""
+        case .tagFilterType:
+            defaultValue = "all"
+        }
+        self.init(wrappedValue: defaultValue, key.rawValue)
     }
 }

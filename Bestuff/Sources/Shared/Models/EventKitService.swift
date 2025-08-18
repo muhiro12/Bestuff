@@ -67,7 +67,13 @@ final class EventKitService {
         return reminder.calendarItemIdentifier
     }
 
-    func addReminder(title: String, notes: String?, dueDate: Date, steps: [String] = [], expandSteps: Bool = false, priority: Int) async throws -> String {
+    struct ReminderSaveResult: Sendable {
+        let id: String
+        let dueDate: Date
+        let calendarTitle: String?
+    }
+
+    func addReminder(title: String, notes: String?, dueDate: Date, steps: [String] = [], expandSteps: Bool = false, priority: Int) async throws -> ReminderSaveResult {
         try await requestAccessIfNeeded(for: .reminder)
 
         let reminder = EKReminder(eventStore: store)
@@ -80,7 +86,7 @@ final class EventKitService {
 
         // Prevent duplicates (same title on same day)
         if let existing = try await existingReminderId(title: reminder.title, dueDate: dueDate, calendar: reminder.calendar) {
-            return existing
+            return .init(id: existing, dueDate: dueDate, calendarTitle: reminder.calendar?.title)
         }
 
         try store.save(reminder, commit: true)
@@ -89,7 +95,7 @@ final class EventKitService {
             try createStepReminders(steps: steps, baseTitle: title, notes: notes, dueDate: dueDate, priority: priority, calendar: reminder.calendar)
         }
 
-        return reminder.calendarItemIdentifier
+        return .init(id: reminder.calendarItemIdentifier, dueDate: dueDate, calendarTitle: reminder.calendar?.title)
     }
 
     // MARK: - Private
