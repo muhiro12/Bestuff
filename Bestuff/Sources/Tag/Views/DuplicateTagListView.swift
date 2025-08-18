@@ -10,6 +10,9 @@ struct DuplicateTagListView: View {
     @State private var groups: [[Tag]] = []
     @State private var isResolving = false
     @State private var selectedParents: [Int: Tag] = [:]
+    @State private var confirmMergeIndex: Int?
+    @State private var isConfirmingResolveAll = false
+    @State private var toastMessage: String?
 
     var body: some View {
         NavigationStack {
@@ -32,7 +35,7 @@ struct DuplicateTagListView: View {
                             }
                         }
                         Button("Merge", systemImage: "link") {
-                            merge(groupIndex: index)
+                            confirmMergeIndex = index
                         }
                         .disabled(selectedParents[index] == nil || isResolving)
                     }
@@ -44,11 +47,51 @@ struct DuplicateTagListView: View {
                     CloseButton()
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Resolve All", systemImage: "wand.and.stars") { resolveAll() }
-                        .disabled(groups.isEmpty || isResolving)
+                    Button("Resolve All", systemImage: "wand.and.stars") {
+                        isConfirmingResolveAll = true
+                    }
+                    .disabled(groups.isEmpty || isResolving)
                 }
             }
             .task(refresh)
+            .alert("Merge duplicates?", isPresented: Binding(get: {
+                confirmMergeIndex != nil
+            }, set: { flag in
+                if flag == false { confirmMergeIndex = nil }
+            })) {
+                Button("Merge", role: .destructive) {
+                    if let index = confirmMergeIndex {
+                        merge(groupIndex: index)
+                    }
+                }
+                Button("Cancel", role: .cancel) {}
+            } message: {
+                if let index = confirmMergeIndex,
+                   let parent = selectedParents[index] {
+                    let name = parent.name
+                    let childrenCount = max(0, (groups[safe: index]?.count ?? 0) - 1)
+                    Text("This will merge \(childrenCount) duplicates into \"\(name)\" and remove them.")
+                } else {
+                    Text("This will merge the selected duplicate group.")
+                }
+            }
+            .alert("Resolve all duplicates?", isPresented: $isConfirmingResolveAll) {
+                Button("Resolve All", role: .destructive) {
+                    resolveAll()
+                }
+                Button("Cancel", role: .cancel) {}
+            } message: {
+                let groupsCount = groups.count
+                let dupCount = groups.reduce(0) { $0 + max(0, $1.count - 1) }
+                Text("This will merge \(dupCount) duplicates across \(groupsCount) groups and remove them.")
+            }
+            .alert(toastMessage ?? "", isPresented: Binding(get: {
+                toastMessage != nil
+            }, set: { flag in
+                if flag == false { toastMessage = nil }
+            })) {
+                Button("OK") {}
+            }
         }
     }
 
@@ -59,11 +102,14 @@ struct DuplicateTagListView: View {
     private func resolveAll() {
         isResolving = true
         do {
+            let groupsCount = groups.count
+            let dupCount = groups.reduce(0) { $0 + max(0, $1.count - 1) }
             try TagService.resolveDuplicates(context: modelContext)
             refresh()
             if groups.isEmpty {
                 dismiss()
             }
+            toastMessage = "Resolved \(dupCount) duplicates across \(groupsCount) groups."
         } catch {
             // No-op: keep UI responsive without crashing
         }
@@ -81,6 +127,8 @@ struct DuplicateTagListView: View {
             let children = group.filter { $0.id != parent.id }
             try TagService.mergeDuplicates(parent: parent, children: children)
             refresh()
+            let mergedCount = max(0, group.count - 1)
+            toastMessage = "Merged \(mergedCount) duplicates into \"\(parent.name)\"."
         } catch {
             // No-op
         }
@@ -111,4 +159,13 @@ struct DuplicateTagListView: View {
 
 #Preview(traits: .sampleData) {
     DuplicateTagListView()
+}
+
+private extension Collection {
+    subscript(safe index: Index) -> Element? {
+        if indices.contains(index) {
+            return self[index]
+        }
+        return nil
+    }
 }
