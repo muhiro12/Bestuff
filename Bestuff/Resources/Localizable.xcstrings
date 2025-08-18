@@ -187,17 +187,6 @@
         }
       }
     },
-    "Category" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "カテゴリー"
-          }
-        }
-      }
-    },
     "Clear" : {
       "localizations" : {
         "ja" : {
@@ -354,17 +343,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "作成済み"
-          }
-        }
-      }
-    },
-    "Created %@" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ に作成"
           }
         }
       }
@@ -769,17 +747,6 @@
         }
       }
     },
-    "New Tags (comma separated)" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "新しいタグ（カンマ区切り）"
-          }
-        }
-      }
-    },
     "Next Month" : {
       "localizations" : {
         "ja" : {
@@ -870,34 +837,12 @@
         }
       }
     },
-    "Notes" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "メモ"
-          }
-        }
-      }
-    },
     "Occurred" : {
       "localizations" : {
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "発生"
-          }
-        }
-      }
-    },
-    "Occurred %@" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ に発生"
           }
         }
       }
@@ -1171,28 +1116,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ランニングシューズ"
-          }
-        }
-      }
-    },
-    "Sample" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "サンプル"
-          }
-        }
-      }
-    },
-    "Sample suggestion" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "サンプル提案"
           }
         }
       }
