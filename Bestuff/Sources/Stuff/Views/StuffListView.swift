@@ -23,6 +23,7 @@ struct StuffListView: View {
 
     @State private var sort = StuffSort.occurredDateDescending
     @State private var completion = CompletionFilter.all
+    @State private var dateFilter = DateFilter.all
     @State private var minScore: Int?
     @State private var selectedLabel: Tag?
     @State private var availableLabels: [Tag] = []
@@ -87,6 +88,12 @@ struct StuffListView: View {
                 Menu {
                     Picker("Sort", selection: $sort) {
                         ForEach(StuffSort.allCases) { option in
+                            Text(option.title).tag(option)
+                        }
+                    }
+                    Divider()
+                    Picker("Date", selection: $dateFilter) {
+                        ForEach(DateFilter.allCases) { option in
                             Text(option.title).tag(option)
                         }
                     }
@@ -245,6 +252,9 @@ struct StuffListView: View {
             }
         }
         // Apply filters
+        result = result.filter { model in
+            dateFilter.contains(model.occurredAt)
+        }
         switch completion {
         case .all:
             break
