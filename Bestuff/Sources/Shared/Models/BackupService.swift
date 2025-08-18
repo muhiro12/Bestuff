@@ -62,11 +62,33 @@ enum BackupService {
         return try encoder.encode(payload)
     }
 
+    struct ImportResult: Sendable {
+        let tagCreated: Int
+        let tagSkipped: Int
+        let stuffCreated: Int
+        let stuffUpdated: Int
+        let stuffSkipped: Int
+    }
+
     static func importJSON(
         context: ModelContext,
         data: Data,
         conflictStrategy: BackupConflictStrategy
     ) throws {
+        _ = try importJSONDetailed(context: context, data: data, conflictStrategy: conflictStrategy)
+    }
+
+    static func importJSONDetailed(
+        context: ModelContext,
+        data: Data,
+        conflictStrategy: BackupConflictStrategy
+    ) throws -> ImportResult {
+        var tagCreated = 0
+        var tagSkipped = 0
+        var stuffCreated = 0
+        var stuffUpdated = 0
+        var stuffSkipped = 0
+
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .iso8601
         let payload = try decoder.decode(BackupPayload.self, from: data)
@@ -74,11 +96,13 @@ enum BackupService {
         // Restore tags first
         for dump in payload.tags {
             if (try? Tag.fetch(byName: dump.name, type: TagType(rawValue: dump.typeID) ?? .label, in: context)) != nil {
+                tagSkipped += 1
                 continue
             }
             let type = TagType(rawValue: dump.typeID) ?? .label
             let tag = Tag.create(name: dump.name, type: type)
             context.insert(tag)
+            tagCreated += 1
         }
 
         // Helper to resolve label models (labels only in stuffs)
@@ -104,7 +128,7 @@ enum BackupService {
                 .first { $0.title == dump.title && isSame($0.occurredAt, dump.occurredAt) }
             switch (existing, conflictStrategy) {
             case (.some, .skip):
-                // Keep the existing one
+                stuffSkipped += 1
                 continue
             case (.some(let model), .update):
                 model.update(
@@ -116,6 +140,7 @@ enum BackupService {
                     lastFeedback: dump.lastFeedback,
                     source: dump.source
                 )
+                stuffUpdated += 1
             case (nil, _):
                 let model = Stuff.create(
                     title: dump.title,
@@ -129,7 +154,16 @@ enum BackupService {
                     source: dump.source
                 )
                 context.insert(model)
+                stuffCreated += 1
             }
         }
+
+        return .init(
+            tagCreated: tagCreated,
+            tagSkipped: tagSkipped,
+            stuffCreated: stuffCreated,
+            stuffUpdated: stuffUpdated,
+            stuffSkipped: stuffSkipped
+        )
     }
 }

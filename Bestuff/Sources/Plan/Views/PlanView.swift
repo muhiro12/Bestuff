@@ -351,16 +351,16 @@ struct PlanView: View {
         let store = EventKitService.shared.eventStore
         if let id, let event = store.event(withIdentifier: id) {
             let seconds = event.startDate.timeIntervalSinceReferenceDate
-            if let url = URL(string: "calshow:\\(seconds)") {
+            if let url = URL(string: "calshow:\(seconds)") {
                 UIApplication.shared.open(url)
                 return
             }
         }
-        if let url = URL(string: "calshow:\\(Date().timeIntervalSinceReferenceDate)") {
+        if let url = URL(string: "calshow:\(Date().timeIntervalSinceReferenceDate)") {
             UIApplication.shared.open(url)
         }
         #elseif canImport(AppKit)
-        if let url = URL(string: "calshow:\\(Date().timeIntervalSinceReferenceDate)") {
+        if let url = URL(string: "calshow:\(Date().timeIntervalSinceReferenceDate)") {
             NSWorkspace.shared.open(url)
         } else {
             NSWorkspace.shared.open(URL(fileURLWithPath: "/Applications/Calendar.app"))

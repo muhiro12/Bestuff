@@ -117,20 +117,13 @@ struct SettingsListView: View {
                     return
                 }
                 do {
-                    // Decode payload to report counts
-                    let decoder = JSONDecoder()
-                    decoder.dateDecodingStrategy = .iso8601
-                    if let payload = try? decoder.decode(BackupPayload.self, from: data) {
-                        let tagCount = payload.tags.count
-                        let stuffCount = payload.stuffs.count
-                        let strategy = BackupConflictStrategy(rawValue: importStrategyRaw) ?? .update
-                        try BackupService.importJSON(context: modelContext, data: data, conflictStrategy: strategy)
-                        successMessage = "Imported backup (\(tagCount) tags, \(stuffCount) items)."
-                    } else {
-                        let strategy = BackupConflictStrategy(rawValue: importStrategyRaw) ?? .update
-                        try BackupService.importJSON(context: modelContext, data: data, conflictStrategy: strategy)
-                        successMessage = "Backup imported successfully."
-                    }
+                    let strategy = BackupConflictStrategy(rawValue: importStrategyRaw) ?? .update
+                    let result = try BackupService.importJSONDetailed(context: modelContext, data: data, conflictStrategy: strategy)
+                    let summaryLines = [
+                        "Tags: +\(result.tagCreated), =\(result.tagSkipped)",
+                        "Items: +\(result.stuffCreated), ~\(result.stuffUpdated), =\(result.stuffSkipped)"
+                    ]
+                    successMessage = (["Imported backup"] + summaryLines).joined(separator: "\n")
                 } catch {
                     importErrorMessage = "Failed to import backup."
                 }
