@@ -34,6 +34,11 @@ struct StuffListView: View {
     @State private var isQuickAddPresented = false
     @State private var isSettingsPresented = false
     @State private var isDebugPresented = false
+    @State private var isSavePresetPresented = false
+    @State private var isManagePresetsPresented = false
+    @State private var presetName: String = ""
+    @AppStorage(StringAppStorageKey.savedFilters)
+    private var savedFiltersRaw
     @State private var isBulkPresented = false
     @State private var bulkSelectedIDs: Set<PersistentIdentifier> = []
     @State private var bulkAddLabelNames: String = ""
@@ -122,6 +127,25 @@ struct StuffListView: View {
                         ForEach(StuffSort.allCases) { option in
                             Text(option.title).tag(option)
                         }
+                    }
+                    Divider()
+                    // Saved filters
+                    if !getSavedPresets().isEmpty {
+                        Menu("Saved Filters") {
+                            ForEach(getSavedPresets()) { preset in
+                                Button(preset.name) {
+                                    applyPreset(preset)
+                                }
+                            }
+                            Divider()
+                            Button("Manage…", systemImage: "slider.horizontal.3") {
+                                isManagePresetsPresented = true
+                            }
+                        }
+                    }
+                    Button("Save Current Filters", systemImage: "tray.and.arrow.down") {
+                        presetName = ""
+                        isSavePresetPresented = true
                     }
                     Divider()
                     Picker("Date", selection: $dateFilter) {
@@ -271,6 +295,45 @@ struct StuffListView: View {
                 }
             }
         }
+        .sheet(isPresented: $isSavePresetPresented) {
+            NavigationStack {
+                Form {
+                    Section("Name") {
+                        TextField("Preset name", text: $presetName)
+                    }
+                }
+                .navigationTitle("Save Filters")
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Cancel") { isSavePresetPresented = false }
+                    }
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button("Save") { saveCurrentPreset() }
+                            .disabled(presetName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                    }
+                }
+            }
+        }
+        .sheet(isPresented: $isManagePresetsPresented) {
+            NavigationStack {
+                List {
+                    ForEach(getSavedPresets()) { preset in
+                        HStack {
+                            Text(preset.name)
+                            Spacer()
+                            Button("Apply") { applyPreset(preset) }
+                        }
+                    }
+                    .onDelete(perform: deletePresets)
+                }
+                .navigationTitle("Saved Filters")
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Close") { isManagePresetsPresented = false }
+                    }
+                }
+            }
+        }
         .task {
             availableLabels = (try? TagService.getAllLabels(context: modelContext)) ?? []
         }
@@ -392,6 +455,57 @@ struct StuffListView: View {
         bulkSelectedIDs.removeAll()
         bulkRemoveLabelNames = ""
         isBulkPresented = false
+    }
+
+    // MARK: - Saved Filters
+
+    private func getSavedPresets() -> [FilterPreset] {
+        if let data = savedFiltersRaw.data(using: .utf8),
+           let decoded = try? JSONDecoder().decode([FilterPreset].self, from: data) {
+            return decoded
+        }
+        return []
+    }
+
+    private func setSavedPresets(_ presets: [FilterPreset]) {
+        let data = (try? JSONEncoder().encode(presets)) ?? Data()
+        savedFiltersRaw = String(data: data, encoding: .utf8) ?? "[]"
+    }
+
+    private func saveCurrentPreset() {
+        let trimmed = presetName.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard trimmed.isEmpty == false else { return }
+        let labelName = selectedLabel?.name
+        var presets = getSavedPresets()
+        let preset = FilterPreset(
+            name: trimmed,
+            searchText: searchText,
+            dateFilter: dateFilter,
+            completion: completion,
+            minScore: minScore,
+            labelName: labelName
+        )
+        presets.append(preset)
+        setSavedPresets(presets)
+        isSavePresetPresented = false
+    }
+
+    private func applyPreset(_ preset: FilterPreset) {
+        searchText = preset.searchText
+        dateFilter = DateFilter(rawValue: preset.dateFilter) ?? .all
+        completion = CompletionFilter(rawValue: preset.completion) ?? .all
+        minScore = preset.minScore
+        if let name = preset.labelName {
+            selectedLabel = availableLabels.first { $0.name == name }
+        } else {
+            selectedLabel = nil
+        }
+    }
+
+    private func deletePresets(at offsets: IndexSet) {
+        var presets = getSavedPresets()
+        presets.remove(atOffsets: offsets)
+        setSavedPresets(presets)
     }
 }
 

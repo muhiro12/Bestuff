@@ -16,6 +16,7 @@ enum StringAppStorageKey: String {
     case backupImportStrategy = "bKp_ImportStrategy"
     case tagSearchText = "tag_search_text"
     case tagFilterType = "tag_filter_type"
+    case savedFilters = "saved_filters_v1"
 }
 
 extension AppStorage where Value == String {
@@ -28,6 +29,8 @@ extension AppStorage where Value == String {
             defaultValue = ""
         case .tagFilterType:
             defaultValue = "all"
+        case .savedFilters:
+            defaultValue = "[]"
         }
         self.init(wrappedValue: defaultValue, key.rawValue)
     }
