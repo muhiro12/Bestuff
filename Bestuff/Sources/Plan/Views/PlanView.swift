@@ -6,6 +6,12 @@
 //
 
 import EventKit
+#if canImport(UIKit)
+import UIKit
+#endif
+#if canImport(AppKit)
+import AppKit
+#endif
 import SwiftData
 import SwiftUI
 
@@ -156,6 +162,16 @@ struct PlanView: View {
                 NavigationStack {
                     StuffView()
                         .environment(savedStuff)
+                        .toolbar {
+                            ToolbarItem(placement: .primaryAction) {
+                                ShareLink(item: shareText(for: savedStuff))
+                            }
+                            ToolbarItem(placement: .primaryAction) {
+                                Button("Copy", systemImage: "doc.on.doc") {
+                                    copyToClipboard(shareText(for: savedStuff))
+                                }
+                            }
+                        }
                 }
             }
         }
@@ -253,6 +269,31 @@ struct PlanView: View {
                 isShowingSavedSheet = true
             }
         }
+    }
+
+    private func shareText(for model: Stuff) -> String {
+        var lines: [String] = []
+        lines.append(model.title)
+        if let note = model.note, !note.isEmpty {
+            lines.append(note)
+        }
+        let tagLine = (model.tags ?? []).map(\.name).joined(separator: ", ")
+        if !tagLine.isEmpty {
+            lines.append("Tags: \(tagLine)")
+        }
+        lines.append("Occurred: \(model.occurredAt.formatted(.dateTime))")
+        return lines.joined(separator: "\n")
+    }
+
+    private func copyToClipboard(_ text: String) {
+        #if canImport(UIKit)
+        UIPasteboard.general.string = text
+        #elseif canImport(AppKit)
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.setString(text, forType: .string)
+        #endif
+        alertMessage = "Copied to clipboard"
+        isShowingAlert = true
     }
 }
 
