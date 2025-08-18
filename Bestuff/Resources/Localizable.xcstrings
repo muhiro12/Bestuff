@@ -5,10 +5,24 @@
       "shouldTranslate" : false
     },
     "%lld min" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld 分"
+          }
+        }
+      }
     },
     "%lld." : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld."
+          }
+        }
+      }
     },
     "1.0.0" : {
       "shouldTranslate" : false
@@ -24,10 +38,24 @@
       }
     },
     "Add label" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ラベルを追加"
+          }
+        }
+      }
     },
     "Add Labels" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ラベルを追加"
+          }
+        }
+      }
     },
     "Add Stuff" : {
       "localizations" : {
@@ -50,19 +78,54 @@
       }
     },
     "Add to Calendar…" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "カレンダーに追加…"
+          }
+        }
+      }
     },
     "Add to Reminders" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "リマインダーに追加"
+          }
+        }
+      }
     },
     "Add to Reminders…" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "リマインダーに追加…"
+          }
+        }
+      }
     },
     "All" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "すべて"
+          }
+        }
+      }
     },
     "Any Date In Month" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "月内の任意の日付"
+          }
+        }
+      }
     },
     "App Version" : {
       "localizations" : {
@@ -124,17 +187,6 @@
         }
       }
     },
-    "Category" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "カテゴリー"
-          }
-        }
-      }
-    },
     "Clear" : {
       "localizations" : {
         "ja" : {
@@ -176,13 +228,34 @@
       }
     },
     "Comma separated" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "カンマ区切り"
+          }
+        }
+      }
     },
     "Complete" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "完了"
+          }
+        }
+      }
     },
     "Completed" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "完了済み"
+          }
+        }
+      }
     },
     "Conference Tickets" : {
       "localizations" : {
@@ -235,7 +308,14 @@
       }
     },
     "Create step reminders" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "手順のリマインダーを作成"
+          }
+        }
+      }
     },
     "Create Stuff" : {
       "localizations" : {
@@ -258,24 +338,34 @@
       }
     },
     "Created" : {
-
-    },
-    "Created %@" : {
-      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ に作成"
+            "value" : "作成済み"
           }
         }
       }
     },
     "Current Labels" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "現在のラベル"
+          }
+        }
+      }
     },
     "Data" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "データ"
+          }
+        }
+      }
     },
     "Date" : {
       "localizations" : {
@@ -308,7 +398,14 @@
       }
     },
     "Delete All" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "すべて削除"
+          }
+        }
+      }
     },
     "Delete Stuff" : {
       "localizations" : {
@@ -331,22 +428,64 @@
       }
     },
     "Due" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "期限"
+          }
+        }
+      }
     },
     "Due Date" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "期限日"
+          }
+        }
+      }
     },
     "Duplicate Tags" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重複タグ"
+          }
+        }
+      }
     },
     "Duplicates" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重複"
+          }
+        }
+      }
     },
     "Duplicates (%lld)" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重複 (%lld)"
+          }
+        }
+      }
     },
     "Edit Labels" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ラベルを編集"
+          }
+        }
+      }
     },
     "Edit Stuff" : {
       "localizations" : {
@@ -369,19 +508,54 @@
       }
     },
     "Export" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "エクスポート"
+          }
+        }
+      }
     },
     "Export Backup" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "バックアップをエクスポート"
+          }
+        }
+      }
     },
     "Feedback" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "フィードバック"
+          }
+        }
+      }
     },
     "Filter" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "フィルター"
+          }
+        }
+      }
     },
     "Filter Tag Type" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "タグタイプでフィルター"
+          }
+        }
+      }
     },
     "Fitness" : {
       "localizations" : {
@@ -424,13 +598,34 @@
       }
     },
     "Get Stuffs By Tag" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "タグでアイテムを取得"
+          }
+        }
+      }
     },
     "Get Stuffs In Month" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "月内のアイテムを取得"
+          }
+        }
+      }
     },
     "Get Stuffs On Date" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "指定日のアイテムを取得"
+          }
+        }
+      }
     },
     "Get Tag By ID" : {
       "localizations" : {
@@ -453,13 +648,34 @@
       }
     },
     "Helpful" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "役に立った"
+          }
+        }
+      }
     },
     "Import Backup" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "バックアップをインポート"
+          }
+        }
+      }
     },
     "Import Strategy" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "インポート戦略"
+          }
+        }
+      }
     },
     "Information" : {
       "localizations" : {
@@ -472,10 +688,24 @@
       }
     },
     "Label" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ラベル"
+          }
+        }
+      }
     },
     "Labels" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ラベル"
+          }
+        }
+      }
     },
     "Language" : {
       "localizations" : {
@@ -488,10 +718,24 @@
       }
     },
     "Mark Complete" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "完了としてマーク"
+          }
+        }
+      }
     },
     "Merge" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "マージ"
+          }
+        }
+      }
     },
     "Name" : {
       "localizations" : {
@@ -499,17 +743,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "名前"
-          }
-        }
-      }
-    },
-    "New Tags (comma separated)" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "新しいタグ（カンマ区切り）"
           }
         }
       }
@@ -545,7 +778,14 @@
       }
     },
     "No labels" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ラベルなし"
+          }
+        }
+      }
     },
     "No suggestions yet" : {
       "localizations" : {
@@ -558,7 +798,14 @@
       }
     },
     "No unused labels" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未使用のラベルなし"
+          }
+        }
+      }
     },
     "None" : {
       "localizations" : {
@@ -571,7 +818,14 @@
       }
     },
     "Not helpful" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "役に立たなかった"
+          }
+        }
+      }
     },
     "Note" : {
       "localizations" : {
@@ -583,27 +837,12 @@
         }
       }
     },
-    "Notes" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "メモ"
-          }
-        }
-      }
-    },
     "Occurred" : {
-
-    },
-    "Occurred %@" : {
-      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ に発生"
+            "value" : "発生"
           }
         }
       }
@@ -652,13 +891,34 @@
       }
     },
     "Overview" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "概要"
+          }
+        }
+      }
     },
     "P%lld" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "P%lld"
+          }
+        }
+      }
     },
     "Parent" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "親"
+          }
+        }
+      }
     },
     "Period" : {
       "localizations" : {
@@ -671,7 +931,14 @@
       }
     },
     "Periods" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "期間"
+          }
+        }
+      }
     },
     "Personal" : {
       "localizations" : {
@@ -744,7 +1011,14 @@
       }
     },
     "Priority %lld" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "優先度 %lld"
+          }
+        }
+      }
     },
     "Recap" : {
       "localizations" : {
@@ -767,7 +1041,14 @@
       }
     },
     "Remove Labels" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ラベルを削除"
+          }
+        }
+      }
     },
     "Replace the worn-out pair." : {
       "localizations" : {
@@ -790,16 +1071,44 @@
       }
     },
     "Resolve All" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "すべて解決"
+          }
+        }
+      }
     },
     "Resource" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "リソース"
+          }
+        }
+      }
     },
     "Resources" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "リソース"
+          }
+        }
+      }
     },
     "Risks" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "リスク"
+          }
+        }
+      }
     },
     "Running Shoes" : {
       "localizations" : {
@@ -807,28 +1116,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ランニングシューズ"
-          }
-        }
-      }
-    },
-    "Sample" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "サンプル"
-          }
-        }
-      }
-    },
-    "Sample suggestion" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "サンプル提案"
           }
         }
       }
@@ -844,10 +1131,24 @@
       }
     },
     "Save as Stuff" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "アイテムとして保存"
+          }
+        }
+      }
     },
     "Score" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "スコア"
+          }
+        }
+      }
     },
     "Score: %lld" : {
       "localizations" : {
@@ -910,7 +1211,14 @@
       }
     },
     "Skip duplicates" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重複をスキップ"
+          }
+        }
+      }
     },
     "Sort" : {
       "localizations" : {
@@ -923,13 +1231,34 @@
       }
     },
     "Speech" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "音声"
+          }
+        }
+      }
     },
     "Steps" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "手順"
+          }
+        }
+      }
     },
     "Steps Preview" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "手順のプレビュー"
+          }
+        }
+      }
     },
     "Stored Items" : {
       "localizations" : {
@@ -962,7 +1291,14 @@
       }
     },
     "Success Criteria" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "成功の基準"
+          }
+        }
+      }
     },
     "Suggestion" : {
       "localizations" : {
@@ -1015,10 +1351,24 @@
       }
     },
     "Tag Name" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "タグ名"
+          }
+        }
+      }
     },
     "Tag Type" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "タグタイプ"
+          }
+        }
+      }
     },
     "Tags" : {
       "localizations" : {
@@ -1031,7 +1381,14 @@
       }
     },
     "Text" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "テキスト"
+          }
+        }
+      }
     },
     "This Week" : {
       "localizations" : {
@@ -1104,13 +1461,34 @@
       }
     },
     "Unused" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未使用"
+          }
+        }
+      }
     },
     "Unused Labels" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未使用のラベル"
+          }
+        }
+      }
     },
     "Update duplicates" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重複を更新"
+          }
+        }
+      }
     },
     "Update Required" : {
       "localizations" : {

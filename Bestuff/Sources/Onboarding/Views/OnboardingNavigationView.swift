@@ -76,29 +76,7 @@ struct OnboardingNavigationView: View {
         dismiss()
     }
 
-    private func createSampleData() {
-        for data in SampleData.stuffs {
-            var tagModels: [Tag] = []
-            for label in data.labels {
-                tagModels.append(Tag.findOrCreate(name: label, in: modelContext, type: .label))
-            }
-            if let period = data.period {
-                tagModels.append(Tag.findOrCreate(name: period, in: modelContext, type: .period))
-            }
-            for resource in data.resources {
-                tagModels.append(Tag.findOrCreate(name: resource, in: modelContext, type: .resource))
-            }
-            let occurredAt = Calendar.current.date(byAdding: .day, value: data.occurredOffsetDays, to: .now) ?? .now
-            let model = StuffService.create(
-                context: modelContext,
-                title: data.title,
-                note: data.note,
-                occurredAt: occurredAt,
-                tags: tagModels
-            )
-            model.update(score: data.score, isCompleted: data.isCompleted, lastFeedback: data.lastFeedback, source: data.source)
-        }
-    }
+    private func createSampleData() { SampleDataSeeder.seed(context: modelContext) }
 }
 
 private struct OnboardingPageView: View {
