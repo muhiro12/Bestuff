@@ -34,6 +34,8 @@ struct PlanView: View {
     @State private var isShowingReminderSavedAlert = false
     @State private var lastSavedEventID: String?
     @State private var lastSavedReminderID: String?
+    @State private var lastSavedReminderDueDate: Date?
+    @State private var lastSavedReminderListName: String?
 
     var body: some View {
         List {
@@ -124,7 +126,13 @@ struct PlanView: View {
             }
             Button("OK", role: .cancel) {}
         } message: {
-            Text("Your reminder was saved.")
+            let due = lastSavedReminderDueDate?.formatted(.dateTime) ?? ""
+            let list = lastSavedReminderListName ?? ""
+            if !due.isEmpty || !list.isEmpty {
+                Text([due.isEmpty ? nil : "Due: \(due)", list.isEmpty ? nil : "List: \(list)"].compactMap(\.self).joined(separator: "\n"))
+            } else {
+                Text("Your reminder was saved.")
+            }
         }
         #if canImport(EventKitUI)
         .sheet(isPresented: $isShowingEventEditor) {
@@ -230,7 +238,7 @@ struct PlanView: View {
     private func exportToReminders(dueDate: Date, expandSteps: Bool) {
         Task {
             do {
-                let id = try await EventKitService.shared.addReminder(
+                let result = try await EventKitService.shared.addReminder(
                     title: selection.item.title,
                     notes: selection.item.rationale,
                     dueDate: dueDate,
@@ -238,7 +246,9 @@ struct PlanView: View {
                     expandSteps: expandSteps,
                     priority: selection.item.priority
                 )
-                lastSavedReminderID = id
+                lastSavedReminderID = result.id
+                lastSavedReminderDueDate = result.dueDate
+                lastSavedReminderListName = result.calendarTitle
                 alertMessage = "Reminder saved"
                 isShowingReminderSavedAlert = true
             } catch {
