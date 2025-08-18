@@ -5,6 +5,7 @@
 //  Created by Codex on 2025/07/09.
 //
 
+import Foundation
 import SwiftData
 import SwiftUI
 import UniformTypeIdentifiers
@@ -20,6 +21,7 @@ struct SettingsListView: View {
     @State private var isImporting = false
     @State private var importErrorMessage: String?
     @State private var successMessage: String?
+    @State private var pendingExportCounts: (tags: Int, stuffs: Int)?
 
     @AppStorage(StringAppStorageKey.backupImportStrategy)
     private var importStrategyRaw
@@ -55,6 +57,10 @@ struct SettingsListView: View {
                 }
                 Button("Export Backup", systemImage: "square.and.arrow.up.on.square") {
                     do {
+                        // Precompute counts to show after successful export
+                        let tagCount = try contextTagCount()
+                        let stuffCount = try contextStuffCount()
+                        pendingExportCounts = (tags: tagCount, stuffs: stuffCount)
                         let data = try BackupService.exportJSON(context: modelContext)
                         exportDocument = .init(data: data)
                         isExporting = true
@@ -82,7 +88,12 @@ struct SettingsListView: View {
         ) { result in
             switch result {
             case .success:
-                successMessage = "Backup exported successfully."
+                if let counts = pendingExportCounts {
+                    successMessage = "Exported backup (\(counts.tags) tags, \(counts.stuffs) items)."
+                } else {
+                    successMessage = "Backup exported successfully."
+                }
+                pendingExportCounts = nil
             case .failure:
                 importErrorMessage = "Failed to write backup file."
             }
@@ -100,9 +111,20 @@ struct SettingsListView: View {
                     return
                 }
                 do {
-                    let strategy = BackupConflictStrategy(rawValue: importStrategyRaw) ?? .update
-                    try BackupService.importJSON(context: modelContext, data: data, conflictStrategy: strategy)
-                    successMessage = "Backup imported successfully."
+                    // Decode payload to report counts
+                    let decoder = JSONDecoder()
+                    decoder.dateDecodingStrategy = .iso8601
+                    if let payload = try? decoder.decode(BackupPayload.self, from: data) {
+                        let tagCount = payload.tags.count
+                        let stuffCount = payload.stuffs.count
+                        let strategy = BackupConflictStrategy(rawValue: importStrategyRaw) ?? .update
+                        try BackupService.importJSON(context: modelContext, data: data, conflictStrategy: strategy)
+                        successMessage = "Imported backup (\(tagCount) tags, \(stuffCount) items)."
+                    } else {
+                        let strategy = BackupConflictStrategy(rawValue: importStrategyRaw) ?? .update
+                        try BackupService.importJSON(context: modelContext, data: data, conflictStrategy: strategy)
+                        successMessage = "Backup imported successfully."
+                    }
                 } catch {
                     importErrorMessage = "Failed to import backup."
                 }
@@ -132,6 +154,14 @@ struct SettingsListView: View {
 }
 
 private extension SettingsListView {
+    func contextTagCount() throws -> Int {
+        try modelContext.fetch(FetchDescriptor<Tag>()).count
+    }
+
+    func contextStuffCount() throws -> Int {
+        try modelContext.fetch(FetchDescriptor<Stuff>()).count
+    }
+
     var appVersionLabel: String {
         let info = Bundle.main.infoDictionary
         let version = info?["CFBundleShortVersionString"] as? String
