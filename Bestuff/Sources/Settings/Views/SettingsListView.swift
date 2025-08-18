@@ -34,7 +34,7 @@ struct SettingsListView: View {
                 }
             }
             Section("General") {
-                Label("Version 1.0.0", systemImage: "number")
+                Label(appVersionLabel, systemImage: "number")
             }
             Section("Support") {
                 Link(
@@ -132,6 +132,22 @@ struct SettingsListView: View {
 }
 
 private extension SettingsListView {
+    var appVersionLabel: String {
+        let info = Bundle.main.infoDictionary
+        let version = info?["CFBundleShortVersionString"] as? String
+        let build = info?["CFBundleVersion"] as? String
+        switch (version, build) {
+        case let (.some(v), .some(b)):
+            return "Version \(v) (Build \(b))"
+        case let (.some(v), nil):
+            return "Version \(v)"
+        case let (nil, .some(b)):
+            return "Build \(b)"
+        default:
+            return "Version"
+        }
+    }
+
     var defaultBackupFilename: String {
         let formatter = DateFormatter()
         formatter.calendar = Calendar(identifier: .gregorian)
