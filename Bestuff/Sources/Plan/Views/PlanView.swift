@@ -34,6 +34,8 @@ struct PlanView: View {
     @State private var isShowingReminderSavedAlert = false
     @State private var lastSavedEventID: String?
     @State private var lastSavedReminderID: String?
+    @State private var lastSavedEventStartDate: Date?
+    @State private var lastSavedEventCalendarName: String?
     @State private var lastSavedReminderDueDate: Date?
     @State private var lastSavedReminderListName: String?
 
@@ -118,7 +120,13 @@ struct PlanView: View {
             }
             Button("OK", role: .cancel) {}
         } message: {
-            Text("Your calendar event was saved.")
+            let start = lastSavedEventStartDate?.formatted(.dateTime) ?? ""
+            let cal = lastSavedEventCalendarName ?? ""
+            if !start.isEmpty || !cal.isEmpty {
+                Text([start.isEmpty ? nil : "Start: \(start)", cal.isEmpty ? nil : "Calendar: \(cal)"].compactMap(\.self).joined(separator: "\n"))
+            } else {
+                Text("Your calendar event was saved.")
+            }
         }
         .alert("Reminder Saved", isPresented: $isShowingReminderSavedAlert) {
             Button("Open Reminders") {
@@ -141,6 +149,13 @@ struct PlanView: View {
                     switch result {
                     case .saved(let id):
                         lastSavedEventID = id
+                        if let id, let saved = EventKitService.shared.eventStore.event(withIdentifier: id) {
+                            lastSavedEventStartDate = saved.startDate
+                            lastSavedEventCalendarName = saved.calendar?.title
+                        } else {
+                            lastSavedEventStartDate = event.startDate
+                            lastSavedEventCalendarName = event.calendar?.title
+                        }
                         alertMessage = "Calendar event saved"
                         isShowingEventSavedAlert = true
                     case .deleted:
