@@ -97,15 +97,31 @@ struct DebugListView: View {
     private func createSampleData() {
         Logger(#file).info("Creating sample data")
         withAnimation {
-            for stuff in SampleData.stuffs {
-                let tagModels: [Tag] = stuff.tags.map { Tag.findOrCreate(name: $0, in: modelContext, type: .label) }
-                _ = StuffService.create(
+            for data in SampleData.stuffs {
+                var tagModels: [Tag] = []
+                // Labels
+                for label in data.labels {
+                    tagModels.append(Tag.findOrCreate(name: label, in: modelContext, type: .label))
+                }
+                // Period (optional)
+                if let period = data.period {
+                    tagModels.append(Tag.findOrCreate(name: period, in: modelContext, type: .period))
+                }
+                // Resources
+                for resource in data.resources {
+                    tagModels.append(Tag.findOrCreate(name: resource, in: modelContext, type: .resource))
+                }
+
+                let occurredAt = Calendar.current.date(byAdding: .day, value: data.occurredOffsetDays, to: .now) ?? .now
+
+                let model = StuffService.create(
                     context: modelContext,
-                    title: stuff.title,
-                    note: stuff.note,
-                    occurredAt: Date.now,
+                    title: data.title,
+                    note: data.note,
+                    occurredAt: occurredAt,
                     tags: tagModels
                 )
+                model.update(score: data.score, isCompleted: data.isCompleted, lastFeedback: data.lastFeedback, source: data.source)
             }
         }
         Logger(#file).notice("Sample data created")
@@ -133,34 +149,112 @@ struct SampleData {
     struct StuffData {
         let title: String
         let note: String?
-        let tags: [String]
+        let labels: [String]
+        let period: String?
+        let resources: [String]
+        let score: Int
+        let isCompleted: Bool
+        let lastFeedback: Int?
+        let source: String?
+        let occurredOffsetDays: Int
     }
 
     static let stuffs: [StuffData] = [
         .init(
-            title: String(localized: "Coffee Beans"),
-            note: String(localized: "Order from the local roastery."),
-            tags: [String(localized: "Groceries")]
+            title: String(localized: "Morning Run"),
+            note: String(localized: "5km around the park."),
+            labels: [String(localized: "Fitness")],
+            period: String(localized: "This Week"),
+            resources: [String(localized: "Shoes")],
+            score: 60,
+            isCompleted: true,
+            lastFeedback: 10,
+            source: "sample",
+            occurredOffsetDays: -1
         ),
         .init(
-            title: String(localized: "Running Shoes"),
-            note: String(localized: "Replace the worn-out pair."),
-            tags: [String(localized: "Fitness")]
+            title: String(localized: "Read 'Atomic Habits'"),
+            note: String(localized: "Chapters 1–3"),
+            labels: [String(localized: "Leisure"), String(localized: "Learning")],
+            period: nil,
+            resources: [String(localized: "Book")],
+            score: 70,
+            isCompleted: false,
+            lastFeedback: 10,
+            source: "sample",
+            occurredOffsetDays: -3
         ),
         .init(
-            title: String(localized: "Conference Tickets"),
-            note: String(localized: "WWDC 2025"),
-            tags: [String(localized: "Work")]
+            title: String(localized: "Team Meeting Agenda"),
+            note: String(localized: "Outline topics for Monday."),
+            labels: [String(localized: "Work")],
+            period: String(localized: "Tomorrow"),
+            resources: [String(localized: "Document")],
+            score: 50,
+            isCompleted: false,
+            lastFeedback: nil,
+            source: "sample",
+            occurredOffsetDays: 1
         ),
         .init(
-            title: String(localized: "Vacation Booking"),
-            note: String(localized: "Reserve hotel and flights."),
-            tags: [String(localized: "Travel")]
+            title: String(localized: "Grocery Shopping"),
+            note: String(localized: "Milk, eggs, bread, fruit."),
+            labels: [String(localized: "Groceries")],
+            period: nil,
+            resources: [String(localized: "Checklist")],
+            score: 40,
+            isCompleted: false,
+            lastFeedback: nil,
+            source: "sample",
+            occurredOffsetDays: 0
         ),
         .init(
-            title: String(localized: "Birthday Gift"),
-            note: String(localized: "Surprise for Alice."),
-            tags: [String(localized: "Personal")]
+            title: String(localized: "Plan Vacation"),
+            note: String(localized: "Decide destination and budget."),
+            labels: [String(localized: "Travel"), String(localized: "Personal")],
+            period: String(localized: "Next Month"),
+            resources: [String(localized: "Flight"), String(localized: "Hotel")],
+            score: 55,
+            isCompleted: false,
+            lastFeedback: nil,
+            source: "sample",
+            occurredOffsetDays: 10
+        ),
+        .init(
+            title: String(localized: "Learn SwiftUI"),
+            note: String(localized: "Build a small sample app."),
+            labels: [String(localized: "Learning"), String(localized: "Work")],
+            period: nil,
+            resources: [String(localized: "Article"), String(localized: "Video")],
+            score: 80,
+            isCompleted: false,
+            lastFeedback: 1,
+            source: "sample",
+            occurredOffsetDays: -7
+        ),
+        .init(
+            title: String(localized: "Renew Gym Membership"),
+            note: nil,
+            labels: [String(localized: "Fitness")],
+            period: String(localized: "This Week"),
+            resources: [],
+            score: 30,
+            isCompleted: false,
+            lastFeedback: nil,
+            source: "sample",
+            occurredOffsetDays: 2
+        ),
+        .init(
+            title: String(localized: "Birthday Gift for Alice"),
+            note: String(localized: "Consider a book or flowers."),
+            labels: [String(localized: "Personal")],
+            period: nil,
+            resources: [String(localized: "Gift")],
+            score: 65,
+            isCompleted: true,
+            lastFeedback: 10,
+            source: "sample",
+            occurredOffsetDays: -14
         )
     ]
 }
