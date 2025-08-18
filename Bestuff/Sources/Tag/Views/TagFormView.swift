@@ -10,10 +10,18 @@ struct TagFormView: View {
     private var modelContext
 
     @State private var name = ""
+    @State private var selectedType: TagType = .label
 
     var body: some View {
         Form {
-            TextField("Name", text: $name)
+            Section("Details") {
+                TextField("Name", text: $name)
+                Picker("Type", selection: $selectedType) {
+                    Text("Label").tag(TagType.label)
+                    Text("Period").tag(TagType.period)
+                    Text("Resource").tag(TagType.resource)
+                }
+            }
         }
         .navigationTitle(tag == nil ? "Add Tag" : "Edit Tag")
         .toolbar {
@@ -29,6 +37,7 @@ struct TagFormView: View {
         }
         .task {
             name = tag?.name ?? .empty
+            selectedType = tag?.type ?? .label
         }
     }
 
@@ -37,10 +46,13 @@ struct TagFormView: View {
             if let tag {
                 Logger(#file).info("Updating tag \(String(describing: tag.id))")
                 _ = TagService.update(model: tag, name: name)
+                if tag.type != selectedType {
+                    tag.update(type: selectedType)
+                }
                 Logger(#file).notice("Updated tag \(String(describing: tag.id))")
             } else {
                 Logger(#file).info("Creating new tag")
-                _ = TagService.create(context: modelContext, name: name, type: .label)
+                _ = TagService.create(context: modelContext, name: name, type: selectedType)
                 Logger(#file).notice("Created new tag")
             }
             dismiss()
