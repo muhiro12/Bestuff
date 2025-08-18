@@ -19,6 +19,7 @@ struct SettingsListView: View {
     @State private var exportDocument: BackupDocument?
     @State private var isImporting = false
     @State private var importErrorMessage: String?
+    @State private var successMessage: String?
 
     @AppStorage(StringAppStorageKey.backupImportStrategy)
     private var importStrategyRaw
@@ -77,9 +78,12 @@ struct SettingsListView: View {
             isPresented: $isExporting,
             document: exportDocument,
             contentType: .json,
-            defaultFilename: "BestuffBackup"
+            defaultFilename: defaultBackupFilename
         ) { result in
-            if case .failure = result {
+            switch result {
+            case .success:
+                successMessage = "Backup exported successfully."
+            case .failure:
                 importErrorMessage = "Failed to write backup file."
             }
         }
@@ -98,6 +102,7 @@ struct SettingsListView: View {
                 do {
                     let strategy = BackupConflictStrategy(rawValue: importStrategyRaw) ?? .update
                     try BackupService.importJSON(context: modelContext, data: data, conflictStrategy: strategy)
+                    successMessage = "Backup imported successfully."
                 } catch {
                     importErrorMessage = "Failed to import backup."
                 }
@@ -112,9 +117,27 @@ struct SettingsListView: View {
         })) {
             Button("OK") {}
         }
+        .alert(successMessage ?? "", isPresented: Binding(get: {
+            successMessage != nil
+        }, set: { flag in
+            if flag == false { successMessage = nil }
+        })) {
+            Button("OK") {}
+        }
     }
 }
 
 #Preview(traits: .sampleData) {
     SettingsListView()
+}
+
+private extension SettingsListView {
+    var defaultBackupFilename: String {
+        let formatter = DateFormatter()
+        formatter.calendar = Calendar(identifier: .gregorian)
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.dateFormat = "yyyy-MM-dd-HHmmss"
+        let stamp = formatter.string(from: Date())
+        return "BestuffBackup-\(stamp)"
+    }
 }
