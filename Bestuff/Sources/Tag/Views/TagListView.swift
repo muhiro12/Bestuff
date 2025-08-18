@@ -20,8 +20,22 @@ struct TagListView: View {
 
     var body: some View {
         List(selection: $selection) {
-            ForEach(filteredTags) { tag in
-                Text(tag.displayName).tag(tag)
+            if let filterType {
+                Section(sectionTitle(for: filterType)) {
+                    ForEach(filteredTags) { tag in
+                        Text(tag.displayName)
+                            .tag(tag)
+                    }
+                }
+            } else {
+                ForEach(groupedTags, id: \.title) { group in
+                    Section(group.title) {
+                        ForEach(group.tags) { tag in
+                            Text(tag.displayName)
+                                .tag(tag)
+                        }
+                    }
+                }
             }
         }
         .navigationTitle("Tags")
@@ -42,6 +56,35 @@ struct TagListView: View {
         }
         if searchText.isEmpty { return base }
         return base.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
+    }
+
+    private var groupedTags: [(title: String, tags: [Tag])] {
+        let base = filteredTags
+        let byLabel = base.filter { ($0.type ?? .label) == .label }
+        let byPeriod = base.filter { ($0.type ?? .label) == .period }
+        let byResource = base.filter { ($0.type ?? .label) == .resource }
+        var result: [(title: String, tags: [Tag])] = []
+        if byLabel.isEmpty == false {
+            result.append((title: sectionTitle(for: .label), tags: byLabel))
+        }
+        if byPeriod.isEmpty == false {
+            result.append((title: sectionTitle(for: .period), tags: byPeriod))
+        }
+        if byResource.isEmpty == false {
+            result.append((title: sectionTitle(for: .resource), tags: byResource))
+        }
+        return result
+    }
+
+    private func sectionTitle(for type: TagType) -> String {
+        switch type {
+        case .label:
+            return "Labels"
+        case .period:
+            return "Periods"
+        case .resource:
+            return "Resources"
+        }
     }
 }
 

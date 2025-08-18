@@ -10,3 +10,13 @@ extension AppStorage where Value == Bool {
         self.init(wrappedValue: false, key.rawValue)
     }
 }
+
+enum StringAppStorageKey: String {
+    case backupImportStrategy = "bKp_ImportStrategy"
+}
+
+extension AppStorage where Value == String {
+    init(_ key: StringAppStorageKey) {
+        self.init(wrappedValue: "update", key.rawValue)
+    }
+}
