@@ -163,10 +163,6 @@ struct DuplicateTagListView: View {
     DuplicateTagListView()
 }
 
-extension Notification.Name {
-    static let tagDuplicatesDidChange = Notification.Name("TagDuplicatesDidChange")
-}
-
 private extension Collection {
     subscript(safe index: Index) -> Element? {
         if indices.contains(index) {

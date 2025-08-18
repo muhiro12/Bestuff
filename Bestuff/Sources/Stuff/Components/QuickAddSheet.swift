@@ -47,17 +47,16 @@ struct QuickAddSheet: View {
             .split(separator: ",")
             .map { String($0).trimmingCharacters(in: .whitespacesAndNewlines) }
             .filter { $0.isEmpty == false }
-        var tagModels: [Tag] = []
-        for name in names {
-            tagModels.append(Tag.findOrCreate(name: name, in: modelContext, type: .label))
-        }
         let model = StuffService.create(
             context: modelContext,
             title: trimmedTitle,
             note: nil,
             occurredAt: .now,
-            tags: tagModels
+            tags: []
         )
+        if names.isEmpty == false {
+            TagService.addLabels(context: modelContext, to: model, names: names)
+        }
         if pin {
             model.update(pinned: true)
             modelContext.insert(model)

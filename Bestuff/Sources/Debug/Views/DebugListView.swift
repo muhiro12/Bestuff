@@ -96,34 +96,7 @@ struct DebugListView: View {
 
     private func createSampleData() {
         Logger(#file).info("Creating sample data")
-        withAnimation {
-            for data in SampleData.stuffs {
-                var tagModels: [Tag] = []
-                // Labels
-                for label in data.labels {
-                    tagModels.append(Tag.findOrCreate(name: label, in: modelContext, type: .label))
-                }
-                // Period (optional)
-                if let period = data.period {
-                    tagModels.append(Tag.findOrCreate(name: period, in: modelContext, type: .period))
-                }
-                // Resources
-                for resource in data.resources {
-                    tagModels.append(Tag.findOrCreate(name: resource, in: modelContext, type: .resource))
-                }
-
-                let occurredAt = Calendar.current.date(byAdding: .day, value: data.occurredOffsetDays, to: .now) ?? .now
-
-                let model = StuffService.create(
-                    context: modelContext,
-                    title: data.title,
-                    note: data.note,
-                    occurredAt: occurredAt,
-                    tags: tagModels
-                )
-                model.update(score: data.score, isCompleted: data.isCompleted, lastFeedback: data.lastFeedback, source: data.source)
-            }
-        }
+        withAnimation { SampleDataSeeder.seed(context: modelContext) }
         Logger(#file).notice("Sample data created")
     }
 
