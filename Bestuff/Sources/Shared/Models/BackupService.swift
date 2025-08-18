@@ -8,7 +8,7 @@
 import Foundation
 import SwiftData
 
-enum BackupConflictStrategy {
+enum BackupConflictStrategy: String, CaseIterable, Sendable {
     case skip
     case update
 }

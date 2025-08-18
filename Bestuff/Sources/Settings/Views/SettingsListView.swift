@@ -20,6 +20,18 @@ struct SettingsListView: View {
     @State private var isImporting = false
     @State private var importErrorMessage: String?
 
+    @AppStorage(StringAppStorageKey.backupImportStrategy)
+    private var importStrategyRaw
+
+    private var importStrategy: BackupConflictStrategy {
+        get {
+            BackupConflictStrategy(rawValue: importStrategyRaw) ?? .update
+        }
+        set {
+            importStrategyRaw = newValue.rawValue
+        }
+    }
+
     var body: some View {
         List {
             if !isSubscribeOn {
@@ -45,6 +57,20 @@ struct SettingsListView: View {
                 }
             }
             Section("Data") {
+                Picker("Import Strategy", selection: Binding(get: {
+                    importStrategy
+                }, set: { newValue in
+                    importStrategy = newValue
+                })) {
+                    ForEach(BackupConflictStrategy.allCases, id: \.self) { strategy in
+                        switch strategy {
+                        case .skip:
+                            Text("Skip duplicates").tag(strategy)
+                        case .update:
+                            Text("Update duplicates").tag(strategy)
+                        }
+                    }
+                }
                 Button("Export Backup", systemImage: "square.and.arrow.up.on.square") {
                     do {
                         let data = try BackupService.exportJSON(context: modelContext)
@@ -89,7 +115,7 @@ struct SettingsListView: View {
                     return
                 }
                 do {
-                    try BackupService.importJSON(context: modelContext, data: data, conflictStrategy: .update)
+                    try BackupService.importJSON(context: modelContext, data: data, conflictStrategy: importStrategy)
                 } catch {
                     importErrorMessage = "Failed to import backup."
                 }
