@@ -12,10 +12,19 @@ struct ContentView: View {
     private var configurationService
     @Environment(\.scenePhase)
     private var scenePhase
+    @AppStorage(BoolAppStorageKey.hasCompletedOnboarding)
+    private var hasCompletedOnboarding
 
     @State private var isUpdateAlertPresented = false
     var body: some View {
         StuffNavigationView()
+            .fullScreenCover(isPresented: Binding(get: {
+                hasCompletedOnboarding == false
+            }, set: { flag in
+                if flag == false { hasCompletedOnboarding = true }
+            })) {
+                OnboardingNavigationView()
+            }
             .alert(Text("Update Required"), isPresented: $isUpdateAlertPresented) {
                 Button {
                     UIApplication.shared.open(
