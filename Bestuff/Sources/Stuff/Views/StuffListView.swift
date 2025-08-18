@@ -22,6 +22,10 @@ struct StuffListView: View {
     @Binding private var searchText: String
 
     @State private var sort = StuffSort.occurredDateDescending
+    @State private var completion = CompletionFilter.all
+    @State private var minScore: Int?
+    @State private var selectedLabel: Tag?
+    @State private var availableLabels: [Tag] = []
     @State private var isRecapPresented = false
     @State private var isPlanPresented = false
     @State private var isTagPresented = false
@@ -82,6 +86,30 @@ struct StuffListView: View {
                             Text(option.title).tag(option)
                         }
                     }
+                    Divider()
+                    Picker("Completion", selection: $completion) {
+                        ForEach(CompletionFilter.allCases) { option in
+                            Text(option.title).tag(option)
+                        }
+                    }
+                    Picker("Minimum Score", selection: Binding(get: {
+                        minScore ?? -1
+                    }, set: { newValue in
+                        minScore = (newValue <= 0) ? nil : newValue
+                    })) {
+                        Text("Any").tag(-1)
+                        Text("50+").tag(50)
+                        Text("80+").tag(80)
+                        Text("90+").tag(90)
+                    }
+                    Menu("Label") {
+                        Button("Any") { selectedLabel = nil }
+                        if availableLabels.isEmpty == false {
+                            ForEach(availableLabels) { tag in
+                                Button(tag.name) { selectedLabel = tag }
+                            }
+                        }
+                    }
                 } label: {
                     Label("Sort", systemImage: "arrow.up.arrow.down")
                 }
@@ -134,6 +162,9 @@ struct StuffListView: View {
         .sheet(isPresented: $isDebugPresented) {
             NavigationStack { DebugListView() }
         }
+        .task {
+            availableLabels = (try? TagService.getAllLabels(context: modelContext)) ?? []
+        }
     }
 
     private var filteredStuffs: [Stuff] {
@@ -144,6 +175,24 @@ struct StuffListView: View {
             result = stuffs.filter { model in
                 model.title.localizedCaseInsensitiveContains(searchText) ||
                     (model.note?.localizedCaseInsensitiveContains(searchText) ?? false)
+            }
+        }
+        // Apply filters
+        switch completion {
+        case .all:
+            break
+        case .completed:
+            result = result.filter(\.isCompleted)
+        case .pending:
+            result = result.filter { !$0.isCompleted }
+        }
+        if let threshold = minScore {
+            result = result.filter { $0.score >= threshold }
+        }
+        if let label = selectedLabel {
+            let id = label.id
+            result = result.filter { stuff in
+                (stuff.tags ?? []).contains { $0.id == id }
             }
         }
         return result.sorted { first, second in
