@@ -33,11 +33,11 @@ struct FilterLogicTests {
         #expect(filtered.count == 2)
 
         // Label
-        filtered = all.filter { ($0.tags ?? []).contains { $0.name == "A" }}
+        filtered = all.filter { ($0.tags ?? []).contains { $0.name == "A" } }
         #expect(filtered.count == 2)
 
         // Combined: Label A and Score >= 80
-        filtered = all.filter { ($0.tags ?? []).contains { $0.name == "A" }&& $0.score >= 80 }
+        filtered = all.filter { ($0.tags ?? []).contains { $0.name == "A" } && $0.score >= 80 }
         #expect(filtered.count == 2)
 
         // Combined: Pending and Score >= 80
