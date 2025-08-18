@@ -15,7 +15,7 @@ struct DuplicateTagListView: View {
         NavigationStack {
             List {
                 ForEach(Array(groups.enumerated()), id: \.offset) { index, group in
-                    Section(header: Text(sectionTitle(for: group))) {
+                    Section(header: Text(sectionTitleWithType(for: group))) {
                         ForEach(group) { tag in
                             HStack {
                                 Text(tag.name)
@@ -91,6 +91,21 @@ struct DuplicateTagListView: View {
         guard let first = group.first else { return "" }
         let others = max(0, group.count - 1)
         return "\(first.name) (\(others) dup)"
+    }
+
+    private func sectionTitleWithType(for group: [Tag]) -> String {
+        guard let first = group.first else { return "" }
+        let typeName: String
+        switch first.type ?? .label {
+        case .label:
+            typeName = "Label"
+        case .period:
+            typeName = "Period"
+        case .resource:
+            typeName = "Resource"
+        }
+        let others = max(0, group.count - 1)
+        return "\(typeName): \(first.name) (\(others) dup)"
     }
 }
 
