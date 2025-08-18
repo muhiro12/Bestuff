@@ -16,8 +16,15 @@ struct StuffRow: View {
 
     var body: some View {
         VStack(alignment: .leading) {
-            Text(stuff.title)
-                .font(.headline)
+            HStack(spacing: 8) {
+                Text(stuff.title)
+                    .font(.headline)
+                if stuff.isPinned {
+                    Image(systemName: "star.fill")
+                        .foregroundStyle(.yellow)
+                        .accessibilityLabel("Pinned")
+                }
+            }
             if let note = stuff.note, !note.isEmpty {
                 Text(note)
                     .font(.footnote)
@@ -30,6 +37,13 @@ struct StuffRow: View {
             }
         }
         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+            Button {
+                togglePinned()
+            } label: {
+                Label(stuff.isPinned ? "Unpin" : "Pin", systemImage: stuff.isPinned ? "star.slash" : "star")
+            }
+            .tint(.yellow)
+
             Button {
                 markCompleted()
             } label: {
@@ -65,6 +79,11 @@ struct StuffRow: View {
         let bonus = 15
         let newScore = max(0, min(100, stuff.score + bonus))
         stuff.update(score: newScore, isCompleted: true)
+        modelContext.insert(stuff)
+    }
+
+    private func togglePinned() {
+        stuff.update(pinned: !stuff.isPinned)
         modelContext.insert(stuff)
     }
 }

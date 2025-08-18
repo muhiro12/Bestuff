@@ -20,6 +20,7 @@ nonisolated final class Stuff {
     private(set) var isCompleted: Bool
     private(set) var lastFeedback: Int?
     private(set) var source: String?
+    private(set) var isPinned: Bool
 
     private init(
         title: String,
@@ -30,7 +31,8 @@ nonisolated final class Stuff {
         tags: [Tag] = [],
         isCompleted: Bool = false,
         lastFeedback: Int? = nil,
-        source: String? = nil
+        source: String? = nil,
+        isPinned: Bool = false
     ) {
         self.title = title
         self.note = note
@@ -41,6 +43,7 @@ nonisolated final class Stuff {
         self.isCompleted = isCompleted
         self.lastFeedback = lastFeedback
         self.source = source
+        self.isPinned = isPinned
     }
 
     static func create(
@@ -52,7 +55,8 @@ nonisolated final class Stuff {
         tags: [Tag] = [],
         isCompleted: Bool = false,
         lastFeedback: Int? = nil,
-        source: String? = nil
+        source: String? = nil,
+        isPinned: Bool = false
     ) -> Stuff {
         .init(
             title: title,
@@ -63,7 +67,8 @@ nonisolated final class Stuff {
             tags: tags,
             isCompleted: isCompleted,
             lastFeedback: lastFeedback,
-            source: source
+            source: source,
+            isPinned: isPinned
         )
     }
 
@@ -75,7 +80,8 @@ nonisolated final class Stuff {
         tags: [Tag]? = nil,
         isCompleted: Bool? = nil,
         lastFeedback: Int? = nil,
-        source: String? = nil
+        source: String? = nil,
+        pinned: Bool? = nil
     ) {
         if let title {
             self.title = title
@@ -100,6 +106,9 @@ nonisolated final class Stuff {
         }
         if let source {
             self.source = source
+        }
+        if let pinned {
+            self.isPinned = pinned
         }
     }
 }

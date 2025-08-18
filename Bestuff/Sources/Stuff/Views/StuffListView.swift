@@ -56,28 +56,54 @@ struct StuffListView: View {
 
     var body: some View {
         List(selection: $selection) {
-            ForEach(filteredStuffs) { stuff in
-                StuffRow()
-                    .environment(stuff)
-                    .tag(stuff)
-                    .contextMenu(
-                        menuItems: {
-                            EditStuffButton()
-                                .environment(stuff)
-                            Button(
-                                role: .destructive,
-                                action: { delete(stuff) }
-                            ) {
-                                Label("Delete", systemImage: "trash")
-                            }
-                        },
-                        preview: {
-                            StuffView()
-                                .environment(stuff)
-                        }
-                    )
+            let pinned = filteredStuffs.filter(\.isPinned)
+            let regular = filteredStuffs.filter { !$0.isPinned }
+
+            if !pinned.isEmpty {
+                Section("Pinned") {
+                    ForEach(pinned) { stuff in
+                        StuffRow()
+                            .environment(stuff)
+                            .tag(stuff)
+                            .contextMenu(
+                                menuItems: {
+                                    EditStuffButton()
+                                        .environment(stuff)
+                                    Button(role: .destructive, action: { delete(stuff) }) {
+                                        Label("Delete", systemImage: "trash")
+                                    }
+                                },
+                                preview: {
+                                    StuffView()
+                                        .environment(stuff)
+                                }
+                            )
+                    }
+                    .onDelete(perform: delete)
+                }
             }
-            .onDelete(perform: delete)
+
+            Section(regular.isEmpty ? "" : "Items") {
+                ForEach(regular) { stuff in
+                    StuffRow()
+                        .environment(stuff)
+                        .tag(stuff)
+                        .contextMenu(
+                            menuItems: {
+                                EditStuffButton()
+                                    .environment(stuff)
+                                Button(role: .destructive, action: { delete(stuff) }) {
+                                    Label("Delete", systemImage: "trash")
+                                }
+                            },
+                            preview: {
+                                StuffView()
+                                    .environment(stuff)
+                            }
+                        )
+                }
+                .onDelete(perform: delete)
+            }
         }
         .navigationTitle("Best Stuff")
         .toolbar {
