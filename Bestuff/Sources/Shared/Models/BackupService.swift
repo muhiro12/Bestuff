@@ -92,11 +92,16 @@ enum BackupService {
             return models
         }
 
+        // Date equality tolerance to account for ISO8601 precision
+        func isSame(_ lhs: Date, _ rhs: Date) -> Bool {
+            abs(lhs.timeIntervalSince(rhs)) < 1.0
+        }
+
         // Restore stuffs
         for dump in payload.stuffs {
             // Define a simple identity: title + occurredAt
             let existing: Stuff? = try context.fetch(FetchDescriptor<Stuff>())
-                .first { $0.title == dump.title && $0.occurredAt == dump.occurredAt }
+                .first { $0.title == dump.title && isSame($0.occurredAt, dump.occurredAt) }
             switch (existing, conflictStrategy) {
             case (.some(let model), .skip):
                 // Keep the existing one

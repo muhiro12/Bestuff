@@ -5,6 +5,7 @@
 //  Created by Hiromu Nakano on 2025/07/08.
 //
 
+import AppIntents
 import XCTest
 
 final class BestuffUITests: XCTestCase {

@@ -110,6 +110,6 @@ struct BackupServiceTests {
         #expect(model.isCompleted == true)
         #expect(model.lastFeedback == 1)
         #expect(model.source == "import")
-        #expect(model.tags?.contains { $0.name == "Leisure" }== true)
+        #expect(model.tags?.contains { $0.name == "Leisure" } == true)
     }
 }
