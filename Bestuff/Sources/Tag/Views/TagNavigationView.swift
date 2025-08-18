@@ -4,9 +4,23 @@ import SwiftUI
 struct TagNavigationView: View {
     @Environment(\.modelContext) private var modelContext
     @State private var selection: Tag?
-    @State private var searchText = ""
+    @AppStorage(StringAppStorageKey.tagSearchText)
+    private var searchText
     @State private var duplicateCount: Int = 0
-    @State private var filterType: TagType?
+    @AppStorage(StringAppStorageKey.tagFilterType)
+    private var storedFilterType
+
+    private var filterType: TagType? {
+        get {
+            if storedFilterType == "all" {
+                return nil
+            }
+            return TagType(rawValue: storedFilterType)
+        }
+        set {
+            storedFilterType = newValue?.rawValue ?? "all"
+        }
+    }
 
     var body: some View {
         NavigationSplitView {
@@ -14,8 +28,10 @@ struct TagNavigationView: View {
                 Picker("Filter", selection: Binding(get: {
                     filterType ?? .label
                 }, set: { newValue in
-                    filterType = newValue
-                    if searchText.isEmpty { /* no-op */ }
+                    storedFilterType = newValue?.rawValue ?? "all"
+                    if searchText.isEmpty {
+                        // no-op
+                    }
                 })) {
                     Text("All").tag(TagType?.none)
                     Text("Labels").tag(TagType?.some(.label))
@@ -26,7 +42,7 @@ struct TagNavigationView: View {
                 TagListView(
                     selection: $selection,
                     searchText: $searchText,
-                    filterType: $filterType
+                    filterType: Binding(get: { filterType }, set: { storedFilterType = $0?.rawValue ?? "all" })
                 )
             }
         } detail: {
