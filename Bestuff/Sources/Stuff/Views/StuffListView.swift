@@ -31,6 +31,7 @@ struct StuffListView: View {
     @State private var isPlanPresented = false
     @State private var isTagPresented = false
     @State private var isAddPresented = false
+    @State private var isQuickAddPresented = false
     @State private var isSettingsPresented = false
     @State private var isDebugPresented = false
     @State private var isBulkPresented = false
@@ -109,6 +110,11 @@ struct StuffListView: View {
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 AddStuffButton { isAddPresented = true }
+            }
+            ToolbarItem(placement: .primaryAction) {
+                Button("Quick Add", systemImage: "bolt.badge.plus") {
+                    isQuickAddPresented = true
+                }
             }
             ToolbarItem(placement: .primaryAction) {
                 Menu {
@@ -197,6 +203,9 @@ struct StuffListView: View {
         }
         .sheet(isPresented: $isAddPresented) {
             NavigationStack { StuffFormView() }
+        }
+        .sheet(isPresented: $isQuickAddPresented) {
+            QuickAddSheet(isPresented: $isQuickAddPresented)
         }
         .sheet(isPresented: $isSettingsPresented) {
             NavigationStack { SettingsListView() }
