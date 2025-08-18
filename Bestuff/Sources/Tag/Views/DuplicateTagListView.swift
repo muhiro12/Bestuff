@@ -110,6 +110,7 @@ struct DuplicateTagListView: View {
                 dismiss()
             }
             toastMessage = "Resolved \(dupCount) duplicates across \(groupsCount) groups."
+            NotificationCenter.default.post(name: .tagDuplicatesDidChange, object: nil)
         } catch {
             // No-op: keep UI responsive without crashing
         }
@@ -129,6 +130,7 @@ struct DuplicateTagListView: View {
             refresh()
             let mergedCount = max(0, group.count - 1)
             toastMessage = "Merged \(mergedCount) duplicates into \"\(parent.name)\"."
+            NotificationCenter.default.post(name: .tagDuplicatesDidChange, object: nil)
         } catch {
             // No-op
         }
@@ -159,6 +161,10 @@ struct DuplicateTagListView: View {
 
 #Preview(traits: .sampleData) {
     DuplicateTagListView()
+}
+
+extension Notification.Name {
+    static let tagDuplicatesDidChange = Notification.Name("TagDuplicatesDidChange")
 }
 
 private extension Collection {

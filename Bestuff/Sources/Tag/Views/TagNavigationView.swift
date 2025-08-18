@@ -59,6 +59,9 @@ struct TagNavigationView: View {
             }
         }
         .searchable(text: $searchText)
+        .onReceive(NotificationCenter.default.publisher(for: .tagDuplicatesDidChange)) { _ in
+            refreshDuplicateCount()
+        }
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 NavigationLink(value: "duplicates") {
