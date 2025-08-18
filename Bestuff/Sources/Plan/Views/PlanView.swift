@@ -30,6 +30,10 @@ struct PlanView: View {
     private var modelContext
     @State private var savedStuff: Stuff?
     @State private var isShowingSavedSheet = false
+    @State private var isShowingEventSavedAlert = false
+    @State private var isShowingReminderSavedAlert = false
+    @State private var lastSavedEventID: String?
+    @State private var lastSavedReminderID: String?
 
     var body: some View {
         List {
@@ -106,20 +110,40 @@ struct PlanView: View {
         .alert(isPresented: $isShowingAlert) {
             Alert(title: Text(alertMessage))
         }
+        .alert("Event Saved", isPresented: $isShowingEventSavedAlert) {
+            Button("Open") {
+                openCalendarEvent(id: lastSavedEventID)
+            }
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text("Your calendar event was saved.")
+        }
+        .alert("Reminder Saved", isPresented: $isShowingReminderSavedAlert) {
+            Button("Open Reminders") {
+                openRemindersApp()
+            }
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text("Your reminder was saved.")
+        }
         #if canImport(EventKitUI)
         .sheet(isPresented: $isShowingEventEditor) {
             if let event = preparedEvent {
                 EKEventEditView(store: EventKitService.shared.eventStore, event: event) { result in
                     switch result {
                     case .saved(let id):
-                        alertMessage = "Calendar event saved (id: \(id ?? "n/a"))"
+                        lastSavedEventID = id
+                        alertMessage = "Calendar event saved"
+                        isShowingEventSavedAlert = true
                     case .deleted:
                         alertMessage = "Calendar event deleted"
                     case .canceled:
                         alertMessage = "Canceled"
                     }
                     isShowingEventEditor = false
-                    isShowingAlert = true
+                    if isShowingEventSavedAlert == false {
+                        isShowingAlert = true
+                    }
                 }
             }
         }
@@ -214,8 +238,9 @@ struct PlanView: View {
                     expandSteps: expandSteps,
                     priority: selection.item.priority
                 )
-                alertMessage = "Reminder saved (id: \(id))"
-                isShowingAlert = true
+                lastSavedReminderID = id
+                alertMessage = "Reminder saved"
+                isShowingReminderSavedAlert = true
             } catch {
                 alertMessage = "Failed to save reminder"
                 isShowingAlert = true
@@ -294,6 +319,42 @@ struct PlanView: View {
         #endif
         alertMessage = "Copied to clipboard"
         isShowingAlert = true
+    }
+
+    private func openCalendarEvent(id: String?) {
+        #if canImport(UIKit)
+        let store = EventKitService.shared.eventStore
+        if let id, let event = store.event(withIdentifier: id) {
+            let seconds = event.startDate.timeIntervalSinceReferenceDate
+            if let url = URL(string: "calshow:\\(seconds)") {
+                UIApplication.shared.open(url)
+                return
+            }
+        }
+        if let url = URL(string: "calshow:\\(Date().timeIntervalSinceReferenceDate)") {
+            UIApplication.shared.open(url)
+        }
+        #elseif canImport(AppKit)
+        if let url = URL(string: "calshow:\\(Date().timeIntervalSinceReferenceDate)") {
+            NSWorkspace.shared.open(url)
+        } else {
+            NSWorkspace.shared.open(URL(fileURLWithPath: "/Applications/Calendar.app"))
+        }
+        #endif
+    }
+
+    private func openRemindersApp() {
+        #if canImport(UIKit)
+        if let url = URL(string: "x-apple-reminderkit://") {
+            UIApplication.shared.open(url)
+        }
+        #elseif canImport(AppKit)
+        if let url = URL(string: "x-apple-reminderkit://") {
+            NSWorkspace.shared.open(url)
+        } else {
+            NSWorkspace.shared.open(URL(fileURLWithPath: "/Applications/Reminders.app"))
+        }
+        #endif
     }
 }
 
