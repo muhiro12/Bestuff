@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		AD585EDD2E1D631B003BB6D1 /* StoreKitWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = AD585EDC2E1D631B003BB6D1 /* StoreKitWrapper */; };
 		AD585EE02E1D6334003BB6D1 /* LicenseListWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = AD585EDF2E1D6334003BB6D1 /* LicenseListWrapper */; };
+		AD6CBF242E54381800B04F84 /* SpeechWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = AD6CBF232E54381800B04F84 /* SpeechWrapper */; };
 		ADB088C62E51715700655540 /* SwiftAppUtilities in Frameworks */ = {isa = PBXBuildFile; productRef = ADB088C52E51715700655540 /* SwiftAppUtilities */; };
 /* End PBXBuildFile section */
 
@@ -73,6 +74,7 @@
 			files = (
 				AD585EE02E1D6334003BB6D1 /* LicenseListWrapper in Frameworks */,
 				AD585EDD2E1D631B003BB6D1 /* StoreKitWrapper in Frameworks */,
+				AD6CBF242E54381800B04F84 /* SpeechWrapper in Frameworks */,
 				ADB088C62E51715700655540 /* SwiftAppUtilities in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -137,6 +139,7 @@
 				AD585EDC2E1D631B003BB6D1 /* StoreKitWrapper */,
 				AD585EDF2E1D6334003BB6D1 /* LicenseListWrapper */,
 				ADB088C52E51715700655540 /* SwiftAppUtilities */,
+				AD6CBF232E54381800B04F84 /* SpeechWrapper */,
 			);
 			productName = Bestuff;
 			productReference = AD585E872E1D5EF1003BB6D1 /* Bestuff.app */;
@@ -225,6 +228,7 @@
 				AD585EDB2E1D631B003BB6D1 /* XCRemoteSwiftPackageReference "StoreKitWrapper" */,
 				AD585EDE2E1D6334003BB6D1 /* XCRemoteSwiftPackageReference "LicenseListWrapper" */,
 				ADB088C42E51715700655540 /* XCRemoteSwiftPackageReference "SwiftAppUtilities" */,
+				AD6CBF222E54381800B04F84 /* XCRemoteSwiftPackageReference "SpeechWrapper" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = AD585E882E1D5EF1003BB6D1 /* Products */;
@@ -315,6 +319,8 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Bestuff/Configurations/Info.plist;
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				INFOPLIST_KEY_NSCalendarsUsageDescription = "Add and edit events from your plans.";
+				INFOPLIST_KEY_NSRemindersUsageDescription = "Create reminders from your plans.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -361,6 +367,8 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Bestuff/Configurations/Info.plist;
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				INFOPLIST_KEY_NSCalendarsUsageDescription = "Add and edit events from your plans.";
+				INFOPLIST_KEY_NSRemindersUsageDescription = "Create reminders from your plans.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -668,6 +676,14 @@
 				minimumVersion = 1.0.0;
 			};
 		};
+		AD6CBF222E54381800B04F84 /* XCRemoteSwiftPackageReference "SpeechWrapper" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/muhiro12/SpeechWrapper";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 		ADB088C42E51715700655540 /* XCRemoteSwiftPackageReference "SwiftAppUtilities" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/muhiro12/SwiftAppUtilities";
@@ -688,6 +704,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = AD585EDE2E1D6334003BB6D1 /* XCRemoteSwiftPackageReference "LicenseListWrapper" */;
 			productName = LicenseListWrapper;
+		};
+		AD6CBF232E54381800B04F84 /* SpeechWrapper */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AD6CBF222E54381800B04F84 /* XCRemoteSwiftPackageReference "SpeechWrapper" */;
+			productName = SpeechWrapper;
 		};
 		ADB088C52E51715700655540 /* SwiftAppUtilities */ = {
 			isa = XCSwiftPackageProductDependency;

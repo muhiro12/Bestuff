@@ -1,5 +1,5 @@
 {
-  "originHash" : "5bf5bcc21d9d883cf7b45fdd8b2e80391e28652e601643899b8efd34ce6464e8",
+  "originHash" : "08eca2fbd2613a5535b598b266ea480567daf5a2a0e5b601d27a9bae6af3ff4f",
   "pins" : [
     {
       "identity" : "licenselist",
@@ -17,6 +17,15 @@
       "state" : {
         "revision" : "d760514bee0ba669db4aed8362d64a64ff17810d",
         "version" : "1.1.0"
+      }
+    },
+    {
+      "identity" : "speechwrapper",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/muhiro12/SpeechWrapper",
+      "state" : {
+        "revision" : "18b69425517fa6221a358f5f80a312ad78b0d8dd",
+        "version" : "1.0.0"
       }
     },
     {
