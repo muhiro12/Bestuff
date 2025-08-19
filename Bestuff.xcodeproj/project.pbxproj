@@ -320,7 +320,9 @@
 				INFOPLIST_FILE = Bestuff/Configurations/Info.plist;
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_NSCalendarsUsageDescription = "Add and edit events from your plans.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Microphone access is needed to use voice input and related features.";
 				INFOPLIST_KEY_NSRemindersUsageDescription = "Create reminders from your plans.";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "Speech recognition access is needed for voice input and processing.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -368,7 +370,9 @@
 				INFOPLIST_FILE = Bestuff/Configurations/Info.plist;
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_NSCalendarsUsageDescription = "Add and edit events from your plans.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Microphone access is needed to use voice input and related features.";
 				INFOPLIST_KEY_NSRemindersUsageDescription = "Create reminders from your plans.";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "Speech recognition access is needed for voice input and processing.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
