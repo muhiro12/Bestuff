@@ -5,6 +5,7 @@
 //  Created by Codex on 2025/07/10.
 //
 
+import SpeechWrapper
 import SwiftData
 import SwiftUI
 
@@ -14,14 +15,36 @@ struct PredictStuffFormView: View {
     @Environment(\.modelContext)
     private var modelContext
 
-    @State private var speech = ""
+    @State private var text = ""
+    @State private var isRecording = false
     @State private var isProcessing = false
+
+    private let speechClient = SpeechClient(settings: .init(useLegacy: true))
 
     var body: some View {
         Form {
             Section("Text") {
-                TextEditor(text: $speech)
+                TextEditor(text: $text)
                     .frame(minHeight: 120, alignment: .topLeading)
+                Button("Speech", systemImage: "mic") {
+                    // TODO: Modify
+                    Task {
+                        if isRecording {
+                            isRecording = false
+                            await speechClient.stop()
+                        } else {
+                            isRecording = true
+                            do {
+                                let stream = try await speechClient.stream()
+                                for await text in stream {
+                                    self.text = text
+                                }
+                            } catch {}
+                            isRecording = false
+                        }
+                    }
+                }
+                .foregroundStyle(isRecording ? Color.secondary : Color.accentColor)
             }
         }
         .navigationTitle("Predict Stuff")
@@ -39,7 +62,7 @@ struct PredictStuffFormView: View {
                     }
                     .buttonStyle(.borderedProminent)
                     .tint(.accentColor)
-                    .disabled(speech.isEmpty)
+                    .disabled(text.isEmpty)
                 }
             }
         }
@@ -49,7 +72,7 @@ struct PredictStuffFormView: View {
         Logger(#file).info("Starting prediction")
         isProcessing = true
         Task {
-            _ = try? await StuffService.predict(context: modelContext, speech: speech)
+            _ = try? await StuffService.predict(context: modelContext, speech: text)
             isProcessing = false
             Logger(#file).notice("Prediction completed")
             dismiss()
@@ -58,6 +81,8 @@ struct PredictStuffFormView: View {
 }
 
 #Preview {
-    PredictStuffFormView()
-        .modelContainer(for: Stuff.self, inMemory: true)
+    NavigationStack {
+        PredictStuffFormView()
+    }
+    .modelContainer(for: Stuff.self, inMemory: true)
 }

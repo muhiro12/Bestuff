@@ -1,6 +1,9 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "" : {
+
+    },
     "%lld" : {
       "shouldTranslate" : false
     },
@@ -26,6 +29,18 @@
     },
     "1.0.0" : {
       "shouldTranslate" : false
+    },
+    "5km around the park." : {
+
+    },
+    "50+" : {
+
+    },
+    "80+" : {
+
+    },
+    "90+" : {
+
     },
     "Actions" : {
       "localizations" : {
@@ -56,6 +71,12 @@
           }
         }
       }
+    },
+    "Add labels (comma separated)" : {
+
+    },
+    "Add Sample Data" : {
+
     },
     "Add Stuff" : {
       "localizations" : {
@@ -117,6 +138,9 @@
         }
       }
     },
+    "Any" : {
+
+    },
     "Any Date In Month" : {
       "localizations" : {
         "ja" : {
@@ -137,6 +161,9 @@
         }
       }
     },
+    "Apply" : {
+
+    },
     "Are you really going to use DebugMode?" : {
       "localizations" : {
         "ja" : {
@@ -146,6 +173,9 @@
           }
         }
       }
+    },
+    "Article" : {
+
     },
     "Best Stuff" : {
       "localizations" : {
@@ -158,6 +188,7 @@
       }
     },
     "Birthday Gift" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -166,6 +197,21 @@
           }
         }
       }
+    },
+    "Birthday Gift for Alice" : {
+
+    },
+    "Book" : {
+
+    },
+    "Build a small sample app." : {
+
+    },
+    "Bulk" : {
+
+    },
+    "Bulk Actions" : {
+
     },
     "Calendar" : {
       "localizations" : {
@@ -186,6 +232,12 @@
           }
         }
       }
+    },
+    "Chapters 1–3" : {
+
+    },
+    "Checklist" : {
+
     },
     "Clear" : {
       "localizations" : {
@@ -217,7 +269,11 @@
         }
       }
     },
+    "Close" : {
+
+    },
     "Coffee Beans" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -257,7 +313,11 @@
         }
       }
     },
+    "Completion" : {
+
+    },
     "Conference Tickets" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -266,6 +326,9 @@
           }
         }
       }
+    },
+    "Consider a book or flowers." : {
+
     },
     "Contact Support" : {
       "localizations" : {
@@ -276,6 +339,9 @@
           }
         }
       }
+    },
+    "Copy" : {
+
     },
     "Create" : {
       "localizations" : {
@@ -387,6 +453,9 @@
         }
       }
     },
+    "Decide destination and budget." : {
+
+    },
     "Delete" : {
       "localizations" : {
         "ja" : {
@@ -407,6 +476,9 @@
         }
       }
     },
+    "Delete Selected" : {
+
+    },
     "Delete Stuff" : {
       "localizations" : {
         "ja" : {
@@ -416,6 +488,12 @@
           }
         }
       }
+    },
+    "Details" : {
+
+    },
+    "Document" : {
+
     },
     "Done" : {
       "localizations" : {
@@ -507,6 +585,9 @@
         }
       }
     },
+    "Event Saved" : {
+
+    },
     "Export" : {
       "localizations" : {
         "ja" : {
@@ -566,6 +647,9 @@
           }
         }
       }
+    },
+    "Flight" : {
+
     },
     "General" : {
       "localizations" : {
@@ -637,6 +721,12 @@
         }
       }
     },
+    "Getting Started" : {
+
+    },
+    "Gift" : {
+
+    },
     "Groceries" : {
       "localizations" : {
         "ja" : {
@@ -647,6 +737,9 @@
         }
       }
     },
+    "Grocery Shopping" : {
+
+    },
     "Helpful" : {
       "localizations" : {
         "ja" : {
@@ -656,6 +749,9 @@
           }
         }
       }
+    },
+    "Hotel" : {
+
     },
     "Import Backup" : {
       "localizations" : {
@@ -687,6 +783,9 @@
         }
       }
     },
+    "Items" : {
+
+    },
     "Label" : {
       "localizations" : {
         "ja" : {
@@ -707,6 +806,9 @@
         }
       }
     },
+    "Labels (comma separated)" : {
+
+    },
     "Language" : {
       "localizations" : {
         "ja" : {
@@ -716,6 +818,18 @@
           }
         }
       }
+    },
+    "Learn SwiftUI" : {
+
+    },
+    "Learning" : {
+
+    },
+    "Leisure" : {
+
+    },
+    "Manage…" : {
+
     },
     "Mark Complete" : {
       "localizations" : {
@@ -727,6 +841,9 @@
         }
       }
     },
+    "Mark Completed" : {
+
+    },
     "Merge" : {
       "localizations" : {
         "ja" : {
@@ -736,6 +853,18 @@
           }
         }
       }
+    },
+    "Merge duplicates?" : {
+
+    },
+    "Milk, eggs, bread, fruit." : {
+
+    },
+    "Minimum Score" : {
+
+    },
+    "Morning Run" : {
+
     },
     "Name" : {
       "localizations" : {
@@ -850,6 +979,9 @@
     "OK" : {
       "shouldTranslate" : false
     },
+    "Open" : {
+
+    },
     "Open App Store" : {
       "localizations" : {
         "ja" : {
@@ -859,6 +991,9 @@
           }
         }
       }
+    },
+    "Open Reminders" : {
+
     },
     "Options" : {
       "localizations" : {
@@ -871,6 +1006,7 @@
       }
     },
     "Order from the local roastery." : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -889,6 +1025,9 @@
           }
         }
       }
+    },
+    "Outline topics for Monday." : {
+
     },
     "Overview" : {
       "localizations" : {
@@ -950,6 +1089,12 @@
         }
       }
     },
+    "Pin" : {
+
+    },
+    "Pinned" : {
+
+    },
     "Plan" : {
       "localizations" : {
         "ja" : {
@@ -979,6 +1124,9 @@
           }
         }
       }
+    },
+    "Plan Vacation" : {
+
     },
     "Please update Bestuff to the latest version to continue using it." : {
       "localizations" : {
@@ -1010,6 +1158,9 @@
         }
       }
     },
+    "Preset name" : {
+
+    },
     "Priority %lld" : {
       "localizations" : {
         "ja" : {
@@ -1019,6 +1170,12 @@
           }
         }
       }
+    },
+    "Quick Add" : {
+
+    },
+    "Read 'Atomic Habits'" : {
+
     },
     "Recap" : {
       "localizations" : {
@@ -1040,6 +1197,9 @@
         }
       }
     },
+    "Reminder Saved" : {
+
+    },
     "Remove Labels" : {
       "localizations" : {
         "ja" : {
@@ -1050,7 +1210,14 @@
         }
       }
     },
+    "Remove labels (comma separated)" : {
+
+    },
+    "Renew Gym Membership" : {
+
+    },
     "Replace the worn-out pair." : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -1061,6 +1228,7 @@
       }
     },
     "Reserve hotel and flights." : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -1079,6 +1247,9 @@
           }
         }
       }
+    },
+    "Resolve all duplicates?" : {
+
     },
     "Resource" : {
       "localizations" : {
@@ -1111,6 +1282,7 @@
       }
     },
     "Running Shoes" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -1140,6 +1312,15 @@
         }
       }
     },
+    "Save Current Filters" : {
+
+    },
+    "Save Filters" : {
+
+    },
+    "Saved Filters" : {
+
+    },
     "Score" : {
       "localizations" : {
         "ja" : {
@@ -1159,6 +1340,9 @@
           }
         }
       }
+    },
+    "Select Items" : {
+
     },
     "Select Period" : {
       "localizations" : {
@@ -1209,6 +1393,12 @@
           }
         }
       }
+    },
+    "Shoes" : {
+
+    },
+    "Skip" : {
+
     },
     "Skip duplicates" : {
       "localizations" : {
@@ -1321,6 +1511,7 @@
       }
     },
     "Surprise for Alice." : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -1380,6 +1571,9 @@
         }
       }
     },
+    "Team Meeting Agenda" : {
+
+    },
     "Text" : {
       "localizations" : {
         "ja" : {
@@ -1409,6 +1603,29 @@
           }
         }
       }
+    },
+    "This will merge %lld duplicates across %lld groups and remove them." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "This will merge %1$lld duplicates across %2$lld groups and remove them."
+          }
+        }
+      }
+    },
+    "This will merge %lld duplicates into \"%@\" and remove them." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "This will merge %1$lld duplicates into \"%2$@\" and remove them."
+          }
+        }
+      }
+    },
+    "This will merge the selected duplicate group." : {
+
     },
     "This will permanently delete all stuff." : {
       "localizations" : {
@@ -1450,6 +1667,9 @@
         }
       }
     },
+    "Tomorrow" : {
+
+    },
     "Travel" : {
       "localizations" : {
         "ja" : {
@@ -1459,6 +1679,12 @@
           }
         }
       }
+    },
+    "Type" : {
+
+    },
+    "Unpin" : {
+
     },
     "Unused" : {
       "localizations" : {
@@ -1521,6 +1747,7 @@
       }
     },
     "Vacation Booking" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -1531,6 +1758,7 @@
       }
     },
     "Version 1.0.0" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -1539,6 +1767,9 @@
           }
         }
       }
+    },
+    "Video" : {
+
     },
     "Visit Website" : {
       "localizations" : {
@@ -1561,6 +1792,7 @@
       }
     },
     "WWDC 2025" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -1569,6 +1801,12 @@
           }
         }
       }
+    },
+    "Your calendar event was saved." : {
+
+    },
+    "Your reminder was saved." : {
+
     }
   },
   "version" : "1.1"
