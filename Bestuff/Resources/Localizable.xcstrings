@@ -31,16 +31,44 @@
       "shouldTranslate" : false
     },
     "5km around the park." : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "公園の周囲5km。"
+          }
+        }
+      }
     },
     "50+" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "50以上"
+          }
+        }
+      }
     },
     "80+" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "80以上"
+          }
+        }
+      }
     },
     "90+" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "90以上"
+          }
+        }
+      }
     },
     "Actions" : {
       "localizations" : {
@@ -73,10 +101,24 @@
       }
     },
     "Add labels (comma separated)" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ラベルを追加（カンマ区切り）"
+          }
+        }
+      }
     },
     "Add Sample Data" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "サンプルデータを追加"
+          }
+        }
+      }
     },
     "Add Stuff" : {
       "localizations" : {
@@ -139,7 +181,14 @@
       }
     },
     "Any" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "任意"
+          }
+        }
+      }
     },
     "Any Date In Month" : {
       "localizations" : {
@@ -162,7 +211,14 @@
       }
     },
     "Apply" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "適用"
+          }
+        }
+      }
     },
     "Are you really going to use DebugMode?" : {
       "localizations" : {
@@ -175,7 +231,14 @@
       }
     },
     "Article" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "記事"
+          }
+        }
+      }
     },
     "Best Stuff" : {
       "localizations" : {
@@ -187,31 +250,55 @@
         }
       }
     },
-    "Birthday Gift" : {
-      "extractionState" : "stale",
+    "Birthday Gift for Alice" : {
       "localizations" : {
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "誕生日プレゼント"
+            "value" : "アリスへの誕生日プレゼント"
           }
         }
       }
     },
-    "Birthday Gift for Alice" : {
-
-    },
     "Book" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "本"
+          }
+        }
+      }
     },
     "Build a small sample app." : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "小さなサンプルアプリを構築する。"
+          }
+        }
+      }
     },
     "Bulk" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "一括"
+          }
+        }
+      }
     },
     "Bulk Actions" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "一括アクション"
+          }
+        }
+      }
     },
     "Calendar" : {
       "localizations" : {
@@ -234,10 +321,24 @@
       }
     },
     "Chapters 1–3" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "第1〜3章"
+          }
+        }
+      }
     },
     "Checklist" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "チェックリスト"
+          }
+        }
+      }
     },
     "Clear" : {
       "localizations" : {
@@ -270,15 +371,11 @@
       }
     },
     "Close" : {
-
-    },
-    "Coffee Beans" : {
-      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "コーヒー豆"
+            "value" : "閉じる"
           }
         }
       }
@@ -314,21 +411,24 @@
       }
     },
     "Completion" : {
-
-    },
-    "Conference Tickets" : {
-      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "カンファレンスチケット"
+            "value" : "完了"
           }
         }
       }
     },
     "Consider a book or flowers." : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "本や花を検討する。"
+          }
+        }
+      }
     },
     "Contact Support" : {
       "localizations" : {
@@ -341,7 +441,14 @@
       }
     },
     "Copy" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "コピー"
+          }
+        }
+      }
     },
     "Create" : {
       "localizations" : {
@@ -454,7 +561,14 @@
       }
     },
     "Decide destination and budget." : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "行き先と予算を決める。"
+          }
+        }
+      }
     },
     "Delete" : {
       "localizations" : {
@@ -477,7 +591,14 @@
       }
     },
     "Delete Selected" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "選択したものを削除"
+          }
+        }
+      }
     },
     "Delete Stuff" : {
       "localizations" : {
@@ -490,10 +611,24 @@
       }
     },
     "Details" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "詳細"
+          }
+        }
+      }
     },
     "Document" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ドキュメント"
+          }
+        }
+      }
     },
     "Done" : {
       "localizations" : {
@@ -586,7 +721,14 @@
       }
     },
     "Event Saved" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "イベントを保存しました"
+          }
+        }
+      }
     },
     "Export" : {
       "localizations" : {
@@ -649,7 +791,14 @@
       }
     },
     "Flight" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "フライト"
+          }
+        }
+      }
     },
     "General" : {
       "localizations" : {
@@ -722,10 +871,24 @@
       }
     },
     "Getting Started" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "はじめに"
+          }
+        }
+      }
     },
     "Gift" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "贈り物"
+          }
+        }
+      }
     },
     "Groceries" : {
       "localizations" : {
@@ -738,7 +901,14 @@
       }
     },
     "Grocery Shopping" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "食料品の買い物"
+          }
+        }
+      }
     },
     "Helpful" : {
       "localizations" : {
@@ -751,7 +921,14 @@
       }
     },
     "Hotel" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ホテル"
+          }
+        }
+      }
     },
     "Import Backup" : {
       "localizations" : {
@@ -784,7 +961,14 @@
       }
     },
     "Items" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "アイテム"
+          }
+        }
+      }
     },
     "Label" : {
       "localizations" : {
@@ -807,7 +991,14 @@
       }
     },
     "Labels (comma separated)" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ラベル（カンマ区切り）"
+          }
+        }
+      }
     },
     "Language" : {
       "localizations" : {
@@ -820,16 +1011,44 @@
       }
     },
     "Learn SwiftUI" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SwiftUIを学ぶ"
+          }
+        }
+      }
     },
     "Learning" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "学習"
+          }
+        }
+      }
     },
     "Leisure" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "レジャー"
+          }
+        }
+      }
     },
     "Manage…" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "管理…"
+          }
+        }
+      }
     },
     "Mark Complete" : {
       "localizations" : {
@@ -842,7 +1061,14 @@
       }
     },
     "Mark Completed" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "完了としてマーク"
+          }
+        }
+      }
     },
     "Merge" : {
       "localizations" : {
@@ -855,16 +1081,44 @@
       }
     },
     "Merge duplicates?" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重複を統合しますか？"
+          }
+        }
+      }
     },
     "Milk, eggs, bread, fruit." : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "牛乳、卵、パン、果物。"
+          }
+        }
+      }
     },
     "Minimum Score" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最低スコア"
+          }
+        }
+      }
     },
     "Morning Run" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "朝のランニング"
+          }
+        }
+      }
     },
     "Name" : {
       "localizations" : {
@@ -980,7 +1234,14 @@
       "shouldTranslate" : false
     },
     "Open" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "開く"
+          }
+        }
+      }
     },
     "Open App Store" : {
       "localizations" : {
@@ -993,7 +1254,14 @@
       }
     },
     "Open Reminders" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "リマインダーを開く"
+          }
+        }
+      }
     },
     "Options" : {
       "localizations" : {
@@ -1001,17 +1269,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "オプション"
-          }
-        }
-      }
-    },
-    "Order from the local roastery." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "地元の焙煎所から注文する。"
           }
         }
       }
@@ -1027,7 +1284,14 @@
       }
     },
     "Outline topics for Monday." : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "月曜日のトピックをアウトライン化する。"
+          }
+        }
+      }
     },
     "Overview" : {
       "localizations" : {
@@ -1090,10 +1354,24 @@
       }
     },
     "Pin" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ピン留め"
+          }
+        }
+      }
     },
     "Pinned" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ピン留め済み"
+          }
+        }
+      }
     },
     "Plan" : {
       "localizations" : {
@@ -1126,7 +1404,14 @@
       }
     },
     "Plan Vacation" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "休暇を計画"
+          }
+        }
+      }
     },
     "Please update Bestuff to the latest version to continue using it." : {
       "localizations" : {
@@ -1159,7 +1444,14 @@
       }
     },
     "Preset name" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "プリセット名"
+          }
+        }
+      }
     },
     "Priority %lld" : {
       "localizations" : {
@@ -1172,10 +1464,24 @@
       }
     },
     "Quick Add" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "クイック追加"
+          }
+        }
+      }
     },
     "Read 'Atomic Habits'" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "『Atomic Habits』を読む"
+          }
+        }
+      }
     },
     "Recap" : {
       "localizations" : {
@@ -1198,7 +1504,14 @@
       }
     },
     "Reminder Saved" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "リマインダーを保存しました"
+          }
+        }
+      }
     },
     "Remove Labels" : {
       "localizations" : {
@@ -1211,29 +1524,21 @@
       }
     },
     "Remove labels (comma separated)" : {
-
-    },
-    "Renew Gym Membership" : {
-
-    },
-    "Replace the worn-out pair." : {
-      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "古くなったものを買い替える。"
+            "value" : "ラベルを削除（カンマ区切り）"
           }
         }
       }
     },
-    "Reserve hotel and flights." : {
-      "extractionState" : "stale",
+    "Renew Gym Membership" : {
       "localizations" : {
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ホテルと航空券を予約する。"
+            "value" : "ジムの会員を更新"
           }
         }
       }
@@ -1249,7 +1554,14 @@
       }
     },
     "Resolve all duplicates?" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "すべての重複を解決しますか？"
+          }
+        }
+      }
     },
     "Resource" : {
       "localizations" : {
@@ -1281,17 +1593,6 @@
         }
       }
     },
-    "Running Shoes" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ランニングシューズ"
-          }
-        }
-      }
-    },
     "Save" : {
       "localizations" : {
         "ja" : {
@@ -1313,13 +1614,34 @@
       }
     },
     "Save Current Filters" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "現在のフィルターを保存"
+          }
+        }
+      }
     },
     "Save Filters" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "フィルターを保存"
+          }
+        }
+      }
     },
     "Saved Filters" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "保存済みフィルター"
+          }
+        }
+      }
     },
     "Score" : {
       "localizations" : {
@@ -1342,7 +1664,14 @@
       }
     },
     "Select Items" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "アイテムを選択"
+          }
+        }
+      }
     },
     "Select Period" : {
       "localizations" : {
@@ -1395,10 +1724,24 @@
       }
     },
     "Shoes" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "靴"
+          }
+        }
+      }
     },
     "Skip" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "スキップ"
+          }
+        }
+      }
     },
     "Skip duplicates" : {
       "localizations" : {
@@ -1510,17 +1853,6 @@
         }
       }
     },
-    "Surprise for Alice." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "アリスへのサプライズ。"
-          }
-        }
-      }
-    },
     "Tag" : {
       "localizations" : {
         "ja" : {
@@ -1572,7 +1904,14 @@
       }
     },
     "Team Meeting Agenda" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "チームミーティングの議題"
+          }
+        }
+      }
     },
     "Text" : {
       "localizations" : {
@@ -1606,26 +1945,33 @@
     },
     "This will merge %lld duplicates across %lld groups and remove them." : {
       "localizations" : {
-        "en" : {
+        "ja" : {
           "stringUnit" : {
-            "state" : "new",
-            "value" : "This will merge %1$lld duplicates across %2$lld groups and remove them."
+            "state" : "translated",
+            "value" : "%lld 個の重複を %lld グループにわたって統合し、削除します。"
           }
         }
       }
     },
     "This will merge %lld duplicates into \"%@\" and remove them." : {
       "localizations" : {
-        "en" : {
+        "ja" : {
           "stringUnit" : {
-            "state" : "new",
-            "value" : "This will merge %1$lld duplicates into \"%2$@\" and remove them."
+            "state" : "translated",
+            "value" : "\"%@\" に %lld 個の重複を統合し、削除します。"
           }
         }
       }
     },
     "This will merge the selected duplicate group." : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "選択した重複グループを統合します。"
+          }
+        }
+      }
     },
     "This will permanently delete all stuff." : {
       "localizations" : {
@@ -1668,7 +2014,14 @@
       }
     },
     "Tomorrow" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "明日"
+          }
+        }
+      }
     },
     "Travel" : {
       "localizations" : {
@@ -1681,10 +2034,24 @@
       }
     },
     "Type" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "タイプ"
+          }
+        }
+      }
     },
     "Unpin" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ピンを外す"
+          }
+        }
+      }
     },
     "Unused" : {
       "localizations" : {
@@ -1746,30 +2113,15 @@
         }
       }
     },
-    "Vacation Booking" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "休暇の予約"
-          }
-        }
-      }
-    },
-    "Version 1.0.0" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "バージョン 1.0.0"
-          }
-        }
-      }
-    },
     "Video" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ビデオ"
+          }
+        }
+      }
     },
     "Visit Website" : {
       "localizations" : {
@@ -1791,22 +2143,25 @@
         }
       }
     },
-    "WWDC 2025" : {
-      "extractionState" : "stale",
+    "Your calendar event was saved." : {
       "localizations" : {
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "WWDC 2025"
+            "value" : "カレンダーのイベントを保存しました。"
           }
         }
       }
     },
-    "Your calendar event was saved." : {
-
-    },
     "Your reminder was saved." : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "リマインダーを保存しました。"
+          }
+        }
+      }
     }
   },
   "version" : "1.1"
