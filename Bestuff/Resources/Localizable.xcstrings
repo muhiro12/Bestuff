@@ -1958,7 +1958,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "\"%@\" に %lld 個の重複を統合し、削除します。"
+            "value" : "“%2$@” に %1$lld 個の重複を統合し、削除します。"
           }
         }
       }
