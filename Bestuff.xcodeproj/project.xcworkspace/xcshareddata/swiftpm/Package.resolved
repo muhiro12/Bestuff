@@ -1,13 +1,13 @@
 {
-  "originHash" : "08eca2fbd2613a5535b598b266ea480567daf5a2a0e5b601d27a9bae6af3ff4f",
+  "originHash" : "25339e79a9a87a2d99f9895dc6d85cd8e73ed5198c481efa54698d6ca854ea76",
   "pins" : [
     {
       "identity" : "licenselist",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/cybozu/LicenseList.git",
       "state" : {
-        "revision" : "a0a1784aa60dcdafbc30cb2ffbac90544b46100a",
-        "version" : "2.1.0"
+        "revision" : "56f1b5724138e4d9f60453b555edc80e43805503",
+        "version" : "2.2.0"
       }
     },
     {
@@ -24,8 +24,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/muhiro12/SpeechWrapper",
       "state" : {
-        "revision" : "18b69425517fa6221a358f5f80a312ad78b0d8dd",
-        "version" : "1.0.0"
+        "revision" : "e04e7ea7af05e8048ba9ef087766b2c3c200819f",
+        "version" : "1.1.0"
       }
     },
     {
