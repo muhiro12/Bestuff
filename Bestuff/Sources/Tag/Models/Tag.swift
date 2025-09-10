@@ -61,3 +61,12 @@ extension Tag {
         }
     }
 }
+
+// MARK: - Deletion helper
+extension Tag {
+    func delete() {
+        if let context = self.modelContext {
+            context.delete(self)
+        }
+    }
+}

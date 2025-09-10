@@ -112,3 +112,12 @@ final class Stuff {
         }
     }
 }
+
+// MARK: - Deletion helper
+extension Stuff {
+    func delete() {
+        if let context = self.modelContext {
+            context.delete(self)
+        }
+    }
+}
