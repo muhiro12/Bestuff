@@ -90,7 +90,6 @@ struct TagNavigationView: View {
         }
     }
 
-    @MainActor
     private func refreshDuplicateCount() {
         let count = (try? TagService.findDuplicates(context: modelContext).count) ?? 0
         duplicateCount = count

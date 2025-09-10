@@ -1,13 +1,10 @@
 import AppIntents
 import Foundation
-import SwiftData
-#if canImport(FoundationModels)
 import FoundationModels
-#endif
+import SwiftData
 
-@MainActor
 struct PredictStuffIntent: AppIntent {
-    nonisolated static var title: LocalizedStringResource {
+    static var title: LocalizedStringResource {
         "Predict Stuff"
     }
 
@@ -16,6 +13,7 @@ struct PredictStuffIntent: AppIntent {
 
     @Dependency private var modelContainer: ModelContainer
 
+    @MainActor
     func perform() async throws -> some ReturnsValue<StuffEntity> {
         Logger(#file).info("Running PredictStuffIntent")
         let trimmed = speech.trimmingCharacters(in: .whitespacesAndNewlines)

@@ -27,9 +27,8 @@ enum TagTypeIntent: String, AppEnum {
     }
 }
 
-@MainActor
 struct GetStuffsByTagIntent: AppIntent {
-    nonisolated static var title: LocalizedStringResource { "Get Stuffs By Tag" }
+    static var title: LocalizedStringResource { "Get Stuffs By Tag" }
 
     @Parameter(title: "Tag Name")
     private var name: String
@@ -39,6 +38,7 @@ struct GetStuffsByTagIntent: AppIntent {
 
     @Dependency private var modelContainer: ModelContainer
 
+    @MainActor
     func perform() throws -> some ReturnsValue<[StuffEntity]> {
         let tag = try Tag.fetch(byName: name, type: type.modelType, in: modelContainer.mainContext)
         let models = tag?.stuffs ?? []

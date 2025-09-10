@@ -1,9 +1,8 @@
 import AppIntents
 import SwiftData
 
-@MainActor
 struct DeleteStuffIntent: AppIntent {
-    nonisolated static var title: LocalizedStringResource {
+    static var title: LocalizedStringResource {
         "Delete Stuff"
     }
 
@@ -12,6 +11,7 @@ struct DeleteStuffIntent: AppIntent {
 
     @Dependency private var modelContainer: ModelContainer
 
+    @MainActor
     func perform() throws -> some IntentResult {
         let entity = stuff
         let model = try entity.model(in: modelContainer.mainContext)

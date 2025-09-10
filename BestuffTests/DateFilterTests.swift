@@ -2,7 +2,6 @@
 import Foundation
 import Testing
 
-@MainActor
 struct DateFilterTests {
     @Test func today_includes_now_excludes_far_dates() {
         let now = Date()

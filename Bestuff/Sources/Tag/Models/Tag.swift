@@ -2,7 +2,7 @@ import Foundation
 import SwiftData
 
 @Model
-nonisolated final class Tag {
+final class Tag {
     private(set) var name: String
     private(set) var typeID: String
 
@@ -58,6 +58,15 @@ extension Tag {
             name
         case .label, .none:
             name
+        }
+    }
+}
+
+// MARK: - Deletion helper
+extension Tag {
+    func delete() {
+        if let context = self.modelContext {
+            context.delete(self)
         }
     }
 }

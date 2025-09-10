@@ -35,7 +35,6 @@ struct StuffDump: Codable, Sendable, Hashable {
     var source: String?
 }
 
-@MainActor
 enum BackupService {
     static func exportJSON(context: ModelContext) throws -> Data {
         let allTags: [Tag] = try context.fetch(FetchDescriptor<Tag>())

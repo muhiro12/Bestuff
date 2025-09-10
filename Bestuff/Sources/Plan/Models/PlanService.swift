@@ -1,10 +1,7 @@
 import Foundation
-import SwiftData
-#if canImport(FoundationModels)
 import FoundationModels
-#endif
+import SwiftData
 
-@MainActor
 enum PlanService {
     static func plan(context: ModelContext, period: PlanPeriod) async throws -> PlanSuggestion {
         Logger(#file).info("Generating plan suggestions for \(period.rawValue)")
@@ -75,7 +72,6 @@ enum PlanService {
 
             Respond in \(language).
             """
-        #if canImport(FoundationModels)
         let session = LanguageModelSession()
         let response = try await session.respond(
             to: prompt,
@@ -83,33 +79,5 @@ enum PlanService {
         )
         Logger(#file).notice("Generated plan suggestions")
         return response.content
-        #else
-        let fallbackItems: [PlanItem] = models.prefix(3).map { stuff in
-            let title = "Work on: \(String(stuff.title.prefix(40)))"
-            let rationale = "Based on your highly rated items and preferences."
-            let steps = [
-                "Review: \(stuff.title)",
-                "Plan next small action",
-                "Schedule 30 minutes to progress"
-            ]
-            let estimatedMinutes = 30
-            let resources: [String] = []
-            let risks = ["Over-scheduling", "Lack of context"]
-            let success = ["Next step completed", "Updated notes"]
-            let priority = 2
-            return .init(
-                title: title,
-                rationale: rationale,
-                steps: steps,
-                estimatedMinutes: estimatedMinutes,
-                resources: resources,
-                risks: risks,
-                successCriteria: success,
-                priority: priority
-            )
-        }
-        Logger(#file).notice("Generated fallback plan suggestions")
-        return .init(items: fallbackItems)
-        #endif
     }
 }

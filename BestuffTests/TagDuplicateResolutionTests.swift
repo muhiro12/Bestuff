@@ -3,7 +3,6 @@ import Foundation
 import SwiftData
 import Testing
 
-@MainActor
 struct TagDuplicateResolutionTests {
     let context: ModelContext
 

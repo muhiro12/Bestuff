@@ -1,17 +1,17 @@
 import AppIntents
 import SwiftData
 
-@MainActor
 struct GetTagByIDIntent: AppIntent {
     @Parameter(title: "Tag ID")
     private var id: String
 
     @Dependency private var modelContainer: ModelContainer
 
-    nonisolated static var title: LocalizedStringResource {
+    static var title: LocalizedStringResource {
         "Get Tag By ID"
     }
 
+    @MainActor
     func perform() throws -> some ReturnsValue<TagEntity?> {
         let trimmed = id.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else {

@@ -1,5 +1,4 @@
 import EventKit
-#if canImport(EventKitUI)
 import EventKitUI
 import SwiftUI
 
@@ -47,4 +46,3 @@ struct EKEventEditView: UIViewControllerRepresentable {
 
     func updateUIViewController(_: EKEventEditViewController, context _: Context) {}
 }
-#endif

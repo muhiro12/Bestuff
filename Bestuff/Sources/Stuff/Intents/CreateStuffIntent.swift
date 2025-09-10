@@ -1,9 +1,8 @@
 import AppIntents
 import SwiftData
 
-@MainActor
 struct CreateStuffIntent: AppIntent {
-    nonisolated static var title: LocalizedStringResource {
+    static var title: LocalizedStringResource {
         "Create Stuff"
     }
 
@@ -21,6 +20,7 @@ struct CreateStuffIntent: AppIntent {
 
     @Dependency private var modelContainer: ModelContainer
 
+    @MainActor
     func perform() throws -> some ReturnsValue<StuffEntity> {
         Logger(#file).info("Running CreateStuffIntent")
         let trimmedTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)

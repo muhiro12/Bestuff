@@ -1,9 +1,8 @@
 import AppIntents
 import SwiftData
 
-@MainActor
 struct GetStuffsOnDateIntent: AppIntent {
-    nonisolated static var title: LocalizedStringResource {
+    static var title: LocalizedStringResource {
         "Get Stuffs On Date"
     }
 
@@ -15,6 +14,7 @@ struct GetStuffsOnDateIntent: AppIntent {
 
     @Dependency private var modelContainer: ModelContainer
 
+    @MainActor
     func perform() throws -> some ReturnsValue<[StuffEntity]> {
         let models = try StuffService.stuffs(
             context: modelContainer.mainContext,
