@@ -1,7 +1,6 @@
 import Foundation
 import SwiftData
 
-@MainActor
 extension StuffService {
     // MARK: - Counts
 

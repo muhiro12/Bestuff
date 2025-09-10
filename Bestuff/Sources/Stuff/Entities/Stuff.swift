@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-nonisolated final class Stuff {
+final class Stuff {
     private(set) var title: String
     private(set) var note: String?
     private(set) var score: Int

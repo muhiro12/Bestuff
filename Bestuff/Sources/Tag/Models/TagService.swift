@@ -1,7 +1,6 @@
 import Foundation
 import SwiftData
 
-@MainActor
 enum TagService {
     static func create(context: ModelContext, name: String, type: TagType = .label) -> Tag {
         Tag.findOrCreate(name: name, in: context, type: type)

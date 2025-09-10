@@ -8,13 +8,8 @@
 import Foundation
 import SwiftData
 import SwiftUI
-import UniformTypeIdentifiers
-#if canImport(UIKit)
 import UIKit
-#endif
-#if canImport(AppKit)
-import AppKit
-#endif
+import UniformTypeIdentifiers
 
 struct SettingsListView: View {
     @AppStorage(BoolAppStorageKey.isSubscribeOn)
@@ -162,14 +157,8 @@ private extension SettingsListView {
         let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
         let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? ""
         let osInfo: String = {
-            #if canImport(UIKit)
             let device = UIDevice.current
             return "\(device.systemName) \(device.systemVersion)"
-            #elseif canImport(AppKit)
-            return ProcessInfo.processInfo.operatingSystemVersionString
-            #else
-            return "Unknown OS"
-            #endif
         }()
         let header = "Please describe your issue here.\n\n---"
         let meta = "App: \(Bundle.main.infoDictionary?["CFBundleName"] as? String ?? "Bestuff") \(version) (Build \(build))\nOS: \(osInfo)"

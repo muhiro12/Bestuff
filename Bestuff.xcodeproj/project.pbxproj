@@ -21,19 +21,11 @@
 			remoteGlobalIDString = AD585E862E1D5EF1003BB6D1;
 			remoteInfo = Bestuff;
 		};
-		AD585EA32E1D5EF3003BB6D1 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = AD585E7F2E1D5EF1003BB6D1 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = AD585E862E1D5EF1003BB6D1;
-			remoteInfo = Bestuff;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		AD585E872E1D5EF1003BB6D1 /* Bestuff.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Bestuff.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD585E982E1D5EF3003BB6D1 /* BestuffTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BestuffTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		AD585EA22E1D5EF3003BB6D1 /* BestuffUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BestuffUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -60,11 +52,6 @@
 			path = BestuffTests;
 			sourceTree = "<group>";
 		};
-		AD585EA52E1D5EF3003BB6D1 /* BestuffUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = BestuffUITests;
-			sourceTree = "<group>";
-		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,13 +73,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		AD585E9F2E1D5EF3003BB6D1 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -101,7 +81,6 @@
 			children = (
 				AD585E892E1D5EF1003BB6D1 /* Bestuff */,
 				AD585E9B2E1D5EF3003BB6D1 /* BestuffTests */,
-				AD585EA52E1D5EF3003BB6D1 /* BestuffUITests */,
 				AD585E882E1D5EF1003BB6D1 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -111,7 +90,6 @@
 			children = (
 				AD585E872E1D5EF1003BB6D1 /* Bestuff.app */,
 				AD585E982E1D5EF3003BB6D1 /* BestuffTests.xctest */,
-				AD585EA22E1D5EF3003BB6D1 /* BestuffUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -168,29 +146,6 @@
 			productReference = AD585E982E1D5EF3003BB6D1 /* BestuffTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		AD585EA12E1D5EF3003BB6D1 /* BestuffUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = AD585EB32E1D5EF3003BB6D1 /* Build configuration list for PBXNativeTarget "BestuffUITests" */;
-			buildPhases = (
-				AD585E9E2E1D5EF3003BB6D1 /* Sources */,
-				AD585E9F2E1D5EF3003BB6D1 /* Frameworks */,
-				AD585EA02E1D5EF3003BB6D1 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				AD585EA42E1D5EF3003BB6D1 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				AD585EA52E1D5EF3003BB6D1 /* BestuffUITests */,
-			);
-			name = BestuffUITests;
-			packageProductDependencies = (
-			);
-			productName = BestuffUITests;
-			productReference = AD585EA22E1D5EF3003BB6D1 /* BestuffUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -205,10 +160,6 @@
 						CreatedOnToolsVersion = 26.0;
 					};
 					AD585E972E1D5EF3003BB6D1 = {
-						CreatedOnToolsVersion = 26.0;
-						TestTargetID = AD585E862E1D5EF1003BB6D1;
-					};
-					AD585EA12E1D5EF3003BB6D1 = {
 						CreatedOnToolsVersion = 26.0;
 						TestTargetID = AD585E862E1D5EF1003BB6D1;
 					};
@@ -237,7 +188,6 @@
 			targets = (
 				AD585E862E1D5EF1003BB6D1 /* Bestuff */,
 				AD585E972E1D5EF3003BB6D1 /* BestuffTests */,
-				AD585EA12E1D5EF3003BB6D1 /* BestuffUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -251,13 +201,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		AD585E962E1D5EF3003BB6D1 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		AD585EA02E1D5EF3003BB6D1 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -281,13 +224,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		AD585E9E2E1D5EF3003BB6D1 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -295,11 +231,6 @@
 			isa = PBXTargetDependency;
 			target = AD585E862E1D5EF1003BB6D1 /* Bestuff */;
 			targetProxy = AD585E992E1D5EF3003BB6D1 /* PBXContainerItemProxy */;
-		};
-		AD585EA42E1D5EF3003BB6D1 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = AD585E862E1D5EF1003BB6D1 /* Bestuff */;
-			targetProxy = AD585EA32E1D5EF3003BB6D1 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -537,9 +468,10 @@
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Bestuff.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Bestuff";
 				XROS_DEPLOYMENT_TARGET = 26.0;
@@ -563,61 +495,12 @@
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Bestuff.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Bestuff";
-				XROS_DEPLOYMENT_TARGET = 26.0;
-			};
-			name = Release;
-		};
-		AD585EB42E1D5EF3003BB6D1 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 66PKF55HK5;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
-				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.muhiro12.BestuffUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = auto;
-				STRING_CATALOG_GENERATE_SYMBOLS = NO;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,7";
-				TEST_TARGET_NAME = Bestuff;
-				XROS_DEPLOYMENT_TARGET = 26.0;
-			};
-			name = Debug;
-		};
-		AD585EB52E1D5EF3003BB6D1 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 66PKF55HK5;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
-				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.muhiro12.BestuffUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = auto;
-				STRING_CATALOG_GENERATE_SYMBOLS = NO;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,7";
-				TEST_TARGET_NAME = Bestuff;
 				XROS_DEPLOYMENT_TARGET = 26.0;
 			};
 			name = Release;
@@ -648,15 +531,6 @@
 			buildConfigurations = (
 				AD585EB12E1D5EF3003BB6D1 /* Debug */,
 				AD585EB22E1D5EF3003BB6D1 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		AD585EB32E1D5EF3003BB6D1 /* Build configuration list for PBXNativeTarget "BestuffUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				AD585EB42E1D5EF3003BB6D1 /* Debug */,
-				AD585EB52E1D5EF3003BB6D1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

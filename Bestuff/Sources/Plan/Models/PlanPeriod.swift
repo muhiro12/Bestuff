@@ -16,11 +16,11 @@ enum PlanPeriod: String, CaseIterable, Identifiable, AppEnum {
 
     var id: Self { self }
 
-    nonisolated static var typeDisplayRepresentation: TypeDisplayRepresentation {
+    static var typeDisplayRepresentation: TypeDisplayRepresentation {
         .init(name: "Plan Period")
     }
 
-    nonisolated static var caseDisplayRepresentations: [Self: DisplayRepresentation] {
+    static var caseDisplayRepresentations: [Self: DisplayRepresentation] {
         [
             .today: .init(stringLiteral: "Today"),
             .thisWeek: .init(stringLiteral: "This Week"),

@@ -1,7 +1,6 @@
 import AppIntents
 import SwiftData
 
-@MainActor
 struct UpdateTagIntent: AppIntent {
     @Parameter(title: "Tag")
     private var tag: TagEntity
@@ -11,10 +10,11 @@ struct UpdateTagIntent: AppIntent {
 
     @Dependency private var modelContainer: ModelContainer
 
-    nonisolated static var title: LocalizedStringResource {
+    static var title: LocalizedStringResource {
         "Update Tag"
     }
 
+    @MainActor
     func perform() throws -> some ReturnsValue<TagEntity> {
         let trimmedName = name.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmedName.isEmpty else {

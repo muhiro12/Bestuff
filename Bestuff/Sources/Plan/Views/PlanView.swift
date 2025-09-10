@@ -6,14 +6,9 @@
 //
 
 import EventKit
-#if canImport(UIKit)
-import UIKit
-#endif
-#if canImport(AppKit)
-import AppKit
-#endif
 import SwiftData
 import SwiftUI
+import UIKit
 
 struct PlanView: View {
     let selection: PlanSelection
@@ -142,7 +137,6 @@ struct PlanView: View {
                 Text("Your reminder was saved.")
             }
         }
-        #if canImport(EventKitUI)
         .sheet(isPresented: $isShowingEventEditor) {
             if let event = preparedEvent {
                 EKEventEditView(store: EventKitService.shared.eventStore, event: event) { result in
@@ -170,7 +164,6 @@ struct PlanView: View {
                 }
             }
         }
-        #endif
         .sheet(isPresented: $isShowingReminderEditor) {
             NavigationStack {
                 Form {
@@ -336,18 +329,12 @@ struct PlanView: View {
     }
 
     private func copyToClipboard(_ text: String) {
-        #if canImport(UIKit)
         UIPasteboard.general.string = text
-        #elseif canImport(AppKit)
-        NSPasteboard.general.clearContents()
-        NSPasteboard.general.setString(text, forType: .string)
-        #endif
         alertMessage = "Copied to clipboard"
         isShowingAlert = true
     }
 
     private func openCalendarEvent(id: String?) {
-        #if canImport(UIKit)
         let store = EventKitService.shared.eventStore
         if let id, let event = store.event(withIdentifier: id) {
             let seconds = event.startDate.timeIntervalSinceReferenceDate
@@ -359,27 +346,12 @@ struct PlanView: View {
         if let url = URL(string: "calshow:\(Date().timeIntervalSinceReferenceDate)") {
             UIApplication.shared.open(url)
         }
-        #elseif canImport(AppKit)
-        if let url = URL(string: "calshow:\(Date().timeIntervalSinceReferenceDate)") {
-            NSWorkspace.shared.open(url)
-        } else {
-            NSWorkspace.shared.open(URL(fileURLWithPath: "/Applications/Calendar.app"))
-        }
-        #endif
     }
 
     private func openRemindersApp() {
-        #if canImport(UIKit)
         if let url = URL(string: "x-apple-reminderkit://") {
             UIApplication.shared.open(url)
         }
-        #elseif canImport(AppKit)
-        if let url = URL(string: "x-apple-reminderkit://") {
-            NSWorkspace.shared.open(url)
-        } else {
-            NSWorkspace.shared.open(URL(fileURLWithPath: "/Applications/Reminders.app"))
-        }
-        #endif
     }
 }
 

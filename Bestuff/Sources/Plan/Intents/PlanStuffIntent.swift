@@ -6,14 +6,11 @@
 //
 
 import AppIntents
-import SwiftData
-#if canImport(FoundationModels)
 import FoundationModels
-#endif
+import SwiftData
 
-@MainActor
 struct PlanStuffIntent: AppIntent {
-    nonisolated static var title: LocalizedStringResource {
+    static var title: LocalizedStringResource {
         "Plan Stuff"
     }
 
@@ -22,6 +19,7 @@ struct PlanStuffIntent: AppIntent {
 
     @Dependency private var modelContainer: ModelContainer
 
+    @MainActor
     func perform() async throws -> some ReturnsValue<[String]> {
         Logger(#file).info("Running PlanStuffIntent")
         let result = try await PlanService.plan(

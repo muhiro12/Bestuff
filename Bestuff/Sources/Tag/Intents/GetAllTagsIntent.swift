@@ -1,14 +1,14 @@
 import AppIntents
 import SwiftData
 
-@MainActor
 struct GetAllTagsIntent: AppIntent {
     @Dependency private var modelContainer: ModelContainer
 
-    nonisolated static var title: LocalizedStringResource {
+    static var title: LocalizedStringResource {
         "Get All Tags"
     }
 
+    @MainActor
     func perform() throws -> some ReturnsValue<[TagEntity]> {
         let tags = try TagService.getAll(context: modelContainer.mainContext)
         return .result(value: tags)

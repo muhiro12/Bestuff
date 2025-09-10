@@ -5,7 +5,6 @@
 //  Created by Codex on 2025/07/12.
 //
 
-#if canImport(FoundationModels)
 import FoundationModels
 
 @Generable
@@ -43,19 +42,3 @@ struct PlanItem: Hashable, Sendable {
     @Guide(description: "Priority where 1=high, 3=low")
     var priority: Int
 }
-#else
-struct PlanSuggestion: Hashable, Sendable {
-    var items: [PlanItem]
-}
-
-struct PlanItem: Hashable, Sendable {
-    var title: String
-    var rationale: String
-    var steps: [String]
-    var estimatedMinutes: Int
-    var resources: [String]
-    var risks: [String]
-    var successCriteria: [String]
-    var priority: Int
-}
-#endif

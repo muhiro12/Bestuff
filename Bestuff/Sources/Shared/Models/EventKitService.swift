@@ -111,82 +111,42 @@ final class EventKitService {
             let status = EKEventStore.authorizationStatus(for: .event)
             if status == .notDetermined {
                 try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-                    if #available(iOS 17, *) {
-                        store.requestFullAccessToEvents { granted, error in
-                            if let error {
-                                continuation.resume(throwing: error)
-                                return
-                            }
-                            if granted {
-                                continuation.resume()
-                            } else {
-                                continuation.resume(throwing: NSError(domain: "Bestuff.EventKitService", code: 1, userInfo: [NSLocalizedDescriptionKey: "Calendar access denied"]))
-                            }
+                    store.requestFullAccessToEvents { granted, error in
+                        if let error {
+                            continuation.resume(throwing: error)
+                            return
                         }
-                    } else {
-                        store.requestAccess(to: .event) { granted, error in
-                            if let error {
-                                continuation.resume(throwing: error)
-                                return
-                            }
-                            if granted {
-                                continuation.resume()
-                            } else {
-                                continuation.resume(throwing: NSError(domain: "Bestuff.EventKitService", code: 1, userInfo: [NSLocalizedDescriptionKey: "Calendar access denied"]))
-                            }
+                        if granted {
+                            continuation.resume()
+                        } else {
+                            continuation.resume(throwing: NSError(domain: "Bestuff.EventKitService", code: 1, userInfo: [NSLocalizedDescriptionKey: "Calendar access denied"]))
                         }
                     }
                 }
             } else {
-                if #available(iOS 17, *) {
-                    if status != .fullAccess && status != .writeOnly {
-                        throw NSError(domain: "Bestuff.EventKitService", code: 2, userInfo: [NSLocalizedDescriptionKey: "Calendar access not authorized"])
-                    }
-                } else {
-                    if status != .authorized {
-                        throw NSError(domain: "Bestuff.EventKitService", code: 2, userInfo: [NSLocalizedDescriptionKey: "Calendar access not authorized"])
-                    }
+                if status != .fullAccess && status != .writeOnly {
+                    throw NSError(domain: "Bestuff.EventKitService", code: 2, userInfo: [NSLocalizedDescriptionKey: "Calendar access not authorized"])
                 }
             }
         case .reminder:
             let status = EKEventStore.authorizationStatus(for: .reminder)
             if status == .notDetermined {
                 try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-                    if #available(iOS 17, *) {
-                        store.requestFullAccessToReminders { granted, error in
-                            if let error {
-                                continuation.resume(throwing: error)
-                                return
-                            }
-                            if granted {
-                                continuation.resume()
-                            } else {
-                                continuation.resume(throwing: NSError(domain: "Bestuff.EventKitService", code: 3, userInfo: [NSLocalizedDescriptionKey: "Reminders access denied"]))
-                            }
+                    store.requestFullAccessToReminders { granted, error in
+                        if let error {
+                            continuation.resume(throwing: error)
+                            return
                         }
-                    } else {
-                        store.requestAccess(to: .reminder) { granted, error in
-                            if let error {
-                                continuation.resume(throwing: error)
-                                return
-                            }
-                            if granted {
-                                continuation.resume()
-                            } else {
-                                continuation.resume(throwing: NSError(domain: "Bestuff.EventKitService", code: 3, userInfo: [NSLocalizedDescriptionKey: "Reminders access denied"]))
-                            }
+                        if granted {
+                            continuation.resume()
+                        } else {
+                            continuation.resume(throwing: NSError(domain: "Bestuff.EventKitService", code: 3, userInfo: [NSLocalizedDescriptionKey: "Reminders access denied"]))
                         }
                     }
                 }
             } else {
-                if #available(iOS 17, *) {
-                    if status != .fullAccess && status != .writeOnly {
-                        throw NSError(domain: "Bestuff.EventKitService", code: 4, userInfo: [NSLocalizedDescriptionKey: "Reminders access not authorized"])
-                    }
-                } else {
-                    if status != .authorized {
-                        throw NSError(domain: "Bestuff.EventKitService", code: 4, userInfo: [NSLocalizedDescriptionKey: "Reminders access not authorized"])
-                    }
+                if status != .fullAccess && status != .writeOnly {
+                    throw NSError(domain: "Bestuff.EventKitService", code: 4, userInfo: [NSLocalizedDescriptionKey: "Reminders access not authorized"])
                 }
             }
         }

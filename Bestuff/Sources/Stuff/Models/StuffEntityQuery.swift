@@ -1,10 +1,10 @@
 import AppIntents
 import SwiftData
 
-@MainActor
 struct StuffEntityQuery: EntityStringQuery {
     @Dependency private var modelContainer: ModelContainer
 
+    @MainActor
     func entities(for identifiers: [StuffEntity.ID]) throws -> [StuffEntity] {
         Logger(#file).info("Fetching entities for \(identifiers.count) identifiers")
         return try identifiers.compactMap { encodedID in
@@ -22,6 +22,7 @@ struct StuffEntityQuery: EntityStringQuery {
         }
     }
 
+    @MainActor
     func entities(matching string: String) throws -> [StuffEntity] {
         Logger(#file).info("Searching entities matching '\(string)'")
         return try modelContainer.mainContext.fetch(
@@ -32,6 +33,7 @@ struct StuffEntityQuery: EntityStringQuery {
         ).compactMap(StuffEntity.init)
     }
 
+    @MainActor
     func suggestedEntities() throws -> [StuffEntity] {
         Logger(#file).info("Fetching suggested entities")
         var descriptor = FetchDescriptor(
