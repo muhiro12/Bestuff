@@ -10,6 +10,7 @@
 		AD585EDD2E1D631B003BB6D1 /* StoreKitWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = AD585EDC2E1D631B003BB6D1 /* StoreKitWrapper */; };
 		AD585EE02E1D6334003BB6D1 /* LicenseListWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = AD585EDF2E1D6334003BB6D1 /* LicenseListWrapper */; };
 		AD6CBF242E54381800B04F84 /* SpeechWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = AD6CBF232E54381800B04F84 /* SpeechWrapper */; };
+		AD8961A22E749C5400A35C12 /* BestuffLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = AD8961A12E749C5400A35C12 /* BestuffLibrary */; };
 		ADB088C62E51715700655540 /* SwiftAppUtilities in Frameworks */ = {isa = PBXBuildFile; productRef = ADB088C52E51715700655540 /* SwiftAppUtilities */; };
 /* End PBXBuildFile section */
 
@@ -26,6 +27,7 @@
 /* Begin PBXFileReference section */
 		AD585E872E1D5EF1003BB6D1 /* Bestuff.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Bestuff.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD585E982E1D5EF3003BB6D1 /* BestuffTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BestuffTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		AD8962832E749C9100A35C12 /* BestuffLibrary */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = BestuffLibrary; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -60,6 +62,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AD585EE02E1D6334003BB6D1 /* LicenseListWrapper in Frameworks */,
+				AD8961A22E749C5400A35C12 /* BestuffLibrary in Frameworks */,
 				AD585EDD2E1D631B003BB6D1 /* StoreKitWrapper in Frameworks */,
 				AD6CBF242E54381800B04F84 /* SpeechWrapper in Frameworks */,
 				ADB088C62E51715700655540 /* SwiftAppUtilities in Frameworks */,
@@ -81,6 +84,7 @@
 			children = (
 				AD585E892E1D5EF1003BB6D1 /* Bestuff */,
 				AD585E9B2E1D5EF3003BB6D1 /* BestuffTests */,
+				AD8962832E749C9100A35C12 /* BestuffLibrary */,
 				AD585E882E1D5EF1003BB6D1 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -118,6 +122,7 @@
 				AD585EDF2E1D6334003BB6D1 /* LicenseListWrapper */,
 				ADB088C52E51715700655540 /* SwiftAppUtilities */,
 				AD6CBF232E54381800B04F84 /* SpeechWrapper */,
+				AD8961A12E749C5400A35C12 /* BestuffLibrary */,
 			);
 			productName = Bestuff;
 			productReference = AD585E872E1D5EF1003BB6D1 /* Bestuff.app */;
@@ -180,6 +185,7 @@
 				AD585EDE2E1D6334003BB6D1 /* XCRemoteSwiftPackageReference "LicenseListWrapper" */,
 				ADB088C42E51715700655540 /* XCRemoteSwiftPackageReference "SwiftAppUtilities" */,
 				AD6CBF222E54381800B04F84 /* XCRemoteSwiftPackageReference "SpeechWrapper" */,
+				AD8961A02E749C5400A35C12 /* XCLocalSwiftPackageReference "BestuffLibrary" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = AD585E882E1D5EF1003BB6D1 /* Products */;
@@ -537,6 +543,13 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCLocalSwiftPackageReference section */
+		AD8961A02E749C5400A35C12 /* XCLocalSwiftPackageReference "BestuffLibrary" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = BestuffLibrary;
+		};
+/* End XCLocalSwiftPackageReference section */
+
 /* Begin XCRemoteSwiftPackageReference section */
 		AD585EDB2E1D631B003BB6D1 /* XCRemoteSwiftPackageReference "StoreKitWrapper" */ = {
 			isa = XCRemoteSwiftPackageReference;
@@ -587,6 +600,10 @@
 			isa = XCSwiftPackageProductDependency;
 			package = AD6CBF222E54381800B04F84 /* XCRemoteSwiftPackageReference "SpeechWrapper" */;
 			productName = SpeechWrapper;
+		};
+		AD8961A12E749C5400A35C12 /* BestuffLibrary */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = BestuffLibrary;
 		};
 		ADB088C52E51715700655540 /* SwiftAppUtilities */ = {
 			isa = XCSwiftPackageProductDependency;
