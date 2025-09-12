@@ -9,18 +9,18 @@ import Foundation
 import SwiftData
 
 @Model
-final class Stuff {
-    private(set) var title: String
-    private(set) var note: String?
-    private(set) var score: Int
+public final class Stuff {
+    public private(set) var title: String
+    public private(set) var note: String?
+    public private(set) var score: Int
     @Relationship(inverse: \Tag.stuffs)
-    private(set) var tags: [Tag]?
-    private(set) var occurredAt: Date
-    private(set) var createdAt: Date
-    private(set) var isCompleted: Bool
-    private(set) var lastFeedback: Int?
-    private(set) var source: String?
-    private(set) var isPinned: Bool
+    public private(set) var tags: [Tag]?
+    public private(set) var occurredAt: Date
+    public private(set) var createdAt: Date
+    public private(set) var isCompleted: Bool
+    public private(set) var lastFeedback: Int?
+    public private(set) var source: String?
+    public private(set) var isPinned: Bool
 
     private init(
         title: String,
@@ -46,7 +46,7 @@ final class Stuff {
         self.isPinned = isPinned
     }
 
-    static func create(
+    public static func create(
         title: String,
         note: String? = nil,
         score: Int = 0,
@@ -72,7 +72,7 @@ final class Stuff {
         )
     }
 
-    func update(
+    public func update(
         title: String? = nil,
         note: String? = nil,
         score: Int? = nil,
@@ -115,7 +115,7 @@ final class Stuff {
 
 // MARK: - Deletion helper
 extension Stuff {
-    func delete() {
+    public func delete() {
         if let context = self.modelContext {
             context.delete(self)
         }

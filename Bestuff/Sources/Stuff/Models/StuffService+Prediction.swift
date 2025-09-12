@@ -1,33 +1,9 @@
+import BestuffLibrary
 import Foundation
 import FoundationModels
 import SwiftData
 
-enum StuffService {
-    static func create(
-        context: ModelContext,
-        title: String,
-        note: String?,
-        occurredAt: Date,
-        tags: [Tag]
-    ) -> Stuff {
-        Logger(#file).info("Creating stuff titled '\(title)'")
-        let model = Stuff.create(
-            title: title,
-            note: note,
-            occurredAt: occurredAt,
-            tags: tags
-        )
-        context.insert(model)
-        Logger(#file).notice("Created stuff with id \(String(describing: model.id))")
-        return model
-    }
-
-    static func delete(model: Stuff) {
-        Logger(#file).info("Deleting stuff with id \(String(describing: model.id))")
-        model.delete()
-        Logger(#file).notice("Deleted stuff with id \(String(describing: model.id))")
-    }
-
+extension StuffService {
     static func predict(context: ModelContext, speech: String) async throws -> Stuff {
         Logger(#file).info("Predicting stuff from speech")
         let prediction = try await generatePrediction(from: speech)
@@ -39,24 +15,6 @@ enum StuffService {
         )
         context.insert(model)
         Logger(#file).notice("Predicted stuff with id \(String(describing: model.id))")
-        return model
-    }
-
-    static func update(
-        model: Stuff,
-        title: String,
-        note: String?,
-        occurredAt: Date,
-        tags: [Tag]
-    ) -> Stuff {
-        Logger(#file).info("Updating stuff with id \(String(describing: model.id))")
-        model.update(
-            title: title,
-            note: note,
-            occurredAt: occurredAt,
-            tags: tags
-        )
-        Logger(#file).notice("Updated stuff with id \(String(describing: model.id))")
         return model
     }
 

@@ -1,5 +1,5 @@
 import Foundation
 
-enum TagError: Error {
+public enum TagError: Error {
     case tagNotFound
 }

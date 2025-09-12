@@ -1,5 +1,5 @@
 import Foundation
 
-enum StuffError: Error {
+public enum StuffError: Error {
     case stuffNotFound
 }

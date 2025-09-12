@@ -9,12 +9,15 @@ import Foundation
 import Observation
 
 @Observable
-final class ConfigurationService {
-    private(set) var configuration: Configuration?
+@MainActor
+public final class ConfigurationService {
+    public private(set) var configuration: Configuration?
 
     private let decoder = JSONDecoder()
 
-    func load() async throws {
+    public init() {}
+
+    public func load() async throws {
         let data = try await URLSession.shared.data(
             from: .init(
                 string: "https://raw.githubusercontent.com/muhiro12/Bestuff/main/.config.json"
@@ -23,7 +26,7 @@ final class ConfigurationService {
         configuration = try decoder.decode(Configuration.self, from: data)
     }
 
-    func isUpdateRequired() -> Bool {
+    public func isUpdateRequired() -> Bool {
         guard let current = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String,
               let required = configuration?.requiredVersion,
               Bundle.main.bundleIdentifier?.contains("playgrounds") == false else {

@@ -1,16 +1,12 @@
 import Foundation
 import SwiftData
 
-enum TagService {
-    static func create(context: ModelContext, name: String, type: TagType = .label) -> Tag {
+public enum TagService {
+    public static func create(context: ModelContext, name: String, type: TagType = .label) -> Tag {
         Tag.findOrCreate(name: name, in: context, type: type)
     }
 
-    static func getAll(context: ModelContext) throws -> [TagEntity] {
-        try context.fetch(FetchDescriptor<Tag>()).compactMap(TagEntity.init)
-    }
-
-    static func getAllLabels(context: ModelContext) throws -> [Tag] {
+    public static func getAllLabels(context: ModelContext) throws -> [Tag] {
         let all = try context.fetch(
             FetchDescriptor<Tag>(
                 sortBy: [SortDescriptor(\Tag.name, order: .forward)]
@@ -19,12 +15,12 @@ enum TagService {
         return all.filter { $0.typeID == TagType.label.rawValue }
     }
 
-    static func getUnusedLabels(context: ModelContext) throws -> [Tag] {
+    public static func getUnusedLabels(context: ModelContext) throws -> [Tag] {
         let labels = try getAllLabels(context: context)
         return labels.filter { ($0.stuffs ?? []).isEmpty }
     }
 
-    static func suggestLabels(
+    public static func suggestLabels(
         context: ModelContext,
         prefix: String,
         excluding excluded: [Tag] = [],
@@ -46,7 +42,7 @@ enum TagService {
         return results
     }
 
-    static func mostUsedLabels(
+    public static func mostUsedLabels(
         context: ModelContext,
         excluding excluded: [Tag] = [],
         limit: Int = 10
@@ -64,31 +60,22 @@ enum TagService {
         return sorted
     }
 
-    static func get(context: ModelContext, id: String) throws -> TagEntity? {
-        let persistentID = try PersistentIdentifier(base64Encoded: id)
-        let all: [Tag] = try context.fetch(FetchDescriptor<Tag>())
-        guard let tag = all.first(where: { $0.id == persistentID }) else {
-            return nil
-        }
-        return .init(tag)
-    }
-
-    static func getByName(context: ModelContext, name: String, type: TagType = .label) throws -> Tag? {
+    public static func getByName(context: ModelContext, name: String, type: TagType = .label) throws -> Tag? {
         try Tag.fetch(byName: name, type: type, in: context)
     }
 
-    static func update(model: Tag, name: String) -> Tag {
+    public static func update(model: Tag, name: String) -> Tag {
         model.update(name: name)
         return model
     }
 
     // MARK: - Duplicates
 
-    static func hasDuplicates(context: ModelContext) throws -> Bool {
+    public static func hasDuplicates(context: ModelContext) throws -> Bool {
         try !findDuplicateGroups(context: context).isEmpty
     }
 
-    static func resolveDuplicates(context: ModelContext) throws {
+    public static func resolveDuplicates(context: ModelContext) throws {
         let groups = try findDuplicateGroups(context: context)
         for (_, tags) in groups {
             guard let parent = tags.first else { continue }
@@ -108,17 +95,17 @@ enum TagService {
         }
     }
 
-    static func findDuplicates(context: ModelContext) throws -> [Tag] {
+    public static func findDuplicates(context: ModelContext) throws -> [Tag] {
         try findDuplicateGroups(context: context).values.compactMap(\.first)
     }
 
-    static func duplicateGroups(context: ModelContext) throws -> [[Tag]] {
+    public static func duplicateGroups(context: ModelContext) throws -> [[Tag]] {
         Array(try findDuplicateGroups(context: context).values)
             .map { $0.sorted { $0.name < $1.name } }
             .sorted { ($0.first?.name ?? "") < ($1.first?.name ?? "") }
     }
 
-    static func mergeDuplicates(tags: [Tag]) throws {
+    public static func mergeDuplicates(tags: [Tag]) throws {
         guard let parent = tags.first else { return }
         let children = tags.dropFirst()
         for child in children {
@@ -135,7 +122,7 @@ enum TagService {
         }
     }
 
-    static func mergeDuplicates(parent: Tag, children: [Tag]) throws {
+    public static func mergeDuplicates(parent: Tag, children: [Tag]) throws {
         for child in children {
             for item in child.stuffs ?? [] {
                 var itemTags = item.tags ?? []
@@ -161,7 +148,7 @@ enum TagService {
 
     // MARK: - Label operations
 
-    static func addLabels(context: ModelContext, to model: Stuff, names: [String]) {
+    public static func addLabels(context: ModelContext, to model: Stuff, names: [String]) {
         let labels: [Tag] = names
             .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
             .filter { !$0.isEmpty }
@@ -173,7 +160,7 @@ enum TagService {
         model.update(tags: current)
     }
 
-    static func removeLabels(from model: Stuff, names: [String]) {
+    public static func removeLabels(from model: Stuff, names: [String]) {
         let targets = Set(names.map { $0.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() })
         let filtered = (model.tags ?? []).filter { tag in
             guard tag.type == .label else { return true }

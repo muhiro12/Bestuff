@@ -8,7 +8,7 @@
 import Foundation
 import SwiftData
 
-enum BackupConflictStrategy: String, CaseIterable, Sendable {
+public enum BackupConflictStrategy: String, CaseIterable, Sendable {
     case skip
     case update
 }
@@ -35,8 +35,8 @@ struct StuffDump: Codable, Sendable, Hashable {
     var source: String?
 }
 
-enum BackupService {
-    static func exportJSON(context: ModelContext) throws -> Data {
+public enum BackupService {
+    public static func exportJSON(context: ModelContext) throws -> Data {
         let allTags: [Tag] = try context.fetch(FetchDescriptor<Tag>())
         let allStuffs: [Stuff] = try context.fetch(FetchDescriptor<Stuff>())
         let tagDumps = allTags.map { tag in
@@ -61,15 +61,15 @@ enum BackupService {
         return try encoder.encode(payload)
     }
 
-    struct ImportResult: Sendable {
-        let tagCreated: Int
-        let tagSkipped: Int
-        let stuffCreated: Int
-        let stuffUpdated: Int
-        let stuffSkipped: Int
+    public struct ImportResult: Sendable {
+        public let tagCreated: Int
+        public let tagSkipped: Int
+        public let stuffCreated: Int
+        public let stuffUpdated: Int
+        public let stuffSkipped: Int
     }
 
-    static func importJSON(
+    public static func importJSON(
         context: ModelContext,
         data: Data,
         conflictStrategy: BackupConflictStrategy
@@ -77,7 +77,7 @@ enum BackupService {
         _ = try importJSONDetailed(context: context, data: data, conflictStrategy: conflictStrategy)
     }
 
-    static func importJSONDetailed(
+    public static func importJSONDetailed(
         context: ModelContext,
         data: Data,
         conflictStrategy: BackupConflictStrategy

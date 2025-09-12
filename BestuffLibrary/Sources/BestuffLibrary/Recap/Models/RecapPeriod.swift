@@ -7,13 +7,13 @@
 
 import Foundation
 
-enum RecapPeriod: String, CaseIterable, Identifiable {
+public enum RecapPeriod: String, CaseIterable, Identifiable {
     case monthly
     case yearly
 
-    var id: Self { self }
+    public var id: Self { self }
 
-    var title: String {
+    public var title: String {
         switch self {
         case .monthly:
             "Monthly"

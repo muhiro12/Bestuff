@@ -1,14 +1,14 @@
 import Foundation
 
-enum DateFilter: String, CaseIterable, Identifiable {
+public enum DateFilter: String, CaseIterable, Identifiable {
     case all
     case today
     case thisWeek
     case thisMonth
 
-    var id: Self { self }
+    public var id: Self { self }
 
-    var title: String {
+    public var title: String {
         switch self {
         case .all:
             "Any Date"
@@ -21,7 +21,7 @@ enum DateFilter: String, CaseIterable, Identifiable {
         }
     }
 
-    func contains(_ date: Date, calendar: Calendar = .current) -> Bool {
+    public func contains(_ date: Date, calendar: Calendar = .current) -> Bool {
         switch self {
         case .all:
             return true

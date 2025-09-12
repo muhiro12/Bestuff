@@ -4,11 +4,11 @@ import SwiftData
 extension StuffService {
     // MARK: - Counts
 
-    static func allStuffsCount(context: ModelContext) throws -> Int {
+    public static func allStuffsCount(context: ModelContext) throws -> Int {
         try context.fetchCount(FetchDescriptor<Stuff>())
     }
 
-    static func yearStuffsCount(context: ModelContext, date: Date) throws -> Int {
+    public static func yearStuffsCount(context: ModelContext, date: Date) throws -> Int {
         let (start, end) = dateRange(for: date, component: .year)
         let descriptor = FetchDescriptor<Stuff>(
             predicate: #Predicate { model in
@@ -20,7 +20,7 @@ extension StuffService {
 
     // MARK: - Collections
 
-    static func stuffs(context: ModelContext, monthOf date: Date) throws -> [Stuff] {
+    public static func stuffs(context: ModelContext, monthOf date: Date) throws -> [Stuff] {
         let (start, end) = dateRange(for: date, component: .month)
         let descriptor = FetchDescriptor<Stuff>(
             predicate: #Predicate { model in
@@ -31,7 +31,7 @@ extension StuffService {
         return try context.fetch(descriptor)
     }
 
-    static func stuffs(context: ModelContext, sameDayAs date: Date) throws -> [Stuff] {
+    public static func stuffs(context: ModelContext, sameDayAs date: Date) throws -> [Stuff] {
         let (start, end) = dateRange(for: date, component: .day)
         let descriptor = FetchDescriptor<Stuff>(
             predicate: #Predicate { model in
@@ -44,7 +44,7 @@ extension StuffService {
 
     // MARK: - Navigation
 
-    static func nextStuff(context: ModelContext, after date: Date) throws -> Stuff? {
+    public static func nextStuff(context: ModelContext, after date: Date) throws -> Stuff? {
         let descriptor = FetchDescriptor<Stuff>(
             predicate: #Predicate { model in
                 model.occurredAt > date
@@ -54,7 +54,7 @@ extension StuffService {
         return try context.fetch(descriptor).first
     }
 
-    static func previousStuff(context: ModelContext, before date: Date) throws -> Stuff? {
+    public static func previousStuff(context: ModelContext, before date: Date) throws -> Stuff? {
         let descriptor = FetchDescriptor<Stuff>(
             predicate: #Predicate { model in
                 model.occurredAt < date
@@ -64,25 +64,25 @@ extension StuffService {
         return try context.fetch(descriptor).first
     }
 
-    static func nextStuffs(context: ModelContext, after date: Date) throws -> [Stuff] {
+    public static func nextStuffs(context: ModelContext, after date: Date) throws -> [Stuff] {
         guard let next = try nextStuff(context: context, after: date) else {
             return []
         }
         return try stuffs(context: context, sameDayAs: next.occurredAt)
     }
 
-    static func previousStuffs(context: ModelContext, before date: Date) throws -> [Stuff] {
+    public static func previousStuffs(context: ModelContext, before date: Date) throws -> [Stuff] {
         guard let prev = try previousStuff(context: context, before: date) else {
             return []
         }
         return try stuffs(context: context, sameDayAs: prev.occurredAt)
     }
 
-    static func nextStuffDate(context: ModelContext, after date: Date) throws -> Date? {
+    public static func nextStuffDate(context: ModelContext, after date: Date) throws -> Date? {
         try nextStuff(context: context, after: date)?.occurredAt
     }
 
-    static func previousStuffDate(context: ModelContext, before date: Date) throws -> Date? {
+    public static func previousStuffDate(context: ModelContext, before date: Date) throws -> Date? {
         try previousStuff(context: context, before: date)?.occurredAt
     }
 }

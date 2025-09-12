@@ -1,15 +1,15 @@
 import Foundation
 
-struct FilterPreset: Codable, Identifiable, Hashable {
-    let id: UUID
-    var name: String
-    var searchText: String
-    var dateFilter: String
-    var completion: String
-    var minScore: Int?
-    var labelName: String?
+public struct FilterPreset: Codable, Identifiable, Hashable {
+    public let id: UUID
+    public var name: String
+    public var searchText: String
+    public var dateFilter: String
+    public var completion: String
+    public var minScore: Int?
+    public var labelName: String?
 
-    init(
+    public init(
         id: UUID = .init(),
         name: String,
         searchText: String,

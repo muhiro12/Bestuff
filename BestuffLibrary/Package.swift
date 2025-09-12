@@ -5,6 +5,9 @@ import PackageDescription
 
 let package = Package(
     name: "BestuffLibrary",
+    platforms: [
+        .iOS(.v26)
+    ],
     products: [
         .library(
             name: "BestuffLibrary",
@@ -13,14 +16,26 @@ let package = Package(
             ]
         )
     ],
+    dependencies: [
+        .package(url: "https://github.com/muhiro12/SwiftAppUtilities", "1.0.0"..<"2.0.0")
+    ],
     targets: [
         .target(
-            name: "BestuffLibrary"
+            name: "BestuffLibrary",
+            dependencies: [
+                .product(name: "SwiftAppUtilities", package: "SwiftAppUtilities")
+            ],
+            swiftSettings: [
+                .swiftLanguageMode(.v6)
+            ]
         ),
         .testTarget(
             name: "BestuffLibraryTests",
             dependencies: [
                 "BestuffLibrary"
+            ],
+            swiftSettings: [
+                .swiftLanguageMode(.v6)
             ]
         )
     ]

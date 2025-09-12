@@ -1,14 +1,14 @@
 import Foundation
 
-enum StuffSort: String, CaseIterable, Identifiable {
+public enum StuffSort: String, CaseIterable, Identifiable {
     case occurredDateDescending
     case occurredDateAscending
     case titleAscending
     case titleDescending
 
-    var id: Self { self }
+    public var id: Self { self }
 
-    var title: String {
+    public var title: String {
         switch self {
         case .occurredDateDescending:
             "Date \u{2193}"
@@ -21,7 +21,7 @@ enum StuffSort: String, CaseIterable, Identifiable {
         }
     }
 
-    func areInIncreasingOrder(_ lhs: Stuff, _ rhs: Stuff) -> Bool {
+    public func areInIncreasingOrder(_ lhs: Stuff, _ rhs: Stuff) -> Bool {
         switch self {
         case .occurredDateDescending:
             lhs.occurredAt > rhs.occurredAt
