@@ -1,4 +1,4 @@
-@testable import Bestuff
+@testable import BestuffLibrary
 import Foundation
 import SwiftData
 import Testing
@@ -12,8 +12,8 @@ struct TagDuplicateResolutionTests {
 
     @Test func resolve_duplicates_reassigns_items_and_deletes_children() throws {
         // Create duplicate tags with same name/type
-        let t1 = Bestuff.Tag.create(name: "Dup", type: .label)
-        let t2 = Bestuff.Tag.create(name: "Dup", type: .label)
+        let t1 = Tag.create(name: "Dup", type: .label)
+        let t2 = Tag.create(name: "Dup", type: .label)
         context.insert(t1)
         context.insert(t2)
         let item = StuffService.create(context: context, title: "X", note: nil, occurredAt: .now, tags: [t2])
@@ -22,7 +22,7 @@ struct TagDuplicateResolutionTests {
         try TagService.resolveDuplicates(context: context)
 
         // After resolving, only one tag named Dup remains
-        let allTags = try context.fetch(FetchDescriptor<Bestuff.Tag>())
+        let allTags = try context.fetch(FetchDescriptor<BestuffLibrary.Tag>())
         let dups = allTags.filter { $0.name == "Dup" }
         #expect(dups.count == 1)
 

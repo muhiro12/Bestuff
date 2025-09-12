@@ -1,4 +1,4 @@
-@testable import Bestuff
+@testable import BestuffLibrary
 import Foundation
 import SwiftData
 import Testing
@@ -27,8 +27,8 @@ struct BackupServiceTests {
         let newContext = testContext
         try BackupService.importJSON(context: newContext, data: data, conflictStrategy: .skip)
 
-        let fetchedStuff = try newContext.fetch(FetchDescriptor<Bestuff.Stuff>())
-        let fetchedTags = try newContext.fetch(FetchDescriptor<Bestuff.Tag>())
+        let fetchedStuff = try newContext.fetch(FetchDescriptor<Stuff>())
+        let fetchedTags = try newContext.fetch(FetchDescriptor<BestuffLibrary.Tag>())
 
         #expect(fetchedStuff.count == 1)
         #expect(fetchedStuff.first?.title == "Write report")
@@ -69,7 +69,7 @@ struct BackupServiceTests {
         encoder.dateEncodingStrategy = .iso8601
         let data = try encoder.encode(payload)
         try BackupService.importJSON(context: context, data: data, conflictStrategy: .skip)
-        let fetched = try context.fetch(FetchDescriptor<Bestuff.Stuff>())
+        let fetched = try context.fetch(FetchDescriptor<Stuff>())
         #expect(fetched.count == 1)
         #expect(fetched.first?.note == "")
     }

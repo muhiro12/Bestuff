@@ -1,4 +1,4 @@
-@testable import Bestuff
+@testable import BestuffLibrary
 import SwiftData
 
 var testContext: ModelContext {
