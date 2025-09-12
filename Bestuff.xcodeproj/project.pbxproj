@@ -14,6 +14,7 @@
 		AD89646B2E74B6BA00A35C12 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD89646A2E74B6BA00A35C12 /* WidgetKit.framework */; };
 		AD89646D2E74B6BA00A35C12 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD89646C2E74B6BA00A35C12 /* SwiftUI.framework */; };
 		AD89647E2E74B6BB00A35C12 /* WidgetsExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = AD8964682E74B6BA00A35C12 /* WidgetsExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		AD8964872E74B8AD00A35C12 /* BestuffLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = AD8964862E74B8AD00A35C12 /* BestuffLibrary */; };
 		ADB088C62E51715700655540 /* SwiftAppUtilities in Frameworks */ = {isa = PBXBuildFile; productRef = ADB088C52E51715700655540 /* SwiftAppUtilities */; };
 /* End PBXBuildFile section */
 
@@ -123,6 +124,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AD8964872E74B8AD00A35C12 /* BestuffLibrary in Frameworks */,
 				AD89646D2E74B6BA00A35C12 /* SwiftUI.framework in Frameworks */,
 				AD89646B2E74B6BA00A35C12 /* WidgetKit.framework in Frameworks */,
 			);
@@ -235,6 +237,7 @@
 			);
 			name = WidgetsExtension;
 			packageProductDependencies = (
+				AD8964862E74B8AD00A35C12 /* BestuffLibrary */,
 			);
 			productName = WidgetsExtension;
 			productReference = AD8964682E74B6BA00A35C12 /* WidgetsExtension.appex */;
@@ -794,6 +797,10 @@
 			productName = SpeechWrapper;
 		};
 		AD8961A12E749C5400A35C12 /* BestuffLibrary */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = BestuffLibrary;
+		};
+		AD8964862E74B8AD00A35C12 /* BestuffLibrary */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = BestuffLibrary;
 		};

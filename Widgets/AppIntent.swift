@@ -8,11 +8,28 @@
 import AppIntents
 import WidgetKit
 
-struct ConfigurationAppIntent: WidgetConfigurationIntent {
-    static var title: LocalizedStringResource { "Configuration" }
-    static var description: IntentDescription { "This is an example widget." }
+enum WidgetMode: String, AppEnum, CaseDisplayRepresentable, Sendable {
+    case today
+    case pinned
+    case thisMonth
 
-    // An example configurable parameter.
-    @Parameter(title: "Favorite Emoji", default: "😃")
-    var favoriteEmoji: String
+    static var typeDisplayRepresentation: TypeDisplayRepresentation {
+        .init(name: "Widget Mode")
+    }
+
+    static var caseDisplayRepresentations: [Self: DisplayRepresentation] {
+        [
+            .today: .init(stringLiteral: "Today"),
+            .pinned: .init(stringLiteral: "Pinned"),
+            .thisMonth: .init(stringLiteral: "This Month")
+        ]
+    }
+}
+
+struct ConfigurationAppIntent: WidgetConfigurationIntent {
+    static var title: LocalizedStringResource { "Bestuff" }
+    static var description: IntentDescription { "Show your Bestuff overview." }
+
+    @Parameter(title: "Content")
+    var mode: WidgetMode?
 }

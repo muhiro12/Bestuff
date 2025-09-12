@@ -12,7 +12,5 @@ import WidgetKit
 struct WidgetsBundle: WidgetBundle {
     var body: some Widget {
         Widgets()
-        WidgetsControl()
-        WidgetsLiveActivity()
     }
 }
