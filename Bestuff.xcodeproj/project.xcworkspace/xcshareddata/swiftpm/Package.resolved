@@ -1,5 +1,5 @@
 {
-  "originHash" : "25339e79a9a87a2d99f9895dc6d85cd8e73ed5198c481efa54698d6ca854ea76",
+  "originHash" : "4155a09c99cd644bc67d72eae5009c9a03c57537ba44ed1c8e687a80b813cceb",
   "pins" : [
     {
       "identity" : "licenselist",
@@ -42,8 +42,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/muhiro12/SwiftAppUtilities",
       "state" : {
-        "revision" : "96d7ad0f9bb82bc809b878eeaa2383e30ccebefc",
-        "version" : "1.0.0"
+        "revision" : "33ef526c02ca4e4691935264b13bf1e4f8f516be",
+        "version" : "1.1.0"
       }
     },
     {
